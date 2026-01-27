@@ -6,7 +6,7 @@ namespace ElderlySystem.DAL.Model
     public class Employee : ApplicationUser
     {
         [Required(ErrorMessage = "المسمّى الوظيفي مطلوب.")]
-        public string JobTitle { get; set; }
+        public string JobTitle { get; set; } = null!;
         [Required(ErrorMessage = "تاريخ التعيين مطلوب.")]
         public DateTime HireDate { get; set; }
         [Required(ErrorMessage = "المستوى التعليمي مطلوب.")]
@@ -23,10 +23,11 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "الحالة الاجتماعية مطلوبة.")]
         public MaritalStatus MaritalStatus { get; set; }
         public DateTime? EndDate { get; set; }
+        [MinLength(1, ErrorMessage = "يجب إدخال مهارة واحدة على الأقل.")]
         public ICollection<string> Skills { get; set; } = new List<string>();
-        //public ICollection<WorkExperience> WorkExperiences { get; set; } = new List<WorkExperience>();
-        //public ICollection<Donation> Donations { get; set; } = new List<Donation>();
-        //public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+        public ICollection<WorkExperience> WorkExperiences { get; set; } = new List<WorkExperience>();
+        public ICollection<Donation> Donations { get; set; } = new List<Donation>();
+        public ICollection<Activity> Activities { get; set; } = new List<Activity>();
     }
 }
 

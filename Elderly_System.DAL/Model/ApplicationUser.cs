@@ -12,9 +12,9 @@ namespace ElderlySystem.DAL.Model
     public class ApplicationUser :IdentityUser
     {
         [Required(ErrorMessage = "الاسم الكامل مطلوب.")]
-        public string FullName { get; set; }
+        public string FullName { get; set; } = null!;
         [Required(ErrorMessage = "اسم المدينة مطلوب.")]
-        public string City { get; set; }
+        public string City { get; set; } = null!;
         public string? Street { get; set; }
         public string? CodeResetPassword { get; set; }
         public DateTime? PasswordResetCodeExpiry { get; set; }
@@ -24,7 +24,7 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "رقم الهوية مطلوب.")]
 
         [RegularExpression(@"^\d{9}$", ErrorMessage = "يجب ان يكون رقم الهوية مكون من 9 ارقام")]
-        public string NationalId { get; set; }
+        public string NationalId { get; set; } = null!;
         [Required(ErrorMessage = "الجنس مطلوب.")]
         public Gender Gender { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
