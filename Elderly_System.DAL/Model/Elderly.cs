@@ -69,6 +69,6 @@ namespace ElderlySystem.DAL.Model
 
         public ICollection<ElderlySponsor> ElderlySponsors { get; set; } = new List<ElderlySponsor>();
         //public ICollection<ResidentStay> ResidentStays { get; set; } = new List<ResidentStay>();
-        //public ICollection<ElderlyVisitor> ElderlyVisitors { get; set; } = new List<ElderlyVisitor>();
+        public ICollection<ElderlyVisitor> ElderlyVisitors { get; set; } = new List<ElderlyVisitor>();
     }
 }

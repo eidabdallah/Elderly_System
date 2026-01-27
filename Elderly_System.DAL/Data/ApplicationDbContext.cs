@@ -15,6 +15,12 @@ namespace ElderlySystem.DAL.Data
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<Good> Goods { get; set; }
+        public DbSet<Elderly> Elderlies { get; set; }
+        public DbSet<ElderlySponsor> ElderlySponsors { get; set; }
+        public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<ElderlyVisitor> ElderlyVisitors { get; set; }
+        public DbSet<WorkExperience> WorkExperiences { get; set; }
+
 
 
 
@@ -26,11 +32,6 @@ namespace ElderlySystem.DAL.Data
             builder.Entity<IdentityUserRole<string>>().ToTable("UsersRoles");
             builder.Entity<Employee>().ToTable("Employees");
             builder.Entity<Sponsor>().ToTable("Sponsors");
-
-            builder.Ignore<IdentityUserClaim<string>>();
-            builder.Ignore<IdentityUserLogin<string>>();
-            builder.Ignore<IdentityUserToken<string>>();
-            builder.Ignore<IdentityRoleClaim<string>>();
         }
     }
 }

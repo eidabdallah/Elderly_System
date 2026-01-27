@@ -29,5 +29,8 @@ namespace ElderlySystem.DAL.Model
         public Gender Gender { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public Status Status { get; set; } = Status.Pending;
+        [Required(ErrorMessage = "رقم الهاتف مطلوب.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يتكون من 10 أرقام.")]
+        public string PhoneNumberForValidation => PhoneNumber ?? string.Empty;
     }
 }
