@@ -28,6 +28,6 @@ namespace Elderly_System.DAL.Model
         [StringLength(500, ErrorMessage = "الملاحظات يجب ألا تتجاوز 500 حرف.")]
         public string? Notes { get; set; }
 
-        //public ICollection<Medication> Medications { get; set; } = new List<Medication>();
+        public ICollection<Medication> Medications { get; set; } = new List<Medication>();
     }
 }

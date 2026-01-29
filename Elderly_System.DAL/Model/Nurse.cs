@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Elderly_System.DAL.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace ElderlySystem.DAL.Model
 {
@@ -7,5 +8,7 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "الشهادة مطلوبة.")]
         public string ImageCertificate { get; set; } = null!;
         public ICollection<NurseShiftAssignment> NurseShiftAssignments { get; set; } = new List<NurseShiftAssignment>();
+        public ICollection<Medication> Medications { get; set; } = new List<Medication>();
+
     }
 }
