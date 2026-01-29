@@ -1,4 +1,5 @@
-﻿using ElderlySystem.DAL.Model;
+﻿using Elderly_System.DAL.Model;
+using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace ElderlySystem.DAL.Data
         public DbSet<Nurse> Nurses { get; set; }
         public DbSet<Shift> Shifts { get; set; }
         public DbSet<NurseShiftAssignment> NurseShiftAssignments { get; set; }
+        public DbSet<ElderMeal> ElderMeals { get; set; }
+
 
 
 

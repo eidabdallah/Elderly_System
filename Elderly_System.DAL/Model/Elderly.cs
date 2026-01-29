@@ -1,4 +1,5 @@
 ﻿using EderlySystem.DAL.Enums;
+using Elderly_System.DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
@@ -70,5 +71,7 @@ namespace ElderlySystem.DAL.Model
         public ICollection<ElderlySponsor> ElderlySponsors { get; set; } = new List<ElderlySponsor>();
         public ICollection<ResidentStay> ResidentStays { get; set; } = new List<ResidentStay>();
         public ICollection<ElderlyVisitor> ElderlyVisitors { get; set; } = new List<ElderlyVisitor>();
+        public ICollection<ElderMeal> ElderMeals { get; set; } = new List<ElderMeal>();
+
     }
 }
