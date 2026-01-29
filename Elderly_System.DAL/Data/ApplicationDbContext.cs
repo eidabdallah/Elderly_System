@@ -20,6 +20,10 @@ namespace ElderlySystem.DAL.Data
         public DbSet<Visitor> Visitors { get; set; }
         public DbSet<ElderlyVisitor> ElderlyVisitors { get; set; }
         public DbSet<WorkExperience> WorkExperiences { get; set; }
+        public DbSet<ResidentStay> ResidentStays { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomImage> RoomImages { get; set; }
+
 
 
 
