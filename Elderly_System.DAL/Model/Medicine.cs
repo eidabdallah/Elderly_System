@@ -14,7 +14,7 @@ namespace Elderly_System.DAL.Model
         [StringLength(500, ErrorMessage = "الوصف يجب ألا يتجاوز 500 حرف.")]
         public string Description { get; set; } = null!;
 
-        //public ICollection<DrugPlan> DrugPlans { get; set; } = new List<DrugPlan>();
+        public ICollection<DrugPlan> DrugPlans { get; set; } = new List<DrugPlan>();
         public ICollection<MedicalReportMedicine> MedicalReportMedicines { get; set; } = new List<MedicalReportMedicine>();
     }
 }
