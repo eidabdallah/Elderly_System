@@ -23,7 +23,9 @@ namespace ElderlySystem.DAL.Data
         public DbSet<ResidentStay> ResidentStays { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomImage> RoomImages { get; set; }
-
+        public DbSet<Nurse> Nurses { get; set; }
+        public DbSet<Shift> Shifts { get; set; }
+        public DbSet<NurseShiftAssignment> NurseShiftAssignments { get; set; }
 
 
 
@@ -36,6 +38,8 @@ namespace ElderlySystem.DAL.Data
             builder.Entity<IdentityUserRole<string>>().ToTable("UsersRoles");
             builder.Entity<Employee>().ToTable("Employees");
             builder.Entity<Sponsor>().ToTable("Sponsors");
+            builder.Entity<Nurse>().ToTable("Nurses");
+
         }
     }
 }
