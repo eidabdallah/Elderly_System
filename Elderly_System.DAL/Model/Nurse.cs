@@ -9,6 +9,8 @@ namespace ElderlySystem.DAL.Model
         public string ImageCertificate { get; set; } = null!;
         public ICollection<NurseShiftAssignment> NurseShiftAssignments { get; set; } = new List<NurseShiftAssignment>();
         public ICollection<Medication> Medications { get; set; } = new List<Medication>();
+        public ICollection<CheckList> CheckLists { get; set; } = new List<CheckList>();
+
 
     }
 }

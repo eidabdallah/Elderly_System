@@ -74,6 +74,7 @@ namespace ElderlySystem.DAL.Model
         public ICollection<ElderMeal> ElderMeals { get; set; } = new List<ElderMeal>();
         public ICollection<MedicalReport> MedicalReports { get; set; } = new List<MedicalReport>();
         public ICollection<DrugPlan> DrugPlans { get; set; } = new List<DrugPlan>();
+        public ICollection<CheckList> CheckLists { get; set; } = new List<CheckList>();
 
 
     }
