@@ -28,7 +28,13 @@ namespace ElderlySystem.DAL.Data
         public DbSet<Shift> Shifts { get; set; }
         public DbSet<NurseShiftAssignment> NurseShiftAssignments { get; set; }
         public DbSet<ElderMeal> ElderMeals { get; set; }
-
+        public DbSet<MedicalReport> MedicalReports { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<MedicalReportMedicine> MedicalReportMedicines { get; set; }
+        //public DbSet<DrugPlan> DrugPlans { get; set; }
+        //public DbSet<Medication> Medications { get; set; }
+        //public DbSet<CheckList> CheckLists { get; set; }
 
 
 
