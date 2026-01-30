@@ -49,6 +49,10 @@ namespace ElderlySystem.DAL.Data
             builder.Entity<Sponsor>().ToTable("Sponsors");
             builder.Entity<Nurse>().ToTable("Nurses");
 
+            builder.Entity<Donation>()
+                .Property(d => d.MonetaryAmount)
+                .HasPrecision(18, 2);
+
         }
     }
 }

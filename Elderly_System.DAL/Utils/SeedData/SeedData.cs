@@ -60,6 +60,8 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 new Shift { ShiftKey = 'B', StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(16, 0, 0) },
                 new Shift { ShiftKey = 'C', StartTime = new TimeSpan(16, 0, 0), EndTime = new TimeSpan(22, 0, 0) }
             );
+            await _context.SaveChangesAsync();
+
         }
     }
 }
