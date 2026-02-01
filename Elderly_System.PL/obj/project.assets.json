@@ -1376,7 +1376,7 @@
           }
         }
       },
-      "Scalar.AspNetCore/2.12.18": {
+      "Scalar.AspNetCore/2.10.3": {
         "type": "package",
         "compile": {
           "lib/net9.0/Scalar.AspNetCore.dll": {
@@ -5059,10 +5059,10 @@
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
       ]
     },
-    "Scalar.AspNetCore/2.12.18": {
-      "sha512": "SVO8iTlSZPxAklOl8BROup3GLNknLseWKMgLweSG7xyuAydnNt76YmKQfrIiRXmw7mx0z3zCcd0ZRva+vkPn0w==",
+    "Scalar.AspNetCore/2.10.3": {
+      "sha512": "uDJlK7ZcHJgAIbXKB3zf4D/70VVEdsYaN3qwoUSBP3OHrdlLR/cIIYp16OFfX9d4VP29b30Jf6KXF59PvFGG4w==",
       "type": "package",
-      "path": "scalar.aspnetcore/2.12.18",
+      "path": "scalar.aspnetcore/2.10.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5074,7 +5074,7 @@
         "lib/net8.0/Scalar.AspNetCore.xml",
         "lib/net9.0/Scalar.AspNetCore.dll",
         "lib/net9.0/Scalar.AspNetCore.xml",
-        "scalar.aspnetcore.2.12.18.nupkg.sha512",
+        "scalar.aspnetcore.2.10.3.nupkg.sha512",
         "scalar.aspnetcore.nuspec"
       ]
     },
@@ -7975,7 +7975,7 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.10",
       "Microsoft.AspNetCore.OpenApi >= 9.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.10",
-      "Scalar.AspNetCore >= 2.12.18"
+      "Scalar.AspNetCore >= 2.10.3"
     ]
   },
   "packageFolders": {
@@ -8048,7 +8048,7 @@
           },
           "Scalar.AspNetCore": {
             "target": "Package",
-            "version": "[2.12.18, )"
+            "version": "[2.10.3, )"
           }
         },
         "imports": [

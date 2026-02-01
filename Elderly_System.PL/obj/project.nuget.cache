@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cXoPa8C42Qk=",
+  "dgSpecHash": "b/yCo9+cRzc=",
   "success": true,
   "projectFilePath": "C:\\Users\\user\\Desktop\\Elderly_System\\Elderly_System.PL\\Elderly_System.PL.csproj",
   "expectedPackageFiles": [
@@ -78,7 +78,7 @@
     "C:\\Users\\user\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
-    "C:\\Users\\user\\.nuget\\packages\\scalar.aspnetcore\\2.12.18\\scalar.aspnetcore.2.12.18.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\scalar.aspnetcore\\2.10.3\\scalar.aspnetcore.2.10.3.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

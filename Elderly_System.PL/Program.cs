@@ -68,7 +68,6 @@ namespace Elderly_System.PL
 
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

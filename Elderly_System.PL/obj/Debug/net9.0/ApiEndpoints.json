@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
+    "Method": "Register",
+    "RelativePath": "api/Identity/Account/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ElderlySystem.DAL.DTO.Request.Auth.RegisterRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",
