@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Authentication;
 using ElderlySystem.DAL.DTO.Request.Auth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elderly_System.PL.Area.Identitiy.Controller
@@ -18,12 +19,23 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var result = await _authenticationService.RegisterAsync(request);
+            var result = await _authenticationService.RegisterAsync(request , Request);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.Message });
             }
             return Ok(new { message = result.Message });
         }
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string userId)
+        {
+            var ok = await _authenticationService.ConfirmEmailAsync(token, userId);
+            var page = ok == "email confirmed successfully"
+                ? "/pages/confirm-success.html"
+                : "/pages/confirm-failed.html";
+
+            return Redirect(page);
+        }
+
     }
 }

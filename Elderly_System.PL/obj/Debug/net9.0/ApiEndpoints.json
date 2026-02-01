@@ -1,6 +1,27 @@
 [
   {
     "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
+    "Method": "ConfirmEmail",
+    "RelativePath": "api/Identity/Account/ConfirmEmail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
     "Method": "Register",
     "RelativePath": "api/Identity/Account/register",
     "HttpMethod": "POST",

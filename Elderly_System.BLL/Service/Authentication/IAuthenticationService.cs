@@ -6,9 +6,9 @@ namespace Elderly_System.BLL.Service.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<ServiceResult> RegisterAsync(RegisterRequest request/*, HttpRequest HttpRequest*/);
+        Task<ServiceResult> RegisterAsync(RegisterRequest request, HttpRequest HttpRequest);
         //Task<ServiceResult> LoginAsync(LoginRequest request);
-        //Task<bool> ConfirmEmail(string token, string userId);
+        Task<string> ConfirmEmailAsync(string token, string userId);
         //Task<ServiceResult> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
         //Task<ServiceResult> ResetPassword(ResetPasswordRequest resetPasswordRequest);
         //Task<ServiceResult> AuthMeAsync(string userId);

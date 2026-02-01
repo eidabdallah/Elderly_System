@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Buffers.Text;
 
 namespace Elderly_System.BLL.Service.Authentication
 {
@@ -23,7 +24,7 @@ namespace Elderly_System.BLL.Service.Authentication
             _configuration = configuration;
             _emailSender = emailSender;
         }
-        public async Task<ServiceResult> RegisterAsync(RegisterRequest request)
+        public async Task<ServiceResult> RegisterAsync(RegisterRequest request, HttpRequest HttpRequest)
         {
             var existingEmail = await _userManager.FindByEmailAsync(request.Email);
             if (existingEmail is not null)
@@ -51,18 +52,34 @@ namespace Elderly_System.BLL.Service.Authentication
                 Note = string.IsNullOrWhiteSpace(request.Note) ? "لا يوجد" : request.Note,
             };
             var result = await _userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                var error = result.Errors.Select(e => e.Description).FirstOrDefault() ?? "فشل إنشاء حساب.";
-                return ServiceResult.Failure(error);
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var tokenEncoded = Uri.EscapeDataString(token);
+                var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={user.Id}";
+                await _userManager.AddToRoleAsync(user, "Sponsor");
+                await _emailSender.SendEmailAsync(user.Email!, "تأكيد البريد الالكتروني",
+                  $"<h1>Hello {user.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+                return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
             }
-            var roleResult = await _userManager.AddToRoleAsync(user, "Sponsor");
-            if (!roleResult.Succeeded)
+            else
             {
-                await _userManager.DeleteAsync(user);
-                return ServiceResult.Failure("حدث خطأ أثناء تعيين الصلاحيات ، لم يتم تسجيل الحساب يرجى المحاولة مرة اخرى.");
+                return ServiceResult.Failure("فشل في انشاء الحساب");
             }
-            return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح.");
+        }
+        public async Task<string> ConfirmEmailAsync(string token, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                throw new Exception("المستخدم غير موجود");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return "email confirmed successfully";
+            }
+            return "email confirmation failed";
         }
     }
 }
