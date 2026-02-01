@@ -22,6 +22,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
+    "Method": "ForgotPassword",
+    "RelativePath": "api/Identity/Account/forgot-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ElderlySystem.DAL.DTO.Request.Auth.ForgotPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
     "Method": "Login",
     "RelativePath": "api/Identity/Account/login",
     "HttpMethod": "POST",

@@ -128,5 +128,74 @@ namespace Elderly_System.BLL.Service.Authentication
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public async Task<ServiceResult> ForgotPasswordAsync(ForgotPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            var random = new Random();
+            var code = random.Next(1000, 9999).ToString();
+
+            user.CodeResetPassword = code;
+            user.PasswordResetCodeExpiry = DateTime.UtcNow.AddMinutes(15);
+
+            await _userManager.UpdateAsync(user);
+
+            await _emailSender.SendEmailAsync(
+                request.Email,
+                "إعادة تعيين كلمة المرور",
+                $@"
+            <div style='font-family:Arial,Helvetica,sans-serif; direction:rtl; text-align:right; background:#f4f6f8; padding:20px; border-radius:10px;'>
+                <h2 style='color:#007bff;'>طلب إعادة تعيين كلمة المرور</h2>
+                <p>مرحبًا <strong>{user.FullName}</strong>،</p>
+                <p>تم استلام طلب لإعادة تعيين كلمة المرور الخاصة بك.</p>
+                <p>رمز التحقق الخاص بك هو:</p>
+                <h1 style='color:#28a745; text-align:center;'>{code}</h1>
+                <p>سيكون هذا الرمز صالحًا لمدة <strong>15 دقيقة</strong>.</p>
+                <p>إذا لم تقم بطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذه الرسالة.</p>
+                <br/>
+                <p style='color:#6c757d;'>مع تحيات فريق الدعم 👋</p>
+            </div>"
+            );
+            return ServiceResult.SuccessMessage("تم إرسال رمز إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
+        }
+
+        /*public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+            if (user.CodeResetPassword != request.Code)
+                return ServiceResult.Failure("رمز التحقق غير صحيح.");
+
+            if (user.PasswordResetCodeExpiry < DateTime.UtcNow)
+                return ServiceResult.Failure("انتهت صلاحية رمز التحقق، الرجاء طلب رمز جديد.");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+            if (!result.Succeeded)
+                return ServiceResult.Failure("حدث خطأ أثناء تغيير كلمة المرور.");
+
+            return ServiceResult.SuccessMessage("تم تغيير كلمة المرور بنجاح.");
+        }
+        
+        public async Task<ServiceResult> AuthMeAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+
+            var response = new AuthMeResponse
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber!
+            };
+            return ServiceResult.SuccessWithData(response, "تم جلب معلومات المستخدم");
+        }*/
     }
 }
