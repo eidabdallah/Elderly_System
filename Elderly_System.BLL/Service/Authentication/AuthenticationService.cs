@@ -1,4 +1,5 @@
-﻿using ElderlySystem.BLL.Helpers;
+﻿using EderlySystem.DAL.Enums;
+using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.DTO.Request.Auth;
 using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.Buffers.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Elderly_System.BLL.Service.Authentication
 {
@@ -80,6 +85,48 @@ namespace Elderly_System.BLL.Service.Authentication
                 return "email confirmed successfully";
             }
             return "email confirmation failed";
+        }
+
+        public async Task<ServiceResult> LoginAsync(LoginRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user is null)
+                return ServiceResult.Failure("خطأ في الايميل أو كلمة السر");
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, true);
+            if (result.Succeeded)
+            {
+                if (user.Status == Status.Pending) return ServiceResult.SuccessMessage("تم تسجيل الدخول بنجاح ، لكن حسابك لم يتم القبول عليه بعد");
+                var Token = await CreateTokenAsync(user);
+                return ServiceResult.SuccessWithData(Token, "تم تسجيل الدخول بنجاح.");
+            }
+            else if (result.IsLockedOut) return ServiceResult.Failure("تم قفل الحساب ، يرجى التواصل مع الادارة للاستفسار.");
+            else if (result.IsNotAllowed) return ServiceResult.Failure("يرجى تأكيد البريد الإلكتروني أولاً.");
+            else return ServiceResult.Failure("خطا في الايميل او كلمة السر");
+
+        }
+        private async Task<string> CreateTokenAsync(ApplicationUser user)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("jwtOptions")["SecretKey"]!));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(24),
+                signingCredentials: credentials
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

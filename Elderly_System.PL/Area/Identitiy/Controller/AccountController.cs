@@ -36,6 +36,18 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
 
             return Redirect(page);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var result = await _authenticationService.LoginAsync(request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            if (result.Data != null)
+                return Ok(new { message = result.Message, token = result.Data });
+            return Ok(new { message = result.Message });
+        }
 
     }
 }
