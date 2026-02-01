@@ -10,7 +10,7 @@ namespace Elderly_System.BLL.Service.Authentication
         Task<ServiceResult> LoginAsync(LoginRequest request);
         Task<string> ConfirmEmailAsync(string token, string userId);
         Task<ServiceResult> ForgotPasswordAsync(ForgotPasswordRequest forgotPasswordRequest);
-        //Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
+        Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest);
         //Task<ServiceResult> AuthMeAsync(string userId);
     }
 }

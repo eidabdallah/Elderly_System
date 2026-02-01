@@ -55,7 +55,7 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
                 return BadRequest(new { message = result.Message });
             return Ok(new { message = result.Message });
         }
-        /*[HttpPatch("reset-password")]
+        [HttpPatch("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             var result = await _authenticationService.ResetPasswordAsync(request);
@@ -63,7 +63,7 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
                 return BadRequest(new { message = result.Message });
             return Ok(new { message = result.Message });
         }
-        [Authorize]
+        /*[Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> AuthMe()
         {

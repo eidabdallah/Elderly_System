@@ -161,7 +161,7 @@ namespace Elderly_System.BLL.Service.Authentication
             return ServiceResult.SuccessMessage("تم إرسال رمز إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
         }
 
-        /*public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest request)
+        public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null)
@@ -178,10 +178,15 @@ namespace Elderly_System.BLL.Service.Authentication
             if (!result.Succeeded)
                 return ServiceResult.Failure("حدث خطأ أثناء تغيير كلمة المرور.");
 
+            user.CodeResetPassword = null;
+            user.PasswordResetCodeExpiry = null;
+            await _userManager.UpdateAsync(user);
+
+
             return ServiceResult.SuccessMessage("تم تغيير كلمة المرور بنجاح.");
         }
         
-        public async Task<ServiceResult> AuthMeAsync(string userId)
+        /*public async Task<ServiceResult> AuthMeAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
