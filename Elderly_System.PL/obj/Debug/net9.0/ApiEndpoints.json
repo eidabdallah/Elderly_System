@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.DonationController",
+    "Method": "Create",
+    "RelativePath": "api/Admin/Donation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Elderly_System.DAL.DTO.Request.Donation.DonationCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/Identity/Account/ConfirmEmail",

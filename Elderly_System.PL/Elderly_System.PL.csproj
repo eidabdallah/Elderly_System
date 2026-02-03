@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Elderly_System.BLL\Elderly_System.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Area\Admin\Controller\" />
+  </ItemGroup>
+
 </Project>

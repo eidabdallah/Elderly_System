@@ -2,7 +2,7 @@
 using ElderlySystem.DAL.DTO.Request.Auth;
 using Microsoft.AspNetCore.Http;
 
-namespace Elderly_System.BLL.Service.Authentication
+namespace Elderly_System.BLL.Service.Interface
 {
     public interface IAuthenticationService
     {

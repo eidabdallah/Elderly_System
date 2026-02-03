@@ -1,4 +1,4 @@
-﻿using Elderly_System.BLL.Service.Authentication;
+﻿using Elderly_System.BLL.Service.Interface;
 using ElderlySystem.DAL.DTO.Request.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

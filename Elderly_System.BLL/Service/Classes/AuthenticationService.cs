@@ -1,4 +1,5 @@
 ﻿using EderlySystem.DAL.Enums;
+using Elderly_System.BLL.Service.Interface;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.DTO.Request.Auth;
 using ElderlySystem.DAL.DTO.Response.User;
@@ -9,12 +10,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Elderly_System.BLL.Service.Authentication
+namespace Elderly_System.BLL.Service.Classes
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -24,7 +24,8 @@ namespace Elderly_System.BLL.Service.Authentication
         private readonly IEmailSender _emailSender;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager
-           , IConfiguration configuration, IEmailSender emailSender){
+           , IConfiguration configuration, IEmailSender emailSender)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
@@ -186,7 +187,7 @@ namespace Elderly_System.BLL.Service.Authentication
 
             return ServiceResult.SuccessMessage("تم تغيير كلمة المرور بنجاح.");
         }
-        
+
         public async Task<ServiceResult> AuthMeAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
