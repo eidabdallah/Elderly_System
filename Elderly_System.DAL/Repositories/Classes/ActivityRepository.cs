@@ -45,5 +45,16 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Activities.Remove(activity);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateActivityAsync(Activity activity)
+        {
+            _context.Activities.Update(activity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateParticipantAsync(Participant participant)
+        {
+            _context.Participants.Update(participant);
+            await _context.SaveChangesAsync();
+        }
     }
 }

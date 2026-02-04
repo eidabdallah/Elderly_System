@@ -28,7 +28,7 @@ namespace Elderly_System.BLL.Service.Classes
                 Description = request.Description,
                 Location = request.Location,
                 Date = request.Date.Date,
-                StartTime = request.StartTime,
+                StartTime = request.StartTime.Trim(),
                 AdminId = AdminId,
                 ActivityOrganizations = request.ActivityOrganizations.Select(p => new Participant
                 {
@@ -50,7 +50,7 @@ namespace Elderly_System.BLL.Service.Classes
                 Description = a.Description,
                 Location = a.Location,
                 Date = a.Date.ToString("dd/MM/yyyy"),
-                StartTime = a.StartTime.ToString(@"hh\:mm"),
+                StartTime = a.StartTime,
                 ActivityOrganizations = (a.ActivityOrganizations != null && a.ActivityOrganizations.Count > 0)
                     ? a.ActivityOrganizations.Select(p => new ParticipantResponse
                     {
@@ -73,7 +73,7 @@ namespace Elderly_System.BLL.Service.Classes
                 Description = a.Description,
                 Location = a.Location,
                 Date = a.Date.ToString("dd/MM/yyyy"),
-                StartTime = a.StartTime.ToString(@"hh\:mm"),
+                StartTime = a.StartTime,
                 ActivityOrganizations = (a.ActivityOrganizations != null && a.ActivityOrganizations.Count > 0)
                     ? a.ActivityOrganizations.Select(p => new ParticipantResponse
                     {
@@ -91,6 +91,73 @@ namespace Elderly_System.BLL.Service.Classes
 
             await _repository.DeleteActivityAsync(activity);
             return ServiceResult.SuccessMessage("تم حذف النشاط بنجاح.");
+        }
+        public async Task<ServiceResult> UpdateActivityAsync(int activityId, ActivityUpdateRequest request)
+        {
+            var activity = await _repository.GetActivityByIdAsync(activityId);
+            if (activity == null)
+                return ServiceResult.Failure("النشاط غير موجود.");
+
+            bool sentAny = request.ActivityName != null || request.Description != null || request.Location != null || request.Date.HasValue ||
+                request.StartTime != null || request.UpdateParticipantId.HasValue || request.UpdateOrganizationName != null;
+
+            if (!sentAny)
+                return ServiceResult.Failure("لم يتم إرسال أي بيانات للتعديل.");
+
+            bool activityChanged = request.ActivityName != null || request.Description != null || request.Location != null ||
+                request.Date.HasValue || request.StartTime != null;
+
+            if (request.ActivityName != null)
+            {
+                if (string.IsNullOrWhiteSpace(request.ActivityName))
+                    return ServiceResult.Failure("اسم النشاط لا يمكن أن يكون فارغًا.");
+                activity.ActivityName = request.ActivityName.Trim();
+            }
+            if (request.Description != null)
+            {
+                activity.Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim();
+            }
+            if (request.Location != null)
+            {
+                if (string.IsNullOrWhiteSpace(request.Location))
+                    return ServiceResult.Failure("الموقع لا يمكن أن يكون فارغًا.");
+                activity.Location = request.Location.Trim();
+            }
+
+            if (request.Date.HasValue)
+                activity.Date = request.Date.Value.Date;
+
+            if (request.StartTime != null)
+                activity.StartTime = request.StartTime;
+
+            if (activityChanged)
+                await _repository.UpdateActivityAsync(activity);
+
+            bool participantUpdateSent = request.UpdateParticipantId.HasValue || request.UpdateOrganizationName != null;
+
+            if (participantUpdateSent)
+            {
+                if (!request.UpdateParticipantId.HasValue)
+                    return ServiceResult.Failure("معرف المشارك مطلوب لتعديل الجهة المشاركة.");
+
+                if (request.UpdateOrganizationName == null)
+                    return ServiceResult.Failure("اسم المشارك مطلوب لتعديل الجهة المشاركة.");
+
+                if (string.IsNullOrWhiteSpace(request.UpdateOrganizationName))
+                    return ServiceResult.Failure("اسم الجهة لا يمكن أن يكون فارغًا.");
+
+                var participant = activity.ActivityOrganizations
+                    .FirstOrDefault(p => p.Id == request.UpdateParticipantId.Value);
+
+                if (participant == null)
+                    return ServiceResult.Failure("الجهة المشاركة غير موجودة ضمن هذا النشاط.");
+                if (participant.ActivityId != activityId)
+                    return ServiceResult.Failure("الجهة المشاركة غير تابعة لهذا النشاط.");
+                participant.OrganizationName = request.UpdateOrganizationName.Trim();
+                await _repository.UpdateParticipantAsync(participant);
+            }
+
+            return ServiceResult.SuccessMessage("تم تعديل النشاط بنجاح.");
         }
     }
 }

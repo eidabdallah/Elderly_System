@@ -27,7 +27,7 @@ namespace Elderly_System.PL.Area.Admin.Controller
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var activity = await _service.GetActivityByIdAsync(id);
             if (activity == null)
@@ -50,9 +50,19 @@ namespace Elderly_System.PL.Area.Admin.Controller
             return Ok(new { message = result.Message });
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _service.DeleteActivityAsync(id);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ActivityUpdateRequest request)
+        {
+            var result = await _service.UpdateActivityAsync(id, request);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });

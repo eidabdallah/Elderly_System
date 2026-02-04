@@ -21,7 +21,8 @@ namespace ElderlySystem.DAL.Model
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "وقت بدء النشاط مطلوب.")]
-        public TimeSpan StartTime { get; set; }
+        [StringLength(20, ErrorMessage = "وقت النشاط يجب ألا يتجاوز 20 حرف.")]
+        public string StartTime { get; set; } = null!;
         public string AdminId { get; set; } = null!;
         public ApplicationUser Admin { get; set; } = null!;
         [MinLength(1, ErrorMessage = "يجب إضافة جهة منظمة أو مشارك واحد على الأقل.")]

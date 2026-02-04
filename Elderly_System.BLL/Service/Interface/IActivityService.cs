@@ -10,7 +10,6 @@ namespace Elderly_System.BLL.Service.Interface
         Task<List<ActivityResponse>> GetAllActivitiesAsync();
         Task<ActivityResponse?> GetActivityByIdAsync(int id);
         Task<ServiceResult> DeleteActivityAsync(int activityId);
-
-
+        Task<ServiceResult> UpdateActivityAsync(int activityId, ActivityUpdateRequest request);
     }
 }

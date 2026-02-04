@@ -18,7 +18,8 @@ namespace Elderly_System.DAL.DTO.Request.Activity
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "وقت بدء النشاط مطلوب.")]
-        public TimeSpan StartTime { get; set; }
+        [StringLength(20)]
+        public string StartTime { get; set; } = null!;
 
         [MinLength(1, ErrorMessage = "يجب إضافة جهة منظمة أو مشارك واحد على الأقل.")]
         public List<ParticipantCreateRequest> ActivityOrganizations { get; set; } = new();
