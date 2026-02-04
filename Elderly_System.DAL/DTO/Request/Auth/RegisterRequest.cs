@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Elderly_System.DAL.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using EderlySystem.DAL.Enums;
 
 namespace ElderlySystem.DAL.DTO.Request.Auth
 {

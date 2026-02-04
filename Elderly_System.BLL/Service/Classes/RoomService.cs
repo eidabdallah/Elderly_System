@@ -1,9 +1,11 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Room;
+using Elderly_System.DAL.DTO.Response.Room;
+using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.Model;
-using EderlySystem.DAL.Enums;
+using Mapster;
 
 namespace Elderly_System.BLL.Service.Classes
 {
@@ -16,6 +18,23 @@ namespace Elderly_System.BLL.Service.Classes
         {
             _repository = Repository;
             _file = file;
+        }
+        public async Task<ServiceResult> GetAllRoomAsync()
+        {
+            var result = await _repository.GetAllRoomAsync();
+            var rooms = result.Adapt<List<RoomResponse>>();
+            return ServiceResult.SuccessWithData(rooms, "تم جلب جميع الغرف");
+        }
+        public async Task<ServiceResult> GetRoomByIdAsync(int id)
+        {
+            var result = await _repository.GetRoomByIdWithImagesAsync(id);
+            if (result is null)
+                return ServiceResult.Failure("الغرفة غير متوفرة.");
+            var roomDto = result.Adapt<RoomDetailsResponse>();
+            roomDto.Images = result.RoomImages
+                .Select(ri => ri.Url)
+                .ToList();
+            return ServiceResult.SuccessWithData(roomDto, "تم جلب الغرف بنجاح");
         }
         public async Task<ServiceResult> AddRoomAsync(RoomCreateRequest request)
         {
@@ -42,6 +61,23 @@ namespace Elderly_System.BLL.Service.Classes
             }
             await _repository.AddRoomAsync(room);
             return ServiceResult.SuccessMessage("تم إضافة الغرفة بنجاح.");
+        }
+        public async Task<ServiceResult> DeleteRoomAsync(int id)
+        {
+            var room = await _repository.GetRoomByIdWithImagesAsync(id);
+            if (room is null)
+                return ServiceResult.Failure("الغرفة غير متوفرة.");
+            if (room.CurrentCapacity > 0)
+                return ServiceResult.Failure("لا يمكن حذف الغرفة لانها تحتوي على مقيمين حاليا");
+            foreach (var img in room.RoomImages.ToList())
+            {
+                await _file.DeleteAsync(img.PublicId);
+            }
+            var deleted = await _repository.DeleteRoomAsync(room);
+            if (!deleted)
+                return ServiceResult.Failure("حدث خطأ أثناء حذف الغرفة.");
+            return ServiceResult.SuccessMessage("تم حذف الغرفة بنجاح.");
+
         }
     }
 }

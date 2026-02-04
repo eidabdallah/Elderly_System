@@ -1,4 +1,4 @@
-﻿namespace EderlySystem.DAL.Enums
+﻿namespace Elderly_System.DAL.Enums
 {
     public enum Status
     {

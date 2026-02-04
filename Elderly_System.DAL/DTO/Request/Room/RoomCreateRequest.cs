@@ -1,4 +1,4 @@
-﻿using ElderlySystem.DAL.Enums;
+﻿using Elderly_System.DAL.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Elderly_System.DAL.DTO.Request.Room

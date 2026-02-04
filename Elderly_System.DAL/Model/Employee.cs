@@ -1,4 +1,4 @@
-﻿using EderlySystem.DAL.Enums;
+﻿using Elderly_System.DAL.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ElderlySystem.DAL.Model

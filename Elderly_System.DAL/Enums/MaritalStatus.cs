@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EderlySystem.DAL.Enums
+﻿namespace Elderly_System.DAL.Enums
 {
     public enum MaritalStatus
     {

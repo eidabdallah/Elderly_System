@@ -1,5 +1,4 @@
-﻿using EderlySystem.DAL.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace ElderlySystem.DAL.Model

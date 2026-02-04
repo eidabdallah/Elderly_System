@@ -16,10 +16,26 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             return await _context.Rooms.AnyAsync(e => e.RoomNumber == RoomNumber);
         }
+        public async Task<Room?> GetRoomByIdWithImagesAsync(int id)
+        {
+            return await _context.Rooms
+                .Include(r => r.RoomImages)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
         public async Task AddRoomAsync(Room room)
         {
             await _context.AddAsync(room);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<Room>> GetAllRoomAsync()
+        {
+            return await _context.Rooms.ToListAsync();
+        }
+        public async Task<bool> DeleteRoomAsync(Room room)
+        {
+            _context.RoomImages.RemoveRange(room.RoomImages);
+            _context.Rooms.Remove(room);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

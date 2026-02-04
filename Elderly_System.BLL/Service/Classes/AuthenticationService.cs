@@ -1,5 +1,5 @@
-﻿using EderlySystem.DAL.Enums;
-using Elderly_System.BLL.Service.Interface;
+﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.Enums;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.DTO.Request.Auth;
 using ElderlySystem.DAL.DTO.Response.User;

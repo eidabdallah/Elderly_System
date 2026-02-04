@@ -6,5 +6,8 @@ namespace Elderly_System.DAL.Repositories.Interfaces
     {
         Task AddRoomAsync(Room room);
         Task<bool> CheckRoomNumberAsync(int RoomNumber);
+        Task<Room?> GetRoomByIdWithImagesAsync(int id);
+        Task<List<Room>> GetAllRoomAsync();
+        Task<bool> DeleteRoomAsync(Room room);
     }
 }
