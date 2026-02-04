@@ -46,5 +46,19 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Rooms.Update(room);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> UpdateRoomImagesAsync(Room room, List<(string Url, string PublicId)> newImages)
+        {
+            _context.RoomImages.RemoveRange(room.RoomImages);
+            foreach (var (url, publicId) in newImages)
+            {
+                room.RoomImages.Add(new RoomImage
+                {
+                    Url = url,
+                    PublicId = publicId,
+                    RoomId = room.Id
+                });
+            }
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

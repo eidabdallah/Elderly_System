@@ -67,5 +67,26 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
+        [HttpPatch("{id}")]
+
+        public async Task<IActionResult> UpdateRoom([FromRoute] int id, [FromBody] UpdateRoomRequest request)
+        {
+            var room = await _service.UpdateRoomAsync(request, id);
+            if (!room.Success)
+            {
+                return BadRequest(new { message = room.Message });
+            }
+            return Ok(new { message = room.Message });
+        }
+        [HttpPatch("Change-imageRoom/{RoomId}")]
+        public async Task<IActionResult> ChangeImageRoom([FromRoute] int RoomId, [FromForm] ImageRoomRequest request)
+        {
+            var result = await _service.ChangeImageRoomAsync(RoomId, request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
     }
 }

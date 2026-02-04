@@ -242,6 +242,48 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.RoomController",
+    "Method": "UpdateRoom",
+    "RelativePath": "api/Admin/Room/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Room.UpdateRoomRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.RoomController",
+    "Method": "ChangeImageRoom",
+    "RelativePath": "api/Admin/Room/Change-imageRoom/{RoomId}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "RoomId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "Images",
+        "Type": "System.Collections.Generic.List\u00601[[Microsoft.AspNetCore.Http.IFormFile, Microsoft.AspNetCore.Http.Features, Version=9.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.RoomController",
     "Method": "ToggleStatus",
     "RelativePath": "api/Admin/Room/toggle-status/{RoomId}",
     "HttpMethod": "PATCH",

@@ -11,5 +11,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<bool> DeleteRoomAsync(Room room);
         Task<Room?> GetRoomByIdAsync(int id);
         Task UpdateRoomAsync(Room room);
+        Task<bool> UpdateRoomImagesAsync(Room room, List<(string Url, string PublicId)> newImages);
     }
 }

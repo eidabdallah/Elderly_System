@@ -96,6 +96,50 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.UpdateRoomAsync(room);
             return ServiceResult.SuccessMessage("تم تغيير حالة الغرفة بنجاح.");
         }
+        public async Task<ServiceResult> UpdateRoomAsync(UpdateRoomRequest request, int id)
+        {
+            var room = await _repository.GetRoomByIdAsync(id);
+            if (room is null)
+                return ServiceResult.Failure("الغرفة غير متوفره ");
+
+            if (request.Price is not null)
+                room.Price = request.Price.Value;
+            if (request.RoomType is not null)
+                room.RoomType = request.RoomType.Value;
+            if (request.Capacity is not null)
+            {
+                if (request.Capacity < room.CurrentCapacity)
+                    return ServiceResult.Failure("السعة الجديدة أقل من السعة الحالية، غير مسموح.");
+
+                room.Capacity = request.Capacity.Value;
+            }
+            if (!string.IsNullOrWhiteSpace(request.Description))
+                room.Description = request.Description;
+            await _repository.UpdateRoomAsync(room);
+            return ServiceResult.SuccessMessage("تم تحديث بيانات الغرفة بنجاح.");
+        }
+        public async Task<ServiceResult> ChangeImageRoomAsync(int id, ImageRoomRequest request)
+        {
+            var room = await _repository.GetRoomByIdWithImagesAsync(id);
+            if (room is null)
+                return ServiceResult.Failure("الغرفة غير متوفرة.");
+
+            if (request.Images is null || !request.Images.Any())
+                return ServiceResult.Failure("يجب إرسال صورة واحدة على الأقل.");
+            foreach (var img in room.RoomImages.ToList())
+            {
+                await _file.DeleteAsync(img.PublicId);
+            }
+
+            var uploadedImages = await _file.UploadMultipleAsync(request.Images, "rooms");
+
+            var updated = await _repository.UpdateRoomImagesAsync(room, uploadedImages);
+            if (!updated)
+                return ServiceResult.Failure("حدث خطأ أثناء تحديث صور الغرفة.");
+
+            return ServiceResult.SuccessMessage("تم تحديث صور الغرفة بنجاح.");
+
+        }
 
     }
 }
