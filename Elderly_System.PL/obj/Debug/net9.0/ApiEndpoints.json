@@ -8,8 +8,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "Elderly_System.DAL.DTO.Request.Donation.DonationCreateDTO",
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Donation.DonationCreateRequest",
         "IsRequired": true
       }
     ],

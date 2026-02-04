@@ -26,7 +26,6 @@ namespace ElderlySystem.DAL.Model
         [MinLength(1, ErrorMessage = "يجب إدخال مهارة واحدة على الأقل.")]
         public ICollection<string> Skills { get; set; } = new List<string>();
         public ICollection<WorkExperience> WorkExperiences { get; set; } = new List<WorkExperience>();
-        public ICollection<Donation> Donations { get; set; } = new List<Donation>();
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
     }
 }

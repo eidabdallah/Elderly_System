@@ -1,28 +1,21 @@
 ﻿using Elderly_System.DAL.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace ElderlySystem.DAL.Model
+namespace Elderly_System.DAL.DTO.Request.Donation
 {
-    public class Donation
+    public class DonationCreateRequest
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "اسم المتبرع مطلوب.")]
         [StringLength(100, ErrorMessage = "اسم المتبرع يجب ألا يتجاوز 100 حرف.")]
         public string DonorName { get; set; } = null!;
+        public DateTime? DonationDate { get; set; }
 
-        [Required(ErrorMessage = "تاريخ التبرع مطلوب.")]
-        public DateTime DonationDate { get; set; } = DateTime.Now;
-
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required(ErrorMessage = "نوع التبرع مطلوب.")]
         public DonationType DonationType { get; set; }
         public decimal? MonetaryAmount { get; set; }
         public string? Currency { get; set; }
-
-        [Required(ErrorMessage = "الموظف المسؤول مطلوب.")]
-        public string AdminId { get; set; } = null!;
-        public ApplicationUser Admin { get; set; } = null!;
-        public ICollection<Good> Goods { get; set; } = new List<Good>();
+        public List<DonationGoodRequest>? Goods { get; set; }
     }
 }
-

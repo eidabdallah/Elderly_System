@@ -4,6 +4,7 @@ using ElderlySystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elderly_System.DAL.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260204073143_UpdateDonationModelWithValidation")]
+    partial class UpdateDonationModelWithValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,10 +182,6 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AdminId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
@@ -197,13 +196,17 @@ namespace Elderly_System.DAL.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal?>("MonetaryAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Donations");
                 });
@@ -1049,13 +1052,13 @@ namespace Elderly_System.DAL.Data.Migrations
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Donation", b =>
                 {
-                    b.HasOne("ElderlySystem.DAL.Model.ApplicationUser", "Admin")
+                    b.HasOne("ElderlySystem.DAL.Model.Employee", "Employee")
                         .WithMany("Donations")
-                        .HasForeignKey("AdminId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Admin");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.ElderlySponsor", b =>
@@ -1367,11 +1370,6 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Navigation("ActivityOrganizations");
                 });
 
-            modelBuilder.Entity("ElderlySystem.DAL.Model.ApplicationUser", b =>
-                {
-                    b.Navigation("Donations");
-                });
-
             modelBuilder.Entity("ElderlySystem.DAL.Model.Donation", b =>
                 {
                     b.Navigation("Goods");
@@ -1436,6 +1434,8 @@ namespace Elderly_System.DAL.Data.Migrations
             modelBuilder.Entity("ElderlySystem.DAL.Model.Employee", b =>
                 {
                     b.Navigation("Activities");
+
+                    b.Navigation("Donations");
 
                     b.Navigation("WorkExperiences");
                 });

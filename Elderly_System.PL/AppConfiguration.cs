@@ -2,6 +2,8 @@
 using EA_Ecommerce.PL.utils;
 using Elderly_System.BLL.Service.Classes;
 using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.Repositories.Classes;
+using Elderly_System.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Elderly_System.PL
@@ -13,8 +15,8 @@ namespace Elderly_System.PL
             services.AddScoped<ISeedData, SeedData>();
             services.AddScoped<IAuthenticationService,AuthenticationService>();
             services.AddScoped<IEmailSender, EmailSetting>();
-
-
+            services.AddScoped<IDonationService, DonationService>();
+            services.AddScoped<IDonationRepository,DonationRepository>();
         }
     }
 }
