@@ -34,6 +34,8 @@ namespace ElderlySystem.DAL.Model
         public string PhoneNumberForValidation => PhoneNumber ?? string.Empty;
 
         public ICollection<Donation> Donations { get; set; } = new List<Donation>();
+        public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+
 
     }
 }

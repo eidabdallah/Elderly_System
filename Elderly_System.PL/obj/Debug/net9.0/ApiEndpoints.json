@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ActivityController",
+    "Method": "Create",
+    "RelativePath": "api/Admin/Activity",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Activity.ActivityCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.DonationController",
     "Method": "GetAll",
     "RelativePath": "api/Admin/Donation",

@@ -17,6 +17,8 @@ namespace Elderly_System.PL
             services.AddScoped<IEmailSender, EmailSetting>();
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IDonationRepository,DonationRepository>();
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
         }
     }
 }
