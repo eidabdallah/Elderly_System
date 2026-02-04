@@ -83,5 +83,14 @@ namespace Elderly_System.BLL.Service.Classes
                     : null
             };
         }
+        public async Task<ServiceResult> DeleteActivityAsync(int activityId)
+        {
+            var activity = await _repository.GetActivityByIdAsync(activityId);
+            if (activity == null)
+                return ServiceResult.Failure("النشاط غير موجود.");
+
+            await _repository.DeleteActivityAsync(activity);
+            return ServiceResult.SuccessMessage("تم حذف النشاط بنجاح.");
+        }
     }
 }

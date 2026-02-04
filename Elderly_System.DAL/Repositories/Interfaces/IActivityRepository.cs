@@ -7,5 +7,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task AddActivityAsync(Activity activity);
         Task<Activity?> GetActivityByIdAsync(int id);
         Task<List<Activity>> GetAllActivitiesAsync();
+        Task DeleteActivityAsync(Activity activity);
     }
 }

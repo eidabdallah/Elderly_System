@@ -9,6 +9,8 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> CreateActivityAsync(ActivityCreateRequest request, string employeeId);
         Task<List<ActivityResponse>> GetAllActivitiesAsync();
         Task<ActivityResponse?> GetActivityByIdAsync(int id);
+        Task<ServiceResult> DeleteActivityAsync(int activityId);
+
 
     }
 }

@@ -37,5 +37,13 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .OrderByDescending(a => a.Date)
                 .ToListAsync();
         }
+        public async Task DeleteActivityAsync(Activity activity)
+        {
+            if (activity.ActivityOrganizations != null && activity.ActivityOrganizations.Count > 0)
+                _context.Participants.RemoveRange(activity.ActivityOrganizations);
+
+            _context.Activities.Remove(activity);
+            await _context.SaveChangesAsync();
+        }
     }
 }
