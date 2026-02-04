@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Donation;
+using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,6 +18,20 @@ namespace Elderly_System.PL.Area.Admin.Controller
         public DonationController(IDonationService service)
         {
             _service = service;
+        }
+        [HttpGet("")]
+        public async Task<IActionResult> GetAll()
+        {
+            var donations = await _service.GetAllDonationsAsync();
+            return Ok(new { message = "تم جلب التبرعات بنجاح" , data = donations });
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var donation = await _service.GetDonationByIdAsync(id);
+            if (donation == null)
+                return NotFound(new { message = "التبرع غير موجود." });
+            return Ok(new { message = "تم جلب التبرع بنجاح", data = donation });
         }
         [HttpPost("")]
         public async Task<IActionResult> Create([FromBody] DonationCreateRequest request)
@@ -50,6 +65,5 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
-
     }
 }

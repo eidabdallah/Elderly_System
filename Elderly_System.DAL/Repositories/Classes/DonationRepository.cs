@@ -42,6 +42,13 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Goods.Update(good);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Donation>> GetAllDonationsAsync()
+        {
+            return await _context.Donations
+                .Include(d => d.Goods)
+                .OrderByDescending(d => d.DonationDate)
+                .ToListAsync();
+        }
 
     }
 }

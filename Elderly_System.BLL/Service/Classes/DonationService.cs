@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Donation;
+using Elderly_System.DAL.DTO.Response.Donation;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
@@ -144,8 +145,54 @@ namespace Elderly_System.BLL.Service.Classes
                 return ServiceResult.SuccessMessage("تم تعديل التبرع العيني بنجاح.");
             }
         }
+        public async Task<List<DonationResponse>> GetAllDonationsAsync()
+        {
+            var donations = await _repository.GetAllDonationsAsync();
 
+            return donations.Select(d => new DonationResponse
+            {
+                Id = d.Id,
+                DonorName = d.DonorName,
+                DonationDate = d.DonationDate.ToString("dd/MM/yyyy"),
 
+                DonationType = d.DonationType == DonationType.Cash ? "نقدي" : "عيني",
+
+                MonetaryAmount = d.MonetaryAmount,
+                Currency = d.Currency,
+
+                Goods = (d.Goods != null && d.Goods.Count > 0)
+                    ? d.Goods.Select(g => new GoodResponse
+                    {
+                        Id = g.Id,
+                        NameGood = g.NameGood,
+                        Quantity = g.Quantity
+                    }).ToList()
+                    : null
+            }).ToList();
+        }
+        public async Task<DonationResponse?> GetDonationByIdAsync(int id)
+        {
+            var d = await _repository.GetDonationByIdAsync(id);
+            if (d == null) return null;
+
+            return new DonationResponse
+            {
+                Id = d.Id,
+                DonorName = d.DonorName,
+                DonationDate = d.DonationDate.ToString("yyyy-MM-dd"),
+                DonationType = d.DonationType == DonationType.Cash ? "نقدي" : "عيني",
+                MonetaryAmount = d.MonetaryAmount,
+                Currency = d.Currency,
+                Goods = (d.Goods != null && d.Goods.Count > 0)
+                    ? d.Goods.Select(g => new GoodResponse
+                    {
+                        Id = g.Id,
+                        NameGood = g.NameGood,
+                        Quantity = g.Quantity
+                    }).ToList()
+                    : null
+            };
+        }
     }
 
 }
