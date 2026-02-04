@@ -98,6 +98,7 @@ namespace Elderly_System.BLL.Service.Classes
             if (result.Succeeded)
             {
                 if (user.Status == Status.Pending) return ServiceResult.SuccessMessage("تم تسجيل الدخول بنجاح ، لكن حسابك لم يتم القبول عليه بعد");
+                if (user.Status == Status.InActive) return ServiceResult.SuccessMessage("تم تسجيل الدخول بنجاح ، لكن حسابك مقفول من الادمن");
                 var Token = await CreateTokenAsync(user);
                 return ServiceResult.SuccessWithData(Token, "تم تسجيل الدخول بنجاح.");
             }
