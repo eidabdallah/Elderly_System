@@ -19,6 +19,10 @@ namespace Elderly_System.PL
             services.AddScoped<IDonationRepository,DonationRepository>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IActivityRepository, ActivityRepository>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+
         }
     }
 }
