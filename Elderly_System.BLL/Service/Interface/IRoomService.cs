@@ -9,5 +9,6 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> GetRoomByIdAsync(int id);
         Task<ServiceResult> GetAllRoomAsync();
         Task<ServiceResult> DeleteRoomAsync(int id);
+        Task<ServiceResult> ToggleRoomStatusAsync(int roomId);
     }
 }

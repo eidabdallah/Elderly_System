@@ -9,5 +9,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Room?> GetRoomByIdWithImagesAsync(int id);
         Task<List<Room>> GetAllRoomAsync();
         Task<bool> DeleteRoomAsync(Room room);
+        Task<Room?> GetRoomByIdAsync(int id);
+        Task UpdateRoomAsync(Room room);
     }
 }

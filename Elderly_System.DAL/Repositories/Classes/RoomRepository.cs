@@ -37,5 +37,14 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Rooms.Remove(room);
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<Room?> GetRoomByIdAsync(int id)
+        {
+            return await _context.Rooms.FindAsync(id);
+        }
+        public async Task UpdateRoomAsync(Room room)
+        {
+            _context.Rooms.Update(room);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -57,5 +57,15 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
+        [HttpPatch("toggle-status/{RoomId}")]
+        public async Task<IActionResult> ToggleStatus([FromRoute] int RoomId)
+        {
+            var result = await _service.ToggleRoomStatusAsync(RoomId);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
     }
 }

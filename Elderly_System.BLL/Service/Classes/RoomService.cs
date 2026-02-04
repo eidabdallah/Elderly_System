@@ -79,5 +79,23 @@ namespace Elderly_System.BLL.Service.Classes
             return ServiceResult.SuccessMessage("تم حذف الغرفة بنجاح.");
 
         }
+        public async Task<ServiceResult> ToggleRoomStatusAsync(int roomId)
+        {
+            var room = await _repository.GetRoomByIdAsync(roomId);
+            if (room is null)
+                return ServiceResult.Failure("الغرفة غير متوفرة.");
+
+            if (room.Status == Status.Active)
+            {
+                if (room.CurrentCapacity > 0)
+                    return ServiceResult.Failure("لا يمكن إيقاف الغرفة لأنها تحتوي على مقيمين حالياً.");
+            }
+            room.Status = room.Status == Status.Active
+                ? Status.InActive
+                : Status.Active;
+            await _repository.UpdateRoomAsync(room);
+            return ServiceResult.SuccessMessage("تم تغيير حالة الغرفة بنجاح.");
+        }
+
     }
 }
