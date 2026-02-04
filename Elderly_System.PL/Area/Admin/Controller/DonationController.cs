@@ -21,13 +21,35 @@ namespace Elderly_System.PL.Area.Admin.Controller
         [HttpPost("")]
         public async Task<IActionResult> Create([FromBody] DonationCreateRequest request)
         {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _service.CreateDonationAsync(request, UserId);
+            var AdminId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(AdminId))
+                return Unauthorized(new { message = "تعذر تحديد المستخدم من التوكن." });
+            var result = await _service.CreateDonationAsync(request, AdminId);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message });
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _service.DeleteDonationAsync(id);
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+            return Ok(new { message = result.Message });
+        }
+        /*[HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] DonationUpdateRequest request)
+        {
+            var result = await _service.UpdateDonationAsync(id, request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }*/
+
     }
 }
