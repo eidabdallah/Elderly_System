@@ -31,6 +31,17 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Donations.Remove(donation);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateDonationAsync(Donation donation)
+        {
+            _context.Donations.Update(donation);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateGoodAsync(Good good)
+        {
+            _context.Goods.Update(good);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

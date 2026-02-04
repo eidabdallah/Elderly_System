@@ -40,7 +40,7 @@ namespace Elderly_System.PL.Area.Admin.Controller
                 return BadRequest(new { message = result.Message });
             return Ok(new { message = result.Message });
         }
-        /*[HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] DonationUpdateRequest request)
         {
             var result = await _service.UpdateDonationAsync(id, request);
@@ -49,7 +49,7 @@ namespace Elderly_System.PL.Area.Admin.Controller
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message });
-        }*/
+        }
 
     }
 }

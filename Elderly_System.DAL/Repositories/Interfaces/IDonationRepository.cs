@@ -7,5 +7,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task AddDonationAsync(Donation donation);
         Task<Donation?> GetDonationByIdAsync(int id);
         Task DeleteDonationAsync(Donation donation);
+        Task UpdateDonationAsync(Donation donation); 
+        Task UpdateGoodAsync(Good good);
     }
 }

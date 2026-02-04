@@ -69,75 +69,84 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.DeleteDonationAsync(donation);
             return ServiceResult.SuccessMessage("تم حذف التبرع بنجاح.");
         }
-        /*public async Task<ServiceResult> UpdateDonationAsync(int donationId, DonationUpdateRequest request)
+        public async Task<ServiceResult> UpdateDonationAsync(int donationId, DonationUpdateRequest request)
         {
             var donation = await _repository.GetDonationByIdAsync(donationId);
             if (donation == null)
                 return ServiceResult.Failure("التبرع غير موجود.");
 
-            // ===== Cash =====
             if (donation.DonationType == DonationType.Cash)
             {
                 if (request.GoodId.HasValue || request.NameGood != null || request.Quantity.HasValue)
                     return ServiceResult.Failure("لا يمكن تعديل عناصر عينية لتبرع نقدي.");
 
-                if (!request.MonetaryAmount.HasValue && request.Currency == null)
-                    return ServiceResult.Failure("أرسل MonetaryAmount أو Currency للتعديل.");
+                var wantsUpdateAmount = request.MonetaryAmount.HasValue;
+                var wantsUpdateCurrency = request.Currency != null;
 
-                if (request.MonetaryAmount.HasValue)
+                if (!wantsUpdateAmount && !wantsUpdateCurrency)
+                    return ServiceResult.Failure("أرسل المبلغ أو العملة الجديدة للتعديل.");
+                if (wantsUpdateAmount)
                 {
-                    if (request.MonetaryAmount.Value <= 0)
+                    if (request.MonetaryAmount!.Value <= 0)
                         return ServiceResult.Failure("قيمة التبرع يجب أن تكون أكبر من صفر.");
+
                     donation.MonetaryAmount = request.MonetaryAmount.Value;
                 }
-
-                if (request.Currency != null)
+                if (wantsUpdateCurrency)
                 {
                     if (string.IsNullOrWhiteSpace(request.Currency))
                         return ServiceResult.Failure("العملة لا يمكن أن تكون فارغة.");
-                    donation.Currency = request.Currency.Trim().ToUpper();
+
+                    donation.Currency = request.Currency.Trim() ;
                 }
 
-                await _repository.SaveChangesAsync();
+                await _repository.UpdateDonationAsync(donation);
                 return ServiceResult.SuccessMessage("تم تعديل التبرع النقدي بنجاح.");
             }
-
-            // ===== InKind =====
             else
             {
                 if (request.MonetaryAmount.HasValue || request.Currency != null)
                     return ServiceResult.Failure("لا يمكن تعديل مبلغ/عملة لتبرع عيني.");
 
                 if (!request.GoodId.HasValue)
-                    return ServiceResult.Failure("GoodId مطلوب لتعديل عنصر عيني.");
+                    return ServiceResult.Failure("معرف التبرع العيني مطلوب .");
 
                 var good = donation.Goods.FirstOrDefault(g => g.Id == request.GoodId.Value);
                 if (good == null)
                     return ServiceResult.Failure("العنصر غير موجود ضمن هذا التبرع.");
 
-                if (request.NameGood == null && !request.Quantity.HasValue)
-                    return ServiceResult.Failure("أرسل NameGood أو Quantity للتعديل.");
+                if (good.DonationId != donationId)
+                    return ServiceResult.Failure("العنصر غير تابع لهذا التبرع.");
 
-                if (request.NameGood != null)
+                var wantsUpdateName = request.NameGood != null;     
+                var wantsUpdateQty = request.Quantity.HasValue; 
+
+                if (!wantsUpdateName && !wantsUpdateQty)
+                    return ServiceResult.Failure("أرسل اسك التبرع أو الكمية للتعديل.");
+
+                if (wantsUpdateName)
                 {
                     if (string.IsNullOrWhiteSpace(request.NameGood))
                         return ServiceResult.Failure("اسم العنصر لا يمكن أن يكون فارغ.");
+
                     good.NameGood = request.NameGood.Trim();
                 }
 
-                if (request.Quantity.HasValue)
+                if (wantsUpdateQty)
                 {
                     if (request.Quantity.Value <= 0)
                         return ServiceResult.Failure("الكمية يجب أن تكون أكبر من صفر.");
+
                     good.Quantity = request.Quantity.Value;
                 }
 
-                await _repository.SaveChangesAsync();
+                await _repository.UpdateGoodAsync(good);
                 return ServiceResult.SuccessMessage("تم تعديل التبرع العيني بنجاح.");
             }
-        }*/
-    
         }
 
+
     }
+
+}
 

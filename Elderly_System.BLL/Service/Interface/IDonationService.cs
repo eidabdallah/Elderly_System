@@ -7,7 +7,7 @@ namespace Elderly_System.BLL.Service.Interface
     {
         Task<ServiceResult> CreateDonationAsync(DonationCreateRequest request, string AdminId);
         Task<ServiceResult> DeleteDonationAsync(int donationId);
-        //Task<ServiceResult> UpdateDonationAsync(int donationId, DonationUpdateRequest request);
+        Task<ServiceResult> UpdateDonationAsync(int donationId, DonationUpdateRequest request);
 
     }
 }
