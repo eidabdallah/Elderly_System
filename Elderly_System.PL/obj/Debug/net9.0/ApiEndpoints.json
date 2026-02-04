@@ -1,6 +1,16 @@
 [
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ActivityController",
+    "Method": "GetAll",
+    "RelativePath": "api/Admin/Activity",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ActivityController",
     "Method": "Create",
     "RelativePath": "api/Admin/Activity",
     "HttpMethod": "POST",
@@ -10,6 +20,22 @@
       {
         "Name": "request",
         "Type": "Elderly_System.DAL.DTO.Request.Activity.ActivityCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ActivityController",
+    "Method": "GetById",
+    "RelativePath": "api/Admin/Activity/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

@@ -19,6 +19,22 @@ namespace Elderly_System.PL.Area.Admin.Controller
         {
             _service = service;
         }
+        [HttpGet("")]
+        public async Task<IActionResult> GetAll()
+        {
+            var activities = await _service.GetAllActivitiesAsync();
+            return Ok(new { message = "تم جلب الأنشطة بنجاح", data = activities });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var activity = await _service.GetActivityByIdAsync(id);
+            if (activity == null)
+                return NotFound(new { message = "النشاط غير موجود." });
+
+            return Ok(new { message = "تم جلب النشاط بنجاح", data = activity });
+        }
         [HttpPost("")]
         public async Task<IActionResult> Create([FromBody] ActivityCreateRequest request)
         {

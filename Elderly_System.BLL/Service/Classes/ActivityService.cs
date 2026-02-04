@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Activity;
+using Elderly_System.DAL.DTO.Response.Activity;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.Model;
@@ -37,6 +38,50 @@ namespace Elderly_System.BLL.Service.Classes
 
             await _repository.AddActivityAsync(activity);
             return ServiceResult.SuccessMessage("تم إضافة النشاط بنجاح.");
+        }
+        public async Task<List<ActivityResponse>> GetAllActivitiesAsync()
+        {
+            var activities = await _repository.GetAllActivitiesAsync();
+
+            return activities.Select(a => new ActivityResponse
+            {
+                Id = a.Id,
+                ActivityName = a.ActivityName,
+                Description = a.Description,
+                Location = a.Location,
+                Date = a.Date.ToString("dd/MM/yyyy"),
+                StartTime = a.StartTime.ToString(@"hh\:mm"),
+                ActivityOrganizations = (a.ActivityOrganizations != null && a.ActivityOrganizations.Count > 0)
+                    ? a.ActivityOrganizations.Select(p => new ParticipantResponse
+                    {
+                        Id = p.Id,
+                        OrganizationName = p.OrganizationName
+                    }).ToList()
+                    : null
+            }).ToList();
+        }
+
+        public async Task<ActivityResponse?> GetActivityByIdAsync(int id)
+        {
+            var a = await _repository.GetActivityByIdAsync(id);
+            if (a == null) return null;
+
+            return new ActivityResponse
+            {
+                Id = a.Id,
+                ActivityName = a.ActivityName,
+                Description = a.Description,
+                Location = a.Location,
+                Date = a.Date.ToString("dd/MM/yyyy"),
+                StartTime = a.StartTime.ToString(@"hh\:mm"),
+                ActivityOrganizations = (a.ActivityOrganizations != null && a.ActivityOrganizations.Count > 0)
+                    ? a.ActivityOrganizations.Select(p => new ParticipantResponse
+                    {
+                        Id = p.Id,
+                        OrganizationName = p.OrganizationName
+                    }).ToList()
+                    : null
+            };
         }
     }
 }
