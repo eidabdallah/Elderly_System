@@ -37,5 +37,15 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
+        [HttpPatch("change-role/{id}")]
+        public async Task<IActionResult> ChangeRole([FromRoute] string id, [FromQuery] Role role)
+        {
+            var result = await _service.ChangeRoleAsync(id, role);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
     }
 }

@@ -321,6 +321,27 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
+    "Method": "ChangeRole",
+    "RelativePath": "api/Admin/User/change-role/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
     "Method": "ChangeStatus",
     "RelativePath": "api/Admin/User/change-status/{id}",
     "HttpMethod": "PATCH",

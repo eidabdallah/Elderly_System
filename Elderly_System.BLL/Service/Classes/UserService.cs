@@ -12,11 +12,13 @@ namespace Elderly_System.BLL.Service.Classes
     {
         private readonly IUserRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserService(IUserRepository userRepository , UserManager<ApplicationUser> userManager)
+        public UserService(IUserRepository userRepository , UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _repository = userRepository;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         public async Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null)
         {
@@ -77,5 +79,42 @@ namespace Elderly_System.BLL.Service.Classes
 
             return ServiceResult.SuccessMessage(msg);
         }
+        public async Task<ServiceResult> ChangeRoleAsync(string userId, Role newRole)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            var newRoleName = newRole.ToString();
+            var roleExists = await _roleManager.RoleExistsAsync(newRoleName);
+            if (!roleExists)
+                return ServiceResult.Failure("الدور ليس متوفر");
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            if (currentRoles.Any(r => string.Equals(r, newRoleName, StringComparison.OrdinalIgnoreCase)))
+                return ServiceResult.SuccessMessage("المستخدم يمتلك نفس الدور بالفعل.");
+
+            if (currentRoles.Any())
+            {
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeResult.Succeeded)
+                    return ServiceResult.Failure("فشل حذف الدور الحالي للمستخدم.");
+            }
+            var addResult = await _userManager.AddToRoleAsync(user, newRoleName);
+            if (!addResult.Succeeded)
+                return ServiceResult.Failure("فشل تعيين الدور الجديد للمستخدم.");
+
+            var msg = $"تم تغيير دور المستخدم إلى {ToArabic(newRole)} بنجاح.";
+            return ServiceResult.SuccessMessage(msg);
+        }
+
+        private static string ToArabic(Role role) => role switch
+        {
+            Role.Admin => "أدمن",
+            Role.Employee => "موظف",
+            Role.Nurse => "ممرض",
+            Role.Sponsor => "كفيل",
+            _ => "غير معروف"
+        };
     }
 }
