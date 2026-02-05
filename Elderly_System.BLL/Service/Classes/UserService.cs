@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.User;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
@@ -48,6 +49,37 @@ namespace Elderly_System.BLL.Service.Classes
                 });
             }
             return ServiceResult.SuccessWithData(data, "تم جلب المستخدمين بنجاح");
+        }
+        public async Task<ServiceResult> ChangeStatusAsync(string userId, ChangeUserStatusRequest request)
+        {
+            if (request.Status != Status.Pending &&  request.Status != Status.Active &&  request.Status != Status.InActive)
+            {
+                return ServiceResult.Failure("الحالة المسموحة فقط: انتظار القبول / نشط / غير نشط.");
+            }
+
+            var user = await _repository.GetUserByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            // إذا نفس الحالة
+            if (user.Status == request.Status)
+                return ServiceResult.SuccessMessage("حالة المستخدم هي نفسها بالفعل.");
+
+            user.Status = request.Status;
+
+            var updated = await _repository.UpdateUserAsync(user);
+            if (!updated)
+                return ServiceResult.Failure("حدث خطأ أثناء تحديث حالة المستخدم.");
+
+            var msg = request.Status switch
+            {
+                Status.Active => "تم تفعيل المستخدم بنجاح.",
+                Status.InActive => "تم تعطيل المستخدم بنجاح.",
+                Status.Pending => "تم إعادة المستخدم إلى حالة انتظار القبول.",
+                _ => "تم تحديث الحالة."
+            };
+
+            return ServiceResult.SuccessMessage(msg);
         }
     }
 }

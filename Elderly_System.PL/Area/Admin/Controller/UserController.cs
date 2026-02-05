@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.User;
 using Elderly_System.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,16 @@ namespace Elderly_System.PL.Area.Admin.Controller
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message, Users = result.Data });
+        }
+        [HttpPatch("change-status/{id}")]
+        public async Task<IActionResult> ChangeStatus([FromRoute] string id, [FromBody] ChangeUserStatusRequest request)
+        {
+            var result = await _service.ChangeStatusAsync(id, request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
         }
     }
 }

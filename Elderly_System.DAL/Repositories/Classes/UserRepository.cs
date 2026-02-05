@@ -25,6 +25,16 @@ namespace Elderly_System.DAL.Repositories.Classes
 
             return await q.OrderByDescending(u => u.CreatedAt).ToListAsync();
         }
+        public async Task<ApplicationUser?> GetUserByIdAsync(string id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<bool> UpdateUserAsync(ApplicationUser user)
+        {
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync() > 0;
+        }
 
     }
 }
