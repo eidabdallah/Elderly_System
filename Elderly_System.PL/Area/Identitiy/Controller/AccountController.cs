@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Auth;
 using ElderlySystem.DAL.DTO.Request.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,16 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
         public AccountController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
+        }
+        [HttpPost("register-staff")]
+        public async Task<IActionResult> RegisterStaff([FromForm] RegisterStaffRequest request)
+        {
+            var result = await _authenticationService.RegisterStaffAsync(request , Request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)

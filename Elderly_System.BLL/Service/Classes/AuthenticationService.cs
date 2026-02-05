@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Auth;
 using Elderly_System.DAL.Enums;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.DTO.Request.Auth;
@@ -22,14 +23,109 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
+        private readonly IFileService _file;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager
-           , IConfiguration configuration, IEmailSender emailSender)
+           , IConfiguration configuration, IEmailSender emailSender , IFileService file)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _emailSender = emailSender;
+            _file = file;
+        }
+
+        public async Task<ServiceResult> RegisterStaffAsync(RegisterStaffRequest request , HttpRequest HttpRequest)
+        {
+            var existingEmail = await _userManager.FindByEmailAsync(request.Email);
+            if (existingEmail is not null)
+                return ServiceResult.Failure("البريد الإلكتروني مستخدم بالفعل.");
+
+            var existingPhoneNumber = await _userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber);
+            if (existingPhoneNumber)
+                return ServiceResult.Failure("رقم الهاتف مستخدم بالفعل.");
+
+            var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
+            if (nationalIdExists)
+                return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+
+            var isNurse = request.Certificate != null && request.Certificate.Length > 0;
+            var roleName = isNurse ? Role.Nurse.ToString() : Role.Employee.ToString();
+
+            ApplicationUser user;
+
+            if (isNurse)
+            {
+                var uploaded = await _file.UploadAsync(request.Certificate!, "certificates");
+
+                user = new Nurse
+                {
+                    ImageCertificate = uploaded.Url,
+
+                    JobTitle = request.JobTitle,
+                    HireDate = request.HireDate,
+                    EducationLevel = request.EducationLevel,
+                    MaritalStatus = request.MaritalStatus,
+                    FieldOfStudy = request.FieldOfStudy,
+                    YearsOfStudy = request.YearsOfStudy,
+                    AcademicDegree = request.AcademicDegree,
+                    YearDfGraduation = request.YearDfGraduation,
+
+                    FullName = request.FullName,
+                    Email = request.Email,
+                    UserName = request.Email,
+                    PhoneNumber = request.PhoneNumber,
+                    City = request.City,
+                    NationalId = request.NationalId,
+                    Gender = request.Gender,
+                    BirthDate = request.BirthDate,
+                    Status = Status.Pending
+                };
+            }
+            else
+            {
+                user = new Employee
+                {
+                    JobTitle = request.JobTitle,
+                    HireDate = request.HireDate,
+                    EducationLevel = request.EducationLevel,
+                    MaritalStatus = request.MaritalStatus,
+                    FieldOfStudy = request.FieldOfStudy,
+                    YearsOfStudy = request.YearsOfStudy,
+                    AcademicDegree = request.AcademicDegree,
+                    YearDfGraduation = request.YearDfGraduation,
+
+                    FullName = request.FullName,
+                    Email = request.Email,
+                    UserName = request.Email,
+                    PhoneNumber = request.PhoneNumber,
+                    City = request.City,
+                    NationalId = request.NationalId,
+                    Gender = request.Gender,
+                    BirthDate = request.BirthDate,
+                    Status = Status.Pending
+                };
+            }
+
+            var create = await _userManager.CreateAsync(user, request.Password);
+            if (!create.Succeeded)
+                return ServiceResult.Failure(string.Join(" | ", create.Errors.Select(e => e.Description)));
+
+            var addRole = await _userManager.AddToRoleAsync(user, roleName);
+            if (!addRole.Succeeded)
+                return ServiceResult.Failure("تم إنشاء المستخدم لكن فشل تعيين الدور.");
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var tokenEncoded = Uri.EscapeDataString(token);
+            var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={user.Id}";
+            await _emailSender.SendEmailAsync(user.Email!, "تأكيد البريد الالكتروني",
+              $"<h1>Hello {user.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+
+            var msg = isNurse
+                ? "تم تسجيل الممرض بنجاح. الحالة: انتظار القبول."
+                : "تم تسجيل الموظف بنجاح. الحالة: انتظار القبول.";
+
+            return ServiceResult.SuccessMessage(msg);
         }
         public async Task<ServiceResult> RegisterAsync(RegisterRequest request, HttpRequest HttpRequest)
         {
