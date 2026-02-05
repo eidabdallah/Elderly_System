@@ -1,5 +1,8 @@
-﻿using Elderly_System.DAL.Repositories.Interfaces;
+﻿using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
+using ElderlySystem.DAL.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elderly_System.DAL.Repositories.Classes
 {
@@ -11,5 +14,17 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
+        public async Task<List<ApplicationUser>> GetUsersAsync(Status? status = null)
+        {
+            var q = _context.Users.AsNoTracking().AsQueryable();
+
+            if (status is null)
+                q = q.Where(u => u.Status == Status.Active);
+            else
+                q = q.Where(u => u.Status == status.Value);
+
+            return await q.OrderByDescending(u => u.CreatedAt).ToListAsync();
+        }
+
     }
 }

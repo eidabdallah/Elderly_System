@@ -2,6 +2,6 @@
 {
     public enum Role
     {
-        Admin, Nurse, Sponsor, Secretary
+        Admin, Employee, Nurse, Sponsor
     }
 }

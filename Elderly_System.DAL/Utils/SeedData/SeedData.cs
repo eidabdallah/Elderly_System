@@ -27,7 +27,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 await _roleManager.CreateAsync(new IdentityRole("Admin")); 
                 await _roleManager.CreateAsync(new IdentityRole("Nurse"));
                 await _roleManager.CreateAsync(new IdentityRole("Sponsor"));
-                await _roleManager.CreateAsync(new IdentityRole("Secretary"));
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
             }
             if (!await _userManager.Users.AnyAsync())
             {
