@@ -58,7 +58,7 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
 
             if (result.Data != null)
                 return Ok(new { message = result.Message, token = result.Data });
-            return Ok(new { message = result.Message });
+            return StatusCode(403, new { message = result.Message });
         }
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)

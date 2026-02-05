@@ -40,9 +40,7 @@ namespace ElderlySystem.DAL.Model
 
         [Required(ErrorMessage = "تاريخ الميلاد مطلوب.")]
         public DateTime BDate { get; set; }
-
-        [Required(ErrorMessage = "صورة الفحص الشامل مطلوبة.")]
-        public string ComprehensiveExamination { get; set; } = null!;
+        public string? ComprehensiveExamination { get; set; } = null!;
 
         [Required(ErrorMessage = "صورة الهوية مطلوبة.")]
         public string NationalIdImage { get; set; } = null!;

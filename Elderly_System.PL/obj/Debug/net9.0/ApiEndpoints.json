@@ -569,6 +569,112 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.ElderlyController",
+    "Method": "AddWithDoctor",
+    "RelativePath": "api/Sponsor/Elderly/add-with-doctor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "NationalId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Doctrine",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MaritalStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "City",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Street",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "BDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "ReasonRegister",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Diseases",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "NationalIdImage",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthInsurance",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "KinShip",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Degree",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DoctorName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "WorkPlace",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DoctorPhone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ReportDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiagnosisFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

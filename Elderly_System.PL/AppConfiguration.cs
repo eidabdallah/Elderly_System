@@ -24,6 +24,8 @@ namespace Elderly_System.PL
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IElderlyRepository, ElderlyRepository>();
+            services.AddScoped<IElderlyService, ElderlyService>();
 
         }
     }
