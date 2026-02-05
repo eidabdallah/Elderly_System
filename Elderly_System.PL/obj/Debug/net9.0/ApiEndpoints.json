@@ -500,6 +500,11 @@
         "IsRequired": false
       },
       {
+        "Name": "UserName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Password",
         "Type": "System.String",
         "IsRequired": false
@@ -670,6 +675,22 @@
         "Name": "DiagnosisFile",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.ElderlyController",
+    "Method": "RegisterCoSponsor",
+    "RelativePath": "api/Sponsor/Elderly/register-co-sponsor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Elderly.RegisterCoSponsorRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

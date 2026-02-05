@@ -3,10 +3,12 @@ using ElderlySystem.DAL.Model;
 
 namespace Elderly_System.DAL.Repositories.Interfaces
 {
-    public interface IElderlyRepository
+    public interface IElderlySponsorRepository
     {
-        // sponsor
         Task<bool> IsElderlyNationalIdExistsAsync(string nationalId);
         Task AddAsync(Elderly elderly, Doctor doctor, MedicalReport report, ElderlySponsor link);
+        Task<int?> GetElderlyIdForSponsorAsync(string sponsorId);
+        Task<bool> LinkExistsAsync(int elderlyId, string sponsorId);
+        Task AddLinkAsync(int elderlyId, string sponsorId, string kinShip, string degree);
     }
 }

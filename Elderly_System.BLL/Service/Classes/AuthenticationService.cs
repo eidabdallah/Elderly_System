@@ -48,6 +48,9 @@ namespace Elderly_System.BLL.Service.Classes
             var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
             if (nationalIdExists)
                 return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+            var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
+            if (userNameExists)
+                return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
 
             var isNurse = request.Certificate != null && request.Certificate.Length > 0;
             var roleName = isNurse ? Role.Nurse.ToString() : Role.Employee.ToString();
@@ -97,7 +100,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                     FullName = request.FullName,
                     Email = request.Email,
-                    UserName = request.Email,
+                    UserName = request.UserName,
                     PhoneNumber = request.PhoneNumber,
                     City = request.City,
                     NationalId = request.NationalId,
@@ -140,6 +143,9 @@ namespace Elderly_System.BLL.Service.Classes
             var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
             if (nationalIdExists)
                 return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+            var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
+            if (userNameExists)
+                return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
 
             var user = new Sponsor
             {

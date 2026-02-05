@@ -17,7 +17,15 @@ namespace Elderly_System.DAL.DTO.Request.Auth
         public string NationalId { get; set; } = null!;
         [Required] public Gender Gender { get; set; }
         [Required] public DateTime BirthDate { get; set; }
-        [Required] public string Password { get; set; } = null!;
+        [Required(ErrorMessage = "اسم المستخدم مطلوب.")]
+        [MaxLength(50, ErrorMessage = "اسم المستخدم طويل جدًا.")]
+        public string UserName { get; set; } = default!;
+
+        [Required(ErrorMessage = "كلمة المرور مطلوبة.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "كلمة المرور يجب أن تكون بين 6 و 100 حرف.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,100}$",
+           ErrorMessage = "كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز (مثل !@#).")]
+       public string Password { get; set; } = null!;
 
         // Employee
         [Required] public string JobTitle { get; set; } = null!;

@@ -12,9 +12,9 @@ namespace Elderly_System.PL.Area.Sponsor
     [Authorize(Roles = "Sponsor")]
     public class ElderlyController : ControllerBase
     {
-        private readonly IElderlyService _service;
+        private readonly IElderlySponsorService _service;
 
-        public ElderlyController(IElderlyService service)
+        public ElderlyController(IElderlySponsorService service)
         {
             _service = service;
         }
@@ -26,6 +26,19 @@ namespace Elderly_System.PL.Area.Sponsor
                 return Unauthorized(new { message = "غير مصرح." });
 
             var result = await _service.AddElderlyWithDoctorAsync(sponsorId, request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
+        
+        [HttpPost("register-co-sponsor")]
+        public async Task<IActionResult> RegisterCoSponsor([FromBody] RegisterCoSponsorRequest request)
+        {
+            var currentSponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         
+            var result = await _service.RegisterCoSponsorAsync(currentSponsorId!, request, Request);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
