@@ -17,6 +17,16 @@ namespace Elderly_System.PL.Area.Admin.Controller
         {
             _service = service;
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetails([FromRoute] string id)
+        {
+            var result = await _service.GetUserDetailsAsync(id);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, User = result.Data });
+        }
         [HttpGet("")]
         public async Task<IActionResult> GetUsers([FromQuery] Status? status, [FromQuery] Role? role)
         {

@@ -8,6 +8,8 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null);
         Task<ServiceResult> ChangeStatusAsync(string userId, Status newStatus);
         Task<ServiceResult> ChangeRoleAsync(string userId, Role newRole);
+        Task<ServiceResult> GetUserDetailsAsync(string userId);
+
 
     }
 }

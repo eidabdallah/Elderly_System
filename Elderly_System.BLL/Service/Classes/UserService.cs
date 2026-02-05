@@ -40,12 +40,7 @@ namespace Elderly_System.BLL.Service.Classes
                 {
                     Id = u.Id,
                     FullName = u.FullName,
-                    Email = u.Email ?? "",
-                    PhoneNumber = u.PhoneNumber ?? "",
-                    City = u.City ?? "",
-                    NationalId = u.NationalId ?? "",
                     StatusUser = UserResponse.ToArabic(u.Status),
-                    CreatedAt = u.CreatedAt.ToString("yyyy-MM-dd"),
                     RoleUser = UserResponse.ToArabic(roleEnum)
                 });
             }
@@ -107,7 +102,80 @@ namespace Elderly_System.BLL.Service.Classes
             var msg = $"تم تغيير دور المستخدم إلى {ToArabic(newRole)} بنجاح.";
             return ServiceResult.SuccessMessage(msg);
         }
+        public async Task<ServiceResult> GetUserDetailsAsync(string userId)
+        {
+            var baseUser = await _repository.GetBaseAsync(userId);
+            if (baseUser is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
 
+            var roles = await _userManager.GetRolesAsync(baseUser);
+            var roleName = roles.FirstOrDefault() ?? Role.Employee.ToString();
+
+            if (!Enum.TryParse<Role>(roleName, true, out var roleEnum))
+                roleEnum = Role.Employee;
+
+            var dto = new UserDetailsResponse
+            {
+                Id = baseUser.Id,
+                FullName = baseUser.FullName,
+                Email = baseUser.Email ?? "",
+                PhoneNumber = baseUser.PhoneNumber ?? "",
+                City = baseUser.City,
+                Street = baseUser.Street,
+                NationalId = baseUser.NationalId,
+                BirthDate = baseUser.BirthDate.ToString("yyyy-MM-dd"),
+                Gender = UserDetailsResponse.ToArabic(baseUser.Gender),
+                Status = UserDetailsResponse.ToArabic(baseUser.Status),
+                CreatedAt = baseUser.CreatedAt.ToString("yyyy-MM-dd"),
+                RoleUser = UserDetailsResponse.ToArabic(roleEnum)
+            };
+
+            if (roleEnum == Role.Nurse)
+            {
+                var nurse = await _repository.GetNurseAsync(userId);
+                if (nurse is null) return ServiceResult.Failure("بيانات الممرض غير موجودة.");
+
+                FillEmployee(dto, nurse);
+                dto.ImageCertificate = nurse.ImageCertificate;
+            }
+            else if (roleEnum == Role.Employee)
+            {
+                var emp = await _repository.GetEmployeeAsync(userId);
+                if (emp is null) return ServiceResult.Failure("بيانات الموظف غير موجودة.");
+
+                FillEmployee(dto, emp);
+            }
+            else if (roleEnum == Role.Sponsor)
+            {
+                var sponsor = await _repository.GetSponsorWithElderlyAsync(userId);
+                if (sponsor is null) return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
+
+                dto.Note = sponsor.Note;
+
+                dto.ElderlyNames = sponsor.ElderlySponsors
+                    .Select(es => es.Elderly.Name)
+                    .Where(n => !string.IsNullOrWhiteSpace(n))
+                    .Distinct()
+                    .ToList();
+            }
+
+            return ServiceResult.SuccessWithData(dto, "تم جلب تفاصيل المستخدم بنجاح");
+        }
+
+        private static void FillEmployee(UserDetailsResponse dto, Employee emp)
+        {
+            dto.JobTitle = emp.JobTitle;
+            dto.HireDate = emp.HireDate.ToString("yyyy-MM-dd");
+            dto.EducationLevel = UserDetailsResponse.ToArabic(emp.EducationLevel);
+            dto.MaritalStatus = UserDetailsResponse.ToArabic(emp.MaritalStatus);
+            dto.FieldOfStudy = emp.FieldOfStudy;
+            dto.YearsOfStudy = emp.YearsOfStudy;
+            dto.AcademicDegree = emp.AcademicDegree;
+            dto.YearDfGraduation = emp.YearDfGraduation;
+            dto.EndDate = emp.EndDate;
+            dto.Skills = emp.Skills?.ToList();
+        }
+    
         private static string ToArabic(Role role) => role switch
         {
             Role.Admin => "أدمن",
