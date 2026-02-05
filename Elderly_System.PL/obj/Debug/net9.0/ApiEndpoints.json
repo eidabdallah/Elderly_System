@@ -333,9 +333,9 @@
         "IsRequired": true
       },
       {
-        "Name": "request",
-        "Type": "Elderly_System.DAL.DTO.Request.User.ChangeUserStatusRequest",
-        "IsRequired": true
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

@@ -1,5 +1,4 @@
 ﻿using Elderly_System.BLL.Service.Interface;
-using Elderly_System.DAL.DTO.Request.User;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
@@ -50,28 +49,25 @@ namespace Elderly_System.BLL.Service.Classes
             }
             return ServiceResult.SuccessWithData(data, "تم جلب المستخدمين بنجاح");
         }
-        public async Task<ServiceResult> ChangeStatusAsync(string userId, ChangeUserStatusRequest request)
+        public async Task<ServiceResult> ChangeStatusAsync(string userId, Status newStatus)
         {
-            if (request.Status != Status.Pending &&  request.Status != Status.Active &&  request.Status != Status.InActive)
-            {
+            if (newStatus != Status.Pending && newStatus != Status.Active && newStatus != Status.InActive)
                 return ServiceResult.Failure("الحالة المسموحة فقط: انتظار القبول / نشط / غير نشط.");
-            }
 
             var user = await _repository.GetUserByIdAsync(userId);
             if (user is null)
                 return ServiceResult.Failure("المستخدم غير موجود.");
 
-            // إذا نفس الحالة
-            if (user.Status == request.Status)
+            if (user.Status == newStatus)
                 return ServiceResult.SuccessMessage("حالة المستخدم هي نفسها بالفعل.");
 
-            user.Status = request.Status;
+            user.Status = newStatus;
 
             var updated = await _repository.UpdateUserAsync(user);
             if (!updated)
                 return ServiceResult.Failure("حدث خطأ أثناء تحديث حالة المستخدم.");
 
-            var msg = request.Status switch
+            var msg = newStatus switch
             {
                 Status.Active => "تم تفعيل المستخدم بنجاح.",
                 Status.InActive => "تم تعطيل المستخدم بنجاح.",
