@@ -1,0 +1,16 @@
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\bin\Release\net9.0\Elderly_System.BLL.deps.json
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\bin\Release\net9.0\Elderly_System.BLL.dll
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\bin\Release\net9.0\Elderly_System.BLL.pdb
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\bin\Release\net9.0\Elderly_System.DAL.dll
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\bin\Release\net9.0\Elderly_System.DAL.pdb
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.AssemblyInfo.cs
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.sourcelink.json
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_.850B2741.Up2Date
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.dll
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\refint\Elderly_System.BLL.dll
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\Elderly_System.BLL.pdb
+C:\Users\user\Desktop\Elderly_System\Elderly_System.BLL\obj\Release\net9.0\ref\Elderly_System.BLL.dll
