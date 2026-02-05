@@ -39,6 +39,6 @@ namespace Elderly_System.DAL.DTO.Request.Auth
         public string? YearDfGraduation { get; set; }
 
         // If provided => Nurse, else Employee
-        public IFormFile? Certificate { get; set; }
+        public IFormFile Certificate { get; set; } = null!;
     }
 }

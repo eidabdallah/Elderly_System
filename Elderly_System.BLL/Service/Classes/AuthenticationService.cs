@@ -51,84 +51,45 @@ namespace Elderly_System.BLL.Service.Classes
             var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
             if (userNameExists)
                 return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
+            var uploaded = await _file.UploadAsync(request.Certificate!, "certificates");
 
-            var isNurse = request.Certificate != null && request.Certificate.Length > 0;
-            var roleName = isNurse ? Role.Nurse.ToString() : Role.Employee.ToString();
-
-            ApplicationUser user;
-
-            if (isNurse)
+            var nurse = new Nurse
             {
-                var uploaded = await _file.UploadAsync(request.Certificate!, "certificates");
+                ImageCertificate = uploaded.Url,
 
-                user = new Nurse
-                {
-                    ImageCertificate = uploaded.Url,
-
-                    JobTitle = request.JobTitle,
-                    HireDate = request.HireDate,
-                    EducationLevel = request.EducationLevel,
-                    MaritalStatus = request.MaritalStatus,
-                    FieldOfStudy = request.FieldOfStudy,
-                    YearsOfStudy = request.YearsOfStudy,
-                    AcademicDegree = request.AcademicDegree,
-                    YearDfGraduation = request.YearDfGraduation,
-
-                    FullName = request.FullName,
-                    Email = request.Email,
-                    UserName = request.Email,
-                    PhoneNumber = request.PhoneNumber,
-                    City = request.City,
-                    NationalId = request.NationalId,
-                    Gender = request.Gender,
-                    BirthDate = request.BirthDate,
-                    Status = Status.Pending
-                };
-            }
-            else
-            {
-                user = new Employee
-                {
-                    JobTitle = request.JobTitle,
-                    HireDate = request.HireDate,
-                    EducationLevel = request.EducationLevel,
-                    MaritalStatus = request.MaritalStatus,
-                    FieldOfStudy = request.FieldOfStudy,
-                    YearsOfStudy = request.YearsOfStudy,
-                    AcademicDegree = request.AcademicDegree,
-                    YearDfGraduation = request.YearDfGraduation,
-
-                    FullName = request.FullName,
-                    Email = request.Email,
-                    UserName = request.UserName,
-                    PhoneNumber = request.PhoneNumber,
-                    City = request.City,
-                    NationalId = request.NationalId,
-                    Gender = request.Gender,
-                    BirthDate = request.BirthDate,
-                    Status = Status.Pending
-                };
-            }
-
-            var create = await _userManager.CreateAsync(user, request.Password);
+                JobTitle = request.JobTitle,
+                HireDate = request.HireDate,
+                EducationLevel = request.EducationLevel,
+                MaritalStatus = request.MaritalStatus,
+                FieldOfStudy = request.FieldOfStudy,
+                YearsOfStudy = request.YearsOfStudy,
+                AcademicDegree = request.AcademicDegree,
+                YearDfGraduation = request.YearDfGraduation,
+                FullName = request.FullName,
+                Email = request.Email,
+                UserName = request.UserName,
+                PhoneNumber = request.PhoneNumber,
+                City = request.City,
+                NationalId = request.NationalId,
+                Gender = request.Gender,
+                BirthDate = request.BirthDate,
+                Status = Status.Pending
+            };
+            var create = await _userManager.CreateAsync(nurse, request.Password);
             if (!create.Succeeded)
                 return ServiceResult.Failure(string.Join(" | ", create.Errors.Select(e => e.Description)));
 
-            var addRole = await _userManager.AddToRoleAsync(user, roleName);
+            var addRole = await _userManager.AddToRoleAsync(nurse, Role.Nurse.ToString());
             if (!addRole.Succeeded)
                 return ServiceResult.Failure("تم إنشاء المستخدم لكن فشل تعيين الدور.");
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(nurse);
             var tokenEncoded = Uri.EscapeDataString(token);
-            var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={user.Id}";
-            await _emailSender.SendEmailAsync(user.Email!, "تأكيد البريد الالكتروني",
-              $"<h1>Hello {user.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+            var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={nurse.Id}";
+            await _emailSender.SendEmailAsync(nurse.Email!, "تأكيد البريد الالكتروني",
+              $"<h1>Hello {nurse.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
 
-            var msg = isNurse
-                ? "تم تسجيل الممرض بنجاح. الحالة: انتظار القبول."
-                : "تم تسجيل الموظف بنجاح. الحالة: انتظار القبول.";
-
-            return ServiceResult.SuccessMessage(msg);
+            return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
         }
         public async Task<ServiceResult> RegisterAsync(RegisterRequest request, HttpRequest HttpRequest)
         {
