@@ -574,7 +574,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Elderly_System.PL.Area.Sponsor.ElderlyController",
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "AddWithDoctor",
     "RelativePath": "api/Sponsor/Elderly/add-with-doctor",
     "HttpMethod": "POST",
@@ -680,7 +680,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Elderly_System.PL.Area.Sponsor.ElderlyController",
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "RegisterCoSponsor",
     "RelativePath": "api/Sponsor/Elderly/register-co-sponsor",
     "HttpMethod": "POST",
@@ -690,6 +690,22 @@
       {
         "Name": "request",
         "Type": "Elderly_System.DAL.DTO.Request.Elderly.RegisterCoSponsorRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.VisitorController",
+    "Method": "AddVisitor",
+    "RelativePath": "api/Sponsor/Visitor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Vistor.AddVisitorRequest",
         "IsRequired": true
       }
     ],

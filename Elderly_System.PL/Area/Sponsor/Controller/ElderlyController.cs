@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Elderly_System.PL.Area.Sponsor
+namespace Elderly_System.PL.Area.Sponsor.Controller
 {
     [Route("api/[area]/[controller]")]
     [ApiController]

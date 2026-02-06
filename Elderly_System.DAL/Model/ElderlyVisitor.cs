@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Elderly_System.DAL.Enums;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace ElderlySystem.DAL.Model
@@ -18,5 +19,7 @@ namespace ElderlySystem.DAL.Model
 
         [Required(ErrorMessage = "وقت نهاية الزيارة مطلوب.")]
         public TimeSpan EndTime { get; set; }
+        public Status Status { get; set; } = Status.Pending;
+
     }
 }

@@ -26,6 +26,8 @@ namespace Elderly_System.PL
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IElderlySponsorRepository, ElderlySponsorRepository>();
             services.AddScoped<IElderlySponsorService, ElderlySponsorService>();
+            services.AddScoped<IVistorRepository, VistorRepository>();
+            services.AddScoped<IVistorService, VistorService>();
 
         }
     }
