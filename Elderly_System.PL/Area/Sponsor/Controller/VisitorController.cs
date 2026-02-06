@@ -19,7 +19,7 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
             _service = service;
         }
         [HttpPost("")]
-        public async Task<IActionResult> AddVisitor([FromBody] AddVisitorRequest request)
+        public async Task<IActionResult> Add([FromBody] AddVisitorRequest request)
         {
             var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _service.AddVisitorAsync(sponsorId!, request);

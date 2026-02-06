@@ -1,12 +1,12 @@
 ﻿using Elderly_System.DAL.Enums;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace ElderlySystem.DAL.Model
 {
-    [PrimaryKey(nameof(ElderlyId), nameof(VisitorId))]
+    
     public class ElderlyVisitor
     {
+        public int Id { get; set; }
         public int ElderlyId { get; set; }
         public Elderly Elderly { get; set; } = null!;
         public int VisitorId { get; set; }

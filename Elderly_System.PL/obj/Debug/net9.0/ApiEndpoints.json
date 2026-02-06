@@ -378,6 +378,37 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.VisitorController",
+    "Method": "GetPending",
+    "RelativePath": "api/Admin/Visitor/pending",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.VisitorController",
+    "Method": "Reply",
+    "RelativePath": "api/Admin/Visitor/reply/{requestId}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Vistor.AdminVisitorReplyRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/Identity/Account/ConfirmEmail",
@@ -697,7 +728,7 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.VisitorController",
-    "Method": "AddVisitor",
+    "Method": "Add",
     "RelativePath": "api/Sponsor/Visitor",
     "HttpMethod": "POST",
     "IsController": true,

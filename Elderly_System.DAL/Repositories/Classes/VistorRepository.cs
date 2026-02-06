@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.Repositories.Interfaces;
+﻿using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,7 @@ namespace Elderly_System.DAL.Repositories.Classes
         }
 
         public async Task<Visitor?> GetVisitorByPhoneAsync(string phone)
-        {
-            return await _context.Visitors.FirstOrDefaultAsync(v => v.Phone == phone);
-        }
+            => await _context.Visitors.FirstOrDefaultAsync(v => v.Phone == phone);
 
         public async Task AddVisitorAsync(Visitor visitor)
         {
@@ -32,21 +31,44 @@ namespace Elderly_System.DAL.Repositories.Classes
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsElderlyVisitorAsync(int elderlyId, int visitorId, DateTime date, TimeSpan start, TimeSpan end)
-        {
-            return await _context.ElderlyVisitors.AnyAsync(ev =>
-                ev.ElderlyId == elderlyId &&
-                ev.VisitorId == visitorId &&
-                ev.Date.Date == date.Date &&
-                ev.StartTime == start &&
-                ev.EndTime == end
-            );
-        }
-
         public async Task AddElderlyVisitorAsync(ElderlyVisitor link)
         {
             await _context.ElderlyVisitors.AddAsync(link);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<ElderlyVisitor>> GetPendingRequestsAsync()
+        {
+            return await _context.ElderlyVisitors
+                .Include(x => x.Elderly)
+                .Include(x => x.Visitor)
+                .Where(x => x.Status == Status.Pending)
+                .OrderByDescending(x => x.Date)
+                .ToListAsync();
+        }
+
+        public async Task<ElderlyVisitor?> GetRequestByIdAsync(int requestId)
+        {
+            return await _context.ElderlyVisitors
+                .Include(x => x.Elderly)
+                .Include(x => x.Visitor)
+                .FirstOrDefaultAsync(x => x.Id == requestId);
+        }
+
+        public async Task UpdateAsync(ElderlyVisitor req)
+        {
+            _context.ElderlyVisitors.Update(req);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<string>> GetSponsorEmailsByElderlyIdAsync(int elderlyId)
+        {
+            return await _context.ElderlySponsors
+                .Where(es => es.ElderlyId == elderlyId)
+                .Select(es => es.Sponsor.Email!)
+                .Where(e => !string.IsNullOrWhiteSpace(e))
+                .Distinct()
+                .ToListAsync();
         }
     }
 }

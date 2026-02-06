@@ -1,6 +1,7 @@
 ﻿using Elderly_System.DAL.Enums;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Elderly_System.DAL.DTO.Request.Auth
 {
@@ -15,6 +16,7 @@ namespace Elderly_System.DAL.DTO.Request.Auth
         [Required(ErrorMessage = "رقم الهوية مطلوب.")]
         [RegularExpression(@"^\d{9}$", ErrorMessage = "رقم الهوية يجب أن يتكون من 9 أرقام.")]
         public string NationalId { get; set; } = null!;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required] public Gender Gender { get; set; }
         [Required] public DateTime BirthDate { get; set; }
         [Required(ErrorMessage = "اسم المستخدم مطلوب.")]

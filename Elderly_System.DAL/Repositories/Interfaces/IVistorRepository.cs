@@ -9,8 +9,13 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Visitor?> GetVisitorByPhoneAsync(string phone);
         Task AddVisitorAsync(Visitor visitor);
 
-        Task<bool> ExistsElderlyVisitorAsync(int elderlyId, int visitorId, DateTime date, TimeSpan start, TimeSpan end);
-
         Task AddElderlyVisitorAsync(ElderlyVisitor link);
+
+        // admin flow
+        Task<List<ElderlyVisitor>> GetPendingRequestsAsync();
+        Task<ElderlyVisitor?> GetRequestByIdAsync(int requestId);
+        Task UpdateAsync(ElderlyVisitor req);
+
+        Task<List<string>> GetSponsorEmailsByElderlyIdAsync(int elderlyId);
     }
 }
