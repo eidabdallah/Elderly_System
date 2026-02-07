@@ -121,9 +121,7 @@ namespace Elderly_System.BLL.Service.Classes
                 Email = baseUser.Email ?? "",
                 PhoneNumber = baseUser.PhoneNumber ?? "",
                 City = baseUser.City,
-                Street = baseUser.Street,
                 NationalId = baseUser.NationalId,
-                BirthDate = baseUser.BirthDate.ToString("yyyy-MM-dd"),
                 Gender = UserDetailsResponse.ToArabic(baseUser.Gender),
                 Status = UserDetailsResponse.ToArabic(baseUser.Status),
                 CreatedAt = baseUser.CreatedAt.ToString("yyyy-MM-dd"),
@@ -171,7 +169,7 @@ namespace Elderly_System.BLL.Service.Classes
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
             dto.AcademicDegree = emp.AcademicDegree;
-            dto.YearDfGraduation = emp.YearDfGraduation;
+            dto.YearOfGraduation = emp.YearOfGraduation;
             dto.EndDate = emp.EndDate;
             dto.Skills = emp.Skills?.ToList();
         }

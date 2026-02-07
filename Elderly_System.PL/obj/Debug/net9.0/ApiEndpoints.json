@@ -526,16 +526,6 @@
         "IsRequired": false
       },
       {
-        "Name": "BirthDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "UserName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Password",
         "Type": "System.String",
         "IsRequired": false
@@ -576,7 +566,7 @@
         "IsRequired": false
       },
       {
-        "Name": "YearDfGraduation",
+        "Name": "YearOfGraduation",
         "Type": "System.String",
         "IsRequired": false
       },

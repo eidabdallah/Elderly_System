@@ -19,7 +19,7 @@ namespace ElderlySystem.DAL.Model
 
         [StringLength(50, ErrorMessage = "الدرجة العلمية لا يجب أن تتجاوز 50 حرف.")]
         public string? AcademicDegree { get; set; }
-        public string? YearDfGraduation { get; set; }
+        public string? YearOfGraduation { get; set; }
         [Required(ErrorMessage = "الحالة الاجتماعية مطلوبة.")]
         public MaritalStatus MaritalStatus { get; set; }
         public DateTime? EndDate { get; set; }

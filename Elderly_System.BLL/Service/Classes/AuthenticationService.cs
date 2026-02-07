@@ -48,9 +48,6 @@ namespace Elderly_System.BLL.Service.Classes
             var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
             if (nationalIdExists)
                 return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
-            var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
-            if (userNameExists)
-                return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
             var uploaded = await _file.UploadAsync(request.Certificate!, "certificates");
 
             var nurse = new Nurse
@@ -64,15 +61,13 @@ namespace Elderly_System.BLL.Service.Classes
                 FieldOfStudy = request.FieldOfStudy,
                 YearsOfStudy = request.YearsOfStudy,
                 AcademicDegree = request.AcademicDegree,
-                YearDfGraduation = request.YearDfGraduation,
+                YearOfGraduation = request.YearOfGraduation,
                 FullName = request.FullName,
                 Email = request.Email,
-                UserName = request.UserName,
                 PhoneNumber = request.PhoneNumber,
                 City = request.City,
                 NationalId = request.NationalId,
                 Gender = request.Gender,
-                BirthDate = request.BirthDate,
                 Status = Status.Pending
             };
             var create = await _userManager.CreateAsync(nurse, request.Password);
@@ -87,7 +82,7 @@ namespace Elderly_System.BLL.Service.Classes
             var tokenEncoded = Uri.EscapeDataString(token);
             var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={nurse.Id}";
             await _emailSender.SendEmailAsync(nurse.Email!, "تأكيد البريد الالكتروني",
-              $"<h1>Hello {nurse.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+              $"<h1>Hello {nurse.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
 
             return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
         }
@@ -104,20 +99,15 @@ namespace Elderly_System.BLL.Service.Classes
             var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
             if (nationalIdExists)
                 return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
-            var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
-            if (userNameExists)
-                return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
+         
 
             var user = new Sponsor
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                UserName = request.UserName,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
-                BirthDate = request.BirthDate,
                 City = request.City,
-                Street = request.Street,
                 NationalId = request.NationalId,
                 Note = string.IsNullOrWhiteSpace(request.Note) ? "لا يوجد" : request.Note,
             };
@@ -129,7 +119,7 @@ namespace Elderly_System.BLL.Service.Classes
                 var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={user.Id}";
                 await _userManager.AddToRoleAsync(user, "Sponsor");
                 await _emailSender.SendEmailAsync(user.Email!, "تأكيد البريد الالكتروني",
-                  $"<h1>Hello {user.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+                  $"<h1>Hello {user.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
                 return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
             }
             else

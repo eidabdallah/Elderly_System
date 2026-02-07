@@ -22,12 +22,8 @@ namespace ElderlySystem.DAL.DTO.Request.Auth
         [MaxLength(200, ErrorMessage = "الاسم الكامل طويل جدًا.")]
         public string FullName { get; set; } = default!;
 
-        [Required(ErrorMessage = "اسم المستخدم مطلوب.")]
-        [MaxLength(50, ErrorMessage = "اسم المستخدم طويل جدًا.")]
-        public string UserName { get; set; } = default!;
-
         [Required(ErrorMessage = "رقم الهاتف مطلوب.")]
-        [RegularExpression(@"^(059|056)\d{7}$", ErrorMessage = "رقم الهاتف يجب أن يكون 10 أرقام ويبدأ بـ 059 أو 056.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يكون مكوّن من 10 أرقام فقط.")]
         public string PhoneNumber { get; set; } = default!;
 
 
@@ -35,15 +31,9 @@ namespace ElderlySystem.DAL.DTO.Request.Auth
         [RegularExpression(@"^\d{9}$", ErrorMessage = "رقم الهوية يجب أن يكون مكونًا من 9 أرقام.")]
         public string NationalId { get; set; } = default!;
 
-        [Required(ErrorMessage = "تاريخ الميلاد مطلوب.")]
-        public DateTime BirthDate { get; set; }
-
         [Required(ErrorMessage = "المدينة مطلوبة.")]
         [MaxLength(100, ErrorMessage = "اسم المدينة طويل جدًا.")]
         public string City { get; set; } = default!;
-
-        [MaxLength(100, ErrorMessage = "اسم الشارع طويل جدًا.")]
-        public string? Street { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required(ErrorMessage = "الجنس مطلوب.")]

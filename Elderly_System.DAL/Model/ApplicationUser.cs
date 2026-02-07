@@ -15,13 +15,8 @@ namespace ElderlySystem.DAL.Model
         public string FullName { get; set; } = null!;
         [Required(ErrorMessage = "اسم المدينة مطلوب.")]
         public string City { get; set; } = null!;
-        public string? Street { get; set; }
         public string? CodeResetPassword { get; set; }
         public DateTime? PasswordResetCodeExpiry { get; set; }
-        [Required(ErrorMessage = "تاريخ الميلاد مطلوب.")]
-
-        public DateTime BirthDate { get; set; }
-        [Required(ErrorMessage = "رقم الهوية مطلوب.")]
 
         [RegularExpression(@"^\d{9}$", ErrorMessage = "يجب ان يكون رقم الهوية مكون من 9 ارقام")]
         public string NationalId { get; set; } = null!;

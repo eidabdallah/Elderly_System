@@ -18,10 +18,6 @@ namespace Elderly_System.DAL.DTO.Request.Auth
         public string NationalId { get; set; } = null!;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required] public Gender Gender { get; set; }
-        [Required] public DateTime BirthDate { get; set; }
-        [Required(ErrorMessage = "اسم المستخدم مطلوب.")]
-        [MaxLength(50, ErrorMessage = "اسم المستخدم طويل جدًا.")]
-        public string UserName { get; set; } = default!;
 
         [Required(ErrorMessage = "كلمة المرور مطلوبة.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "كلمة المرور يجب أن تكون بين 6 و 100 حرف.")]
@@ -38,7 +34,7 @@ namespace Elderly_System.DAL.DTO.Request.Auth
         public string? FieldOfStudy { get; set; }
         public float? YearsOfStudy { get; set; }
         public string? AcademicDegree { get; set; }
-        public string? YearDfGraduation { get; set; }
+        public string? YearOfGraduation { get; set; }
 
         // If provided => Nurse, else Employee
         public IFormFile Certificate { get; set; } = null!;

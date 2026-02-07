@@ -1,9 +1,4 @@
 ﻿using Elderly_System.DAL.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elderly_System.DAL.DTO.Response.User
 {
@@ -14,12 +9,10 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string Email { get; set; } = "";
         public string PhoneNumber { get; set; } = "";
         public string City { get; set; } = "";
-        public string? Street { get; set; }
         public string NationalId { get; set; } = "";
-        public string Gender { get; set; }
-        public string BirthDate { get; set; }
-        public string Status { get; set; }
-        public string CreatedAt { get; set; }
+        public string Gender { get; set; } = "";
+        public string Status { get; set; } = "";
+        public string CreatedAt { get; set; } = "";
 
         public string RoleUser { get; set; } = "";
 
@@ -29,7 +22,7 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string? FieldOfStudy { get; set; }
         public float? YearsOfStudy { get; set; }
         public string? AcademicDegree { get; set; }
-        public string? YearDfGraduation { get; set; }
+        public string? YearOfGraduation { get; set; }
         public string? MaritalStatus { get; set; }
         public DateTime? EndDate { get; set; }
         public List<string>? Skills { get; set; }
