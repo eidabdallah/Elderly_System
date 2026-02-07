@@ -1,4 +1,4 @@
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using EA_Ecommerce.DAL.utils.SeedData;
 using ElderlySystem.BLL.Configurations;
 using ElderlySystem.DAL.Data;
@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
+using System.Text.Json;
+
 
 namespace Elderly_System.PL
 {
@@ -37,6 +39,13 @@ namespace Elderly_System.PL
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            var userPolicy = "";
+            builder.Services.AddCors(options => {
+                options.AddPolicy(name: userPolicy, policy =>
+                {
+                    policy.AllowAnyOrigin();
+                });
+            });
 
             builder.Services.AddAuthentication(options =>
             {
@@ -69,7 +78,25 @@ namespace Elderly_System.PL
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseStatusCodePages(async context =>
+            {
+                var response = context.HttpContext.Response;
+                response.ContentType = "application/json";
+
+                var message = response.StatusCode switch
+                {
+                    401 => "غير مصرح. الرجاء تسجيل الدخول مرة أخرى.",
+                    403 => "ليس لديك صلاحية للوصول.",
+                    404 => "المسار غير موجود.",
+                    _ => "حدث خطأ غير متوقع."
+                };
+
+                var payload = JsonSerializer.Serialize(new { message, status = response.StatusCode });
+                await response.WriteAsync(payload);
+            });
             app.UseAuthentication();
+            app.UseCors(userPolicy);
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
