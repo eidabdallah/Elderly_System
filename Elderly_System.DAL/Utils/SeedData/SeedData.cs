@@ -42,6 +42,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
+                    IsProfileCompleted = true
                 };
 
                 await _userManager.CreateAsync(userAdmin, "Pass@12345");

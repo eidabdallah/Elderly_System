@@ -17,7 +17,7 @@ namespace Elderly_System.DAL.DTO.Request.Nurse
         public string FieldOfStudy { get; set; } = null!;
         public float YearsOfStudy { get; set; }
         public string YearOfGraduation { get; set; } = null!;
-        public List<WorkExperienceRequest> WorkExperiences { get; set; } = new List<WorkExperienceRequest>();
+        public List<WorkExperienceRequest>? WorkExperiences { get; set; } = new List<WorkExperienceRequest>();
 
     }
 

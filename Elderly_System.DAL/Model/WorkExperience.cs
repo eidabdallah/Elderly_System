@@ -11,16 +11,11 @@ namespace ElderlySystem.DAL.Model
         public string WorkName { get; set; } = null!;
 
         [StringLength(150, ErrorMessage = "موقع العمل يجب ألا يتجاوز 150 حرف.")]
-        public string? WorkLocation { get; set; }
+        public string WorkLocation { get; set; } = null!;
 
         [Required(ErrorMessage = "المسمّى الوظيفي مطلوب.")]
         [StringLength(100, ErrorMessage = "المسمّى الوظيفي يجب ألا يتجاوز 100 حرف.")]
         public string JobTitle { get; set; } = null!;
-
-        [Required(ErrorMessage = "تاريخ بدء العمل مطلوب.")]
-        public DateTime StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "الموظف المرتبط بالخبرة مطلوب.")]
         public string EmployeeId { get; set; } = null!;

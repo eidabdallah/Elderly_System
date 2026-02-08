@@ -208,16 +208,11 @@ namespace Elderly_System.BLL.Service.Classes
                     if (string.IsNullOrWhiteSpace(we.WorkName) || string.IsNullOrWhiteSpace(we.JobTitle))
                         return ServiceResult.Failure("كل خبرة لازم يكون فيها مكان العمل و الدور الوظيفي");
 
-                    if (we.EndDate.HasValue && we.EndDate.Value.Date < we.StartDate.Date)
-                        return ServiceResult.Failure("EndDate لا يمكن أن يكون قبل StartDate");
-
                     nurse.WorkExperiences.Add(new WorkExperience
                     {
                         WorkName = we.WorkName.Trim(),
-                        WorkLocation = string.IsNullOrWhiteSpace(we.WorkLocation) ? null : we.WorkLocation.Trim(),
+                        WorkLocation = we.WorkLocation.Trim(),
                         JobTitle = we.JobTitle.Trim(),
-                        StartDate = we.StartDate,
-                        EndDate = we.EndDate,
                         EmployeeId = nurseId
                     });
                 }
