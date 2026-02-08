@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -117,11 +118,12 @@ namespace Elderly_System.BLL.Service.Classes
             if (result.Succeeded)
             {
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var tokenEncoded = Uri.EscapeDataString(token);
+                //var tokenEncoded = Uri.EscapeDataString(token);
+                var tokenEncoded = WebUtility.UrlEncode(token);
                 var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={user.Id}";
                 await _userManager.AddToRoleAsync(user, "Sponsor");
                 await _emailSender.SendEmailAsync(user.Email!, "تأكيد البريد الالكتروني",
-                  $"<h1>Hello {user.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+                  $"<h1>أهلاااا {user.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
                 return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
             }
             else
@@ -134,8 +136,9 @@ namespace Elderly_System.BLL.Service.Classes
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
             {
-                throw new Exception("المستخدم غير موجود");
+                return "المستخدم غير موجود";
             }
+
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {

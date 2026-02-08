@@ -39,13 +39,19 @@ namespace Elderly_System.PL
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
-            var userPolicy = "";
-            builder.Services.AddCors(options => {
-                options.AddPolicy(name: userPolicy, policy =>
+
+            var userPolicy = "AllowFrontend";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(userPolicy, policy =>
                 {
-                    policy.AllowAnyOrigin();
+                    policy
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
+
 
             builder.Services.AddAuthentication(options =>
             {
@@ -78,6 +84,7 @@ namespace Elderly_System.PL
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCors(userPolicy);
 
             app.UseStatusCodePages(async context =>
             {
@@ -96,8 +103,8 @@ namespace Elderly_System.PL
                 await response.WriteAsync(payload);
             });
             app.UseAuthentication();
-            app.UseCors(userPolicy);
             app.UseAuthorization();
+
             app.MapControllers();
             app.Run();
         }
