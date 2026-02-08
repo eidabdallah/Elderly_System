@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -54,15 +55,6 @@ namespace Elderly_System.BLL.Service.Classes
             var nurse = new Nurse
             {
                 ImageCertificate = uploaded.Url,
-
-                JobTitle = request.JobTitle,
-                HireDate = request.HireDate,
-                EducationLevel = request.EducationLevel,
-                MaritalStatus = request.MaritalStatus,
-                FieldOfStudy = request.FieldOfStudy,
-                YearsOfStudy = request.YearsOfStudy,
-                AcademicDegree = request.AcademicDegree,
-                YearOfGraduation = request.YearOfGraduation,
                 FullName = request.FullName,
                 Email = request.Email,
                 UserName = request.Email,
@@ -70,7 +62,8 @@ namespace Elderly_System.BLL.Service.Classes
                 City = request.City,
                 NationalId = request.NationalId,
                 Gender = request.Gender,
-                Status = Status.Pending
+                Status = Status.Pending,
+                IsProfileCompleted = false
             };
             var create = await _userManager.CreateAsync(nurse, request.Password);
             if (!create.Succeeded)
@@ -158,7 +151,11 @@ namespace Elderly_System.BLL.Service.Classes
                 if (user.Status == Status.Pending) return ServiceResult.SuccessMessage("تم تسجيل الدخول بنجاح ، لكن حسابك لم يتم القبول عليه بعد");
                 if (user.Status == Status.InActive) return ServiceResult.SuccessMessage("تم تسجيل الدخول بنجاح ، لكن حسابك مقفول من الادمن");
                 var Token = await CreateTokenAsync(user);
-                return ServiceResult.SuccessWithData(Token, "تم تسجيل الدخول بنجاح.");
+                return ServiceResult.SuccessWithData(new
+                {
+                    Token,
+                    isProfileCompleted = user.IsProfileCompleted
+                }, "تم تسجيل الدخول بنجاح.");
             }
             else if (result.IsLockedOut) return ServiceResult.Failure("تم قفل الحساب ، يرجى التواصل مع الادارة للاستفسار.");
             else if (result.IsNotAllowed) return ServiceResult.Failure("يرجى تأكيد البريد الإلكتروني أولاً.");

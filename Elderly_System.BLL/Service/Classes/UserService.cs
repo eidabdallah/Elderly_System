@@ -163,17 +163,26 @@ namespace Elderly_System.BLL.Service.Classes
         private static void FillEmployee(UserDetailsResponse dto, Employee emp)
         {
             dto.JobTitle = emp.JobTitle;
-            dto.HireDate = emp.HireDate.ToString("yyyy-MM-dd");
-            dto.EducationLevel = UserDetailsResponse.ToArabic(emp.EducationLevel);
-            dto.MaritalStatus = UserDetailsResponse.ToArabic(emp.MaritalStatus);
+
+            dto.HireDate = emp.HireDate?.ToString("yyyy-MM-dd");
+
+            dto.EducationLevel = emp.EducationLevel.HasValue
+                ? UserDetailsResponse.ToArabic(emp.EducationLevel.Value)
+                : null;
+
+            dto.MaritalStatus = emp.MaritalStatus.HasValue
+                ? UserDetailsResponse.ToArabic(emp.MaritalStatus.Value)
+                : null;
+
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
             dto.AcademicDegree = emp.AcademicDegree;
             dto.YearOfGraduation = emp.YearOfGraduation;
             dto.EndDate = emp.EndDate;
+
             dto.Skills = emp.Skills?.ToList();
         }
-    
+
         private static string ToArabic(Role role) => role switch
         {
             Role.Admin => "أدمن",

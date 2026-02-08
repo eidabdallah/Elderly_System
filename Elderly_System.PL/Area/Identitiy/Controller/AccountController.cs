@@ -57,7 +57,7 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
                 return BadRequest(new { message = result.Message });
 
             if (result.Data != null)
-                return Ok(new { message = result.Message, token = result.Data });
+                return Ok(new { message = result.Message, data = result.Data });
             return StatusCode(403, new { message = result.Message });
         }
         [HttpPost("forgot-password")]

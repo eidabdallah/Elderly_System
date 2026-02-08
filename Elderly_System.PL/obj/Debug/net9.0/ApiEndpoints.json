@@ -531,46 +531,6 @@
         "IsRequired": false
       },
       {
-        "Name": "JobTitle",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "HireDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "EducationLevel",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "MaritalStatus",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "FieldOfStudy",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "YearsOfStudy",
-        "Type": "System.Nullable\u00601[[System.Single, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "AcademicDegree",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "YearOfGraduation",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "Certificate",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
