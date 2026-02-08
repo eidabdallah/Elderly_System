@@ -555,6 +555,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
+    "Method": "CompleteProfile",
+    "RelativePath": "api/Nurse/complete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Nurse.CompleteNurseProfileRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "AddWithDoctor",
     "RelativePath": "api/Sponsor/Elderly/add-with-doctor",

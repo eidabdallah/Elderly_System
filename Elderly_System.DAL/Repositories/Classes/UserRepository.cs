@@ -63,5 +63,18 @@ namespace Elderly_System.DAL.Repositories.Classes
                     .ThenInclude(es => es.Elderly)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
+        public async Task<Nurse?> GetByIdAsync(string id)
+        {
+            return await _context.Users
+             .OfType<Nurse>()
+             .Include(n => n.WorkExperiences)
+             .FirstOrDefaultAsync(n => n.Id == id);
+        }
+
+        public async Task UpdateAsync(Nurse nurse)
+        {
+            _context.Users.Update(nurse);
+            await _context.SaveChangesAsync();
+        }
     }
 }

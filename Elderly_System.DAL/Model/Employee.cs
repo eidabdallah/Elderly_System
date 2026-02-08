@@ -9,11 +9,9 @@ namespace ElderlySystem.DAL.Model
         public EducationLevel? EducationLevel { get; set; }
         public string? FieldOfStudy { get; set; }
         public float? YearsOfStudy { get; set; }
-        public string? AcademicDegree { get; set; }
         public string? YearOfGraduation { get; set; }
         public MaritalStatus? MaritalStatus { get; set; }
         public DateTime? EndDate { get; set; }
-        public ICollection<string>? Skills { get; set; } = new List<string>();
         public ICollection<WorkExperience>? WorkExperiences { get; set; } = new List<WorkExperience>();
     }
 }

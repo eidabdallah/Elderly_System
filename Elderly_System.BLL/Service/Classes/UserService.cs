@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Nurse;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
@@ -14,7 +15,7 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserService(IUserRepository userRepository , UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _repository = userRepository;
             _userManager = userManager;
@@ -176,11 +177,8 @@ namespace Elderly_System.BLL.Service.Classes
 
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
-            dto.AcademicDegree = emp.AcademicDegree;
             dto.YearOfGraduation = emp.YearOfGraduation;
             dto.EndDate = emp.EndDate;
-
-            dto.Skills = emp.Skills?.ToList();
         }
 
         private static string ToArabic(Role role) => role switch
@@ -191,5 +189,45 @@ namespace Elderly_System.BLL.Service.Classes
             Role.Sponsor => "كفيل",
             _ => "غير معروف"
         };
+        public async Task<ServiceResult> CompleteProfileAsync(string nurseId, CompleteNurseProfileRequest request)
+        {
+            var nurse = await _repository.GetByIdAsync(nurseId);
+            if (nurse == null)
+                return ServiceResult.Failure("الممرض غير موجود");
+            nurse.JobTitle = "ممرض";
+            nurse.EducationLevel = request.EducationLevel;
+            nurse.MaritalStatus = request.MaritalStatus;
+            nurse.FieldOfStudy = request.FieldOfStudy.Trim();
+            nurse.YearsOfStudy = request.YearsOfStudy;
+            nurse.YearOfGraduation = request.YearOfGraduation.Trim();
+
+            if (request.WorkExperiences != null && request.WorkExperiences.Count > 0)
+            {
+                foreach (var we in request.WorkExperiences)
+                {
+                    if (string.IsNullOrWhiteSpace(we.WorkName) || string.IsNullOrWhiteSpace(we.JobTitle))
+                        return ServiceResult.Failure("كل خبرة لازم يكون فيها مكان العمل و الدور الوظيفي");
+
+                    if (we.EndDate.HasValue && we.EndDate.Value.Date < we.StartDate.Date)
+                        return ServiceResult.Failure("EndDate لا يمكن أن يكون قبل StartDate");
+
+                    nurse.WorkExperiences.Add(new WorkExperience
+                    {
+                        WorkName = we.WorkName.Trim(),
+                        WorkLocation = string.IsNullOrWhiteSpace(we.WorkLocation) ? null : we.WorkLocation.Trim(),
+                        JobTitle = we.JobTitle.Trim(),
+                        StartDate = we.StartDate,
+                        EndDate = we.EndDate,
+                        EmployeeId = nurseId
+                    });
+                }
+            }
+
+            nurse.IsProfileCompleted = true;
+
+            await _repository.UpdateAsync(nurse);
+            return ServiceResult.SuccessMessage("تم استكمال بيانات الممرض بنجاح");
+        }
+
     }
 }

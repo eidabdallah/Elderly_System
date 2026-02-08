@@ -17,5 +17,9 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Employee?> GetEmployeeAsync(string id);
         Task<Nurse?> GetNurseAsync(string id);
         Task<Sponsor?> GetSponsorWithElderlyAsync(string id);
+        Task<Nurse?> GetByIdAsync(string id);
+        Task UpdateAsync(Nurse nurse);
+
+
     }
 }

@@ -77,7 +77,7 @@ namespace Elderly_System.BLL.Service.Classes
             var tokenEncoded = Uri.EscapeDataString(token);
             var emailUrl = $"{HttpRequest.Scheme}://{HttpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={nurse.Id}";
             await _emailSender.SendEmailAsync(nurse.Email!, "تأكيد البريد الالكتروني",
-              $"<h1>Hello {nurse.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+              $"<h1>أهلااا {nurse.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
 
             return ServiceResult.SuccessMessage("تم تسجيل الحساب بنجاح، يرجى تأكيد البريد الإلكتروني.");
         }

@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.Enums;
+﻿using Elderly_System.DAL.DTO.Request.Nurse;
+using Elderly_System.DAL.Enums;
 using ElderlySystem.BLL.Helpers;
 
 namespace Elderly_System.BLL.Service.Interface
@@ -9,6 +10,8 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> ChangeStatusAsync(string userId, Status newStatus);
         Task<ServiceResult> ChangeRoleAsync(string userId, Role newRole);
         Task<ServiceResult> GetUserDetailsAsync(string userId);
+        Task<ServiceResult> CompleteProfileAsync(string nurseId, CompleteNurseProfileRequest request);
+
 
 
     }
