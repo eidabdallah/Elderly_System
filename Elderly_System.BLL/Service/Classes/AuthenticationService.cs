@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -256,7 +255,10 @@ namespace Elderly_System.BLL.Service.Classes
                 Id = user.Id,
                 Email = user.Email!,
                 FullName = user.FullName,
-                PhoneNumber = user.PhoneNumber!
+                PhoneNumber = user.PhoneNumber!,
+                city = user.City,
+                NationalId = user.NationalId,
+                Gender = user.Gender
             };
             return ServiceResult.SuccessWithData(response, "تم جلب معلومات المستخدم");
         }
