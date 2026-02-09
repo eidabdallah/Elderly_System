@@ -28,6 +28,8 @@ namespace Elderly_System.PL
             services.AddScoped<IElderlySponsorService, ElderlySponsorService>();
             services.AddScoped<IVistorRepository, VistorRepository>();
             services.AddScoped<IVistorService, VistorService>();
+            services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+            services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
         }
     }

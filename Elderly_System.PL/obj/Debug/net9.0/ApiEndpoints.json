@@ -79,6 +79,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.DashboardController",
+    "Method": "GetStats",
+    "RelativePath": "api/Admin/dashboard/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.DonationController",
     "Method": "GetAll",
     "RelativePath": "api/Admin/Donation",
