@@ -35,6 +35,9 @@ namespace Elderly_System.BLL.Service.Classes
                 if (!Enum.TryParse(roleName, true, out roleEnum))
                     roleEnum = Role.Employee;
 
+                if (string.Equals(roleName, nameof(Role.Admin), StringComparison.OrdinalIgnoreCase))
+                    continue;
+
                 if (role is not null && roleEnum != role.Value)
                     continue;
                 data.Add(new UserResponse
