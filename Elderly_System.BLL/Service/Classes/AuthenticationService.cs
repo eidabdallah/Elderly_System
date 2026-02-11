@@ -156,7 +156,6 @@ namespace Elderly_System.BLL.Service.Classes
                     isProfileCompleted = user.IsProfileCompleted
                 }, "تم تسجيل الدخول بنجاح.");
             }
-            else if (result.IsLockedOut) return ServiceResult.Failure("تم قفل الحساب ، يرجى التواصل مع الادارة للاستفسار.");
             else if (result.IsNotAllowed) return ServiceResult.Failure("يرجى تأكيد البريد الإلكتروني أولاً.");
             else return ServiceResult.Failure("خطا في الايميل او كلمة السر");
 

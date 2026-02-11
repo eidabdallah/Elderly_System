@@ -12,24 +12,15 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string NationalId { get; set; } = "";
         public string Gender { get; set; } = "";
         public string Status { get; set; } = "";
-        public string CreatedAt { get; set; } = "";
-
         public string RoleUser { get; set; } = "";
-
         public string? JobTitle { get; set; }
-        public string? HireDate { get; set; }
         public string? EducationLevel { get; set; }
         public string? FieldOfStudy { get; set; }
         public float? YearsOfStudy { get; set; }
         public string? AcademicDegree { get; set; }
         public string? YearOfGraduation { get; set; }
         public string? MaritalStatus { get; set; }
-        public DateTime? EndDate { get; set; }
-        public List<string>? Skills { get; set; }
-
         public string? ImageCertificate { get; set; }
-
-        public string? Note { get; set; }
         public List<string>? ElderlyNames { get; set; }
 
         public static string ToArabic(Role role) => role switch

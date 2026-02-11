@@ -128,7 +128,6 @@ namespace Elderly_System.BLL.Service.Classes
                 NationalId = baseUser.NationalId,
                 Gender = UserDetailsResponse.ToArabic(baseUser.Gender),
                 Status = UserDetailsResponse.ToArabic(baseUser.Status),
-                CreatedAt = baseUser.CreatedAt.ToString("yyyy-MM-dd"),
                 RoleUser = UserDetailsResponse.ToArabic(roleEnum)
             };
 
@@ -152,7 +151,6 @@ namespace Elderly_System.BLL.Service.Classes
                 var sponsor = await _repository.GetSponsorWithElderlyAsync(userId);
                 if (sponsor is null) return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
 
-                dto.Note = sponsor.Note;
 
                 dto.ElderlyNames = sponsor.ElderlySponsors
                     .Select(es => es.Elderly.Name)
@@ -168,7 +166,6 @@ namespace Elderly_System.BLL.Service.Classes
         {
             dto.JobTitle = emp.JobTitle;
 
-            dto.HireDate = emp.HireDate?.ToString("yyyy-MM-dd");
 
             dto.EducationLevel = emp.EducationLevel.HasValue
                 ? UserDetailsResponse.ToArabic(emp.EducationLevel.Value)
@@ -181,7 +178,6 @@ namespace Elderly_System.BLL.Service.Classes
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
             dto.YearOfGraduation = emp.YearOfGraduation;
-            dto.EndDate = emp.EndDate;
         }
 
         private static string ToArabic(Role role) => role switch
