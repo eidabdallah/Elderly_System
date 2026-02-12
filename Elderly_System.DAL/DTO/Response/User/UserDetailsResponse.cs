@@ -22,6 +22,8 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string? MaritalStatus { get; set; }
         public string? ImageCertificate { get; set; }
         public List<string>? ElderlyNames { get; set; }
+        public List<WorkExperienceResponse>? WorkExperiences { get; set; }
+
 
         public static string ToArabic(Role role) => role switch
         {

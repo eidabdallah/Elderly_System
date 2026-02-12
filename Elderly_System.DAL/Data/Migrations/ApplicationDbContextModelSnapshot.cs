@@ -59,7 +59,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.ApplicationUser", b =>
@@ -204,7 +204,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Donations");
+                    b.ToTable("Donations", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Elderly", b =>
@@ -278,7 +278,7 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.HasIndex("NationalId")
                         .IsUnique();
 
-                    b.ToTable("Elderlies");
+                    b.ToTable("Elderlies", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.ElderlySponsor", b =>
@@ -301,7 +301,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("SponsorId");
 
-                    b.ToTable("ElderlySponsors");
+                    b.ToTable("ElderlySponsors", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.ElderlyVisitor", b =>
@@ -336,7 +336,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("VisitorId");
 
-                    b.ToTable("ElderlyVisitors");
+                    b.ToTable("ElderlyVisitors", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Good", b =>
@@ -361,7 +361,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("DonationId");
 
-                    b.ToTable("Goods");
+                    b.ToTable("Goods", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.NurseShiftAssignment", b =>
@@ -389,7 +389,7 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.HasIndex("NurseId", "Date")
                         .IsUnique();
 
-                    b.ToTable("NurseShiftAssignments");
+                    b.ToTable("NurseShiftAssignments", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Participant", b =>
@@ -412,7 +412,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Participants");
+                    b.ToTable("Participants", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.ResidentStay", b =>
@@ -444,7 +444,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("ResidentStays");
+                    b.ToTable("ResidentStays", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Room", b =>
@@ -479,7 +479,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.RoomImage", b =>
@@ -505,7 +505,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("RoomImages");
+                    b.ToTable("RoomImages", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Shift", b =>
@@ -528,7 +528,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shifts");
+                    b.ToTable("Shifts", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Visitor", b =>
@@ -553,7 +553,7 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.HasIndex("Phone")
                         .IsUnique();
 
-                    b.ToTable("Visitors");
+                    b.ToTable("Visitors", (string)null);
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.WorkExperience", b =>
@@ -587,7 +587,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("WorkExperiences");
+                    b.ToTable("WorkExperiences", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.CheckList", b =>
@@ -648,7 +648,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("NurseId");
 
-                    b.ToTable("CheckLists");
+                    b.ToTable("CheckLists", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
@@ -675,7 +675,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlan", b =>
@@ -711,7 +711,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("MedicineId");
 
-                    b.ToTable("DrugPlans");
+                    b.ToTable("DrugPlans", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.ElderMeal", b =>
@@ -737,7 +737,7 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.HasIndex("ElderlyId", "Date", "MealType")
                         .IsUnique();
 
-                    b.ToTable("ElderMeals");
+                    b.ToTable("ElderMeals", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.MedicalReport", b =>
@@ -771,7 +771,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("ElderlyId");
 
-                    b.ToTable("MedicalReports");
+                    b.ToTable("MedicalReports", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.MedicalReportMedicine", b =>
@@ -786,7 +786,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("MedicineId");
 
-                    b.ToTable("MedicalReportMedicines");
+                    b.ToTable("MedicalReportMedicines", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.Medication", b =>
@@ -818,7 +818,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasIndex("NurseId");
 
-                    b.ToTable("Medications");
+                    b.ToTable("Medications", (string)null);
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.Medicine", b =>
@@ -841,7 +841,7 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medicines");
+                    b.ToTable("Medicines", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

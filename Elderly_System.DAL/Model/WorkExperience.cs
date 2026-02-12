@@ -9,7 +9,7 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "اسم جهة العمل مطلوب.")]
         [StringLength(150, MinimumLength = 2, ErrorMessage = "اسم جهة العمل يجب أن يكون بين 2 و 150 حرف.")]
         public string WorkName { get; set; } = null!;
-
+        [Required(ErrorMessage = "اسم جهة العمل مطلوب.")]
         [StringLength(150, ErrorMessage = "موقع العمل يجب ألا يتجاوز 150 حرف.")]
         public string WorkLocation { get; set; } = null!;
 

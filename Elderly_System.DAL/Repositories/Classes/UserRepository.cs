@@ -43,17 +43,22 @@ namespace Elderly_System.DAL.Repositories.Classes
 
         public async Task<Employee?> GetEmployeeAsync(string id)
         {
-            return await _context.Users.AsNoTracking()
+            return await _context.Users
+                .AsNoTracking()
                 .OfType<Employee>()
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .Include(e => e.WorkExperiences)
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<Nurse?> GetNurseAsync(string id)
         {
-            return await _context.Users.AsNoTracking()
+            return await _context.Users
+                .AsNoTracking()
                 .OfType<Nurse>()
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .Include(n => n.WorkExperiences)
+                .FirstOrDefaultAsync(n => n.Id == id);
         }
+
 
         public async Task<Sponsor?> GetSponsorWithElderlyAsync(string id)
         {

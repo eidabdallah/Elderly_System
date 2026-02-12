@@ -178,6 +178,11 @@ namespace Elderly_System.BLL.Service.Classes
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
             dto.YearOfGraduation = emp.YearOfGraduation;
+            dto.WorkExperiences = emp.WorkExperiences?.Select(w => new WorkExperienceResponse
+            {
+                WorkName = w.WorkName ?? "",
+                WorkLocation = w.WorkLocation ?? "",
+            }).ToList();
         }
 
         private static string ToArabic(Role role) => role switch
