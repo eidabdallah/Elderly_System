@@ -148,7 +148,7 @@ namespace Elderly_System.BLL.Service.Classes
                 FillEmployee(dto, nurse);
                 dto.ImageCertificate = nurse.ImageCertificate;
             }
-            else if (roleEnum is Role.Accountant or Role.Chef)
+            else if (roleEnum is Role.Accountant or Role.Chef or Role.Secretary)
             {
                 var emp = await _repository.GetEmployeeAsync(userId);
                 if (emp is null) return ServiceResult.Failure("بيانات الموظف غير موجودة.");

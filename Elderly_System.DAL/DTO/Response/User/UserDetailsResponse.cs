@@ -54,8 +54,8 @@ namespace Elderly_System.DAL.DTO.Response.User
         {
             Enums.EducationLevel.Secondary => "ثانوي",
             Enums.EducationLevel.Tawjihi => "توجيهي",
-            Enums.EducationLevel.University => "دبلوم",
-            Enums.EducationLevel.Institute => "جامعة",
+            Enums.EducationLevel.University => "جامعة",
+            Enums.EducationLevel.Institute => "معهد",
             _ => "غير معروف"
         };
         public static string ToArabic(MaritalStatus m) => m switch

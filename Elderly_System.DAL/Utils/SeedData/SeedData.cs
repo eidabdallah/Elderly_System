@@ -193,7 +193,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Status = Status.Active,
                     IsProfileCompleted = true,
                     EducationLevel = EducationLevel.Secondary,
-                    FieldOfStudy = "فنون الطبخ",
+                    FieldOfStudy = "سكرتيرة",
                     YearsOfStudy = 2,
                     YearOfGraduation = "2018",
                     MaritalStatus = MaritalStatus.Married,
