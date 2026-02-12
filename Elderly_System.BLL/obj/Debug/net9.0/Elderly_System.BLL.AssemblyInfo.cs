@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Elderly_System.BLL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8993b8972eac4e261c6843a713e55a0aa41d3aa9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0fba149f32bafa91505c423c5ea8786e1a178c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Elderly_System.BLL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Elderly_System.BLL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

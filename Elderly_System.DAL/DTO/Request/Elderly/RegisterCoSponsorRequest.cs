@@ -14,10 +14,7 @@ namespace Elderly_System.DAL.DTO.Request.Elderly
 
         [Required(ErrorMessage = "الاسم الكامل مطلوب.")]
         public string FullName { get; set; } = null!;
-        [Required(ErrorMessage = "اسم المستخدم مطلوب.")]
-        [MaxLength(50, ErrorMessage = "اسم المستخدم طويل جدًا.")]
-        public string UserName { get; set; } = default!;
-
+        
         [Required(ErrorMessage = "البريد الإلكتروني مطلوب.")]
         [EmailAddress(ErrorMessage = "البريد الإلكتروني غير صحيح.")]
         public string Email { get; set; } = null!;

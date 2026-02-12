@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
@@ -25,7 +26,6 @@ namespace Elderly_System.DAL.Repositories.Classes
                     ElderlyId = e.Id,
                     ElderlyName = e.Name,
                     ReasonRegister = e.ReasonRegister,
-
                     Sponsors = e.ElderlySponsors
                         .Select(es => new ElderlySponsorBriefDTO
                         {

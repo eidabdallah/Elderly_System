@@ -39,10 +39,10 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 {
                     NationalId = "999333444",
                     Email = "bahaa@gmail.com",
-                    FullName = "bahaa bbb",
+                    FullName = "بهاء احمد",
                     PhoneNumber = "1234567890",
                     UserName = "BahaaBB",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
@@ -51,54 +51,70 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 await _userManager.CreateAsync(userAdmin, "Pass@12345");
                 await _userManager.AddToRoleAsync(userAdmin, "Admin");
 
-                var cleaner1 = new ApplicationUser()
+
+                var cleaner1 = new Employee
                 {
                     NationalId = "444555666",
                     Email = "cleaner1@gmail.com",
                     FullName = "سميحة خالد عبدالصمد",
                     PhoneNumber = "0590000004",
                     UserName = "Cleaner1",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true
-                };
-                await _userManager.CreateAsync(cleaner1, "Pass@12345");
-                await _userManager.AddToRoleAsync(cleaner1, "Cleaner");
+                    IsProfileCompleted = true,
 
-                var cleaner2 = new ApplicationUser()
+                    MaritalStatus = MaritalStatus.Married
+                };
+
+                var resCleaner1 = await _userManager.CreateAsync(cleaner1, "Pass@12345");
+                if (resCleaner1.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(cleaner1, "Cleaner");
+                }
+
+                var cleaner2 = new Employee
                 {
                     NationalId = "555666777",
                     Email = "cleaner2@gmail.com",
                     FullName = "هبة محمد احمد",
                     PhoneNumber = "0590000005",
                     UserName = "Cleaner2",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true
+                    IsProfileCompleted = true,
+                    MaritalStatus = MaritalStatus.Single
                 };
-                await _userManager.CreateAsync(cleaner2, "Pass@12345");
-                await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
 
-                var security = new ApplicationUser()
+                var resCleaner2 = await _userManager.CreateAsync(cleaner2, "Pass@12345");
+                if (resCleaner2.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
+                }
+
+                var security = new Employee
                 {
                     NationalId = "333444555",
                     Email = "security@gmail.com",
                     FullName = "احمد خالد عبدالله",
                     PhoneNumber = "0590000003",
                     UserName = "Security1",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Male,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true
+                    IsProfileCompleted = true,
+                    MaritalStatus = MaritalStatus.Married
                 };
-                await _userManager.CreateAsync(security, "Pass@12345");
-                await _userManager.AddToRoleAsync(security, "Security");
 
+                var resSecurity = await _userManager.CreateAsync(security, "Pass@12345");
+                if (resSecurity.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(security, "Security");
+                }
 
                 var accountant = new Employee
                 {
@@ -107,7 +123,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     FullName = "محمد خالد احمد",
                     PhoneNumber = "0590000001",
                     UserName = "Accountant1",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Male,
                     EmailConfirmed = true,
                     Status = Status.Active,
@@ -147,7 +163,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     FullName = "سمر أحمد علي",
                     PhoneNumber = "0590000002",
                     UserName = "Chef1",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
@@ -187,7 +203,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     FullName = "اسماء احمد علي",
                     PhoneNumber = "0590000013",
                     UserName = "Secretary2",
-                    City = "Nablus",
+                    City = "نابلس",
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,

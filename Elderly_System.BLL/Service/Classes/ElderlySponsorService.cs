@@ -104,16 +104,13 @@ namespace Elderly_System.BLL.Service.Classes
             var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
             if (nationalIdExists)
                 return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
-            var userNameExists = await _userManager.Users.AnyAsync(u => u.UserName == request.UserName);
-            if (userNameExists)
-                return ServiceResult.Failure("اسم المستخدم مستخدم بالفعل.");
 
             var newSponsor = new Sponsor
             {
                 FullName = request.FullName,
                 Status = Status.Active,
                 Email = request.Email,
-                UserName = request.UserName,
+                UserName = request.Email,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 City = request.City,
@@ -141,7 +138,7 @@ namespace Elderly_System.BLL.Service.Classes
             var emailUrl = $"{httpRequest.Scheme}://{httpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={newSponsor.Id}";
 
             await _emailSender.SendEmailAsync(newSponsor.Email!, "تأكيد البريد الالكتروني",
-                $"<h1>Hello {newSponsor.UserName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
+                $"<h1>Hello {newSponsor.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
 
             return ServiceResult.SuccessMessage("تم تسجيل الكفيل وربطه بالمسن بنجاح، يرجى تأكيد البريد الإلكتروني.");
         }
