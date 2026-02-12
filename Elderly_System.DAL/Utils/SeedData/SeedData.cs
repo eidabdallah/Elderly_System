@@ -51,22 +51,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 await _userManager.CreateAsync(userAdmin, "Pass@12345");
                 await _userManager.AddToRoleAsync(userAdmin, "Admin");
 
-                var Secretary = new ApplicationUser()
-                {
-                    NationalId = "444555662",
-                    Email = "Secretary@gmail.com",
-                    FullName = "اسماء احمد علي",
-                    PhoneNumber = "0590000013",
-                    UserName = "Secretary2",
-                    City = "Nablus",
-                    Gender = Gender.Female,
-                    EmailConfirmed = true,
-                    Status = Status.Active,
-                    IsProfileCompleted = true
-                };
-                await _userManager.CreateAsync(Secretary, "Pass@12345");
-                await _userManager.AddToRoleAsync(Secretary, "Secretary");
-
                 var cleaner1 = new ApplicationUser()
                 {
                     NationalId = "444555666",
@@ -196,10 +180,40 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                         }
                     );
                 }
+                var Secretary = new Employee
+                {
+                    NationalId = "444555662",
+                    Email = "Secretary@gmail.com",
+                    FullName = "اسماء احمد علي",
+                    PhoneNumber = "0590000013",
+                    UserName = "Secretary2",
+                    City = "Nablus",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true,
+                    EducationLevel = EducationLevel.Secondary,
+                    FieldOfStudy = "فنون الطبخ",
+                    YearsOfStudy = 2,
+                    YearOfGraduation = "2018",
+                    MaritalStatus = MaritalStatus.Married,
+                };
+                var resSecretary = await _userManager.CreateAsync(Secretary, "Pass@12345");
+                if (resSecretary.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(Secretary, "Secretary");
 
+                    _context.WorkExperiences.AddRange(
+                        new WorkExperience
+                        {
+                            WorkName = "جامعة النجاح",
+                            WorkLocation = "نابلس",
+                            JobTitle = "سكرتيرة",
+                            EmployeeId = Secretary.Id
+                        }
+                    );
+                }
             }
-           
-
             await _context.SaveChangesAsync();
         }
         public async Task SeedShiftsAsync()

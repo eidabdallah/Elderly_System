@@ -30,7 +30,7 @@ namespace Elderly_System.DAL.DTO.Response.User
             Role.Nurse => "ممرض",
             Role.Sponsor => "كفيل",
             Role.Accountant => "محاسب",
-            Role.Chef => "طباخة",
+            Role.Chef => "مسؤولة طبخ",
             Role.Security => "حارس",
             Role.Cleaner => "عاملة نظافة",
             Role.Secretary => "سكرتيرة",
