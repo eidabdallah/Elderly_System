@@ -27,7 +27,11 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 await _roleManager.CreateAsync(new IdentityRole("Admin")); 
                 await _roleManager.CreateAsync(new IdentityRole("Nurse"));
                 await _roleManager.CreateAsync(new IdentityRole("Sponsor"));
-                await _roleManager.CreateAsync(new IdentityRole("Employee"));
+                await _roleManager.CreateAsync(new IdentityRole("Accountant"));
+                await _roleManager.CreateAsync(new IdentityRole("Cleaner"));
+                await _roleManager.CreateAsync(new IdentityRole("Security"));
+                await _roleManager.CreateAsync(new IdentityRole("Chef"));
+                await _roleManager.CreateAsync(new IdentityRole("Secretary"));
             }
             if (!await _userManager.Users.AnyAsync())
             {
@@ -44,11 +48,157 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Status = Status.Active,
                     IsProfileCompleted = true
                 };
-
                 await _userManager.CreateAsync(userAdmin, "Pass@12345");
                 await _userManager.AddToRoleAsync(userAdmin, "Admin");
 
+                var Secretary = new ApplicationUser()
+                {
+                    NationalId = "444555662",
+                    Email = "Secretary@gmail.com",
+                    FullName = "اسماء احمد علي",
+                    PhoneNumber = "0590000013",
+                    UserName = "Secretary2",
+                    City = "Nablus",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true
+                };
+                await _userManager.CreateAsync(Secretary, "Pass@12345");
+                await _userManager.AddToRoleAsync(Secretary, "Secretary");
+
+                var cleaner1 = new ApplicationUser()
+                {
+                    NationalId = "444555666",
+                    Email = "cleaner1@gmail.com",
+                    FullName = "سميحة خالد عبدالصمد",
+                    PhoneNumber = "0590000004",
+                    UserName = "Cleaner1",
+                    City = "Nablus",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true
+                };
+                await _userManager.CreateAsync(cleaner1, "Pass@12345");
+                await _userManager.AddToRoleAsync(cleaner1, "Cleaner");
+
+                var cleaner2 = new ApplicationUser()
+                {
+                    NationalId = "555666777",
+                    Email = "cleaner2@gmail.com",
+                    FullName = "هبة محمد احمد",
+                    PhoneNumber = "0590000005",
+                    UserName = "Cleaner2",
+                    City = "Nablus",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true
+                };
+                await _userManager.CreateAsync(cleaner2, "Pass@12345");
+                await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
+
+                var security = new ApplicationUser()
+                {
+                    NationalId = "333444555",
+                    Email = "security@gmail.com",
+                    FullName = "احمد خالد عبدالله",
+                    PhoneNumber = "0590000003",
+                    UserName = "Security1",
+                    City = "Nablus",
+                    Gender = Gender.Male,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true
+                };
+                await _userManager.CreateAsync(security, "Pass@12345");
+                await _userManager.AddToRoleAsync(security, "Security");
+
+
+                var accountant = new Employee
+                {
+                    NationalId = "111222333",
+                    Email = "accountant@gmail.com",
+                    FullName = "محمد خالد احمد",
+                    PhoneNumber = "0590000001",
+                    UserName = "Accountant1",
+                    City = "Nablus",
+                    Gender = Gender.Male,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true,
+                    EducationLevel = EducationLevel.University,
+                    FieldOfStudy = "محاسبة",
+                    YearsOfStudy = 4,
+                    YearOfGraduation = "2020",
+                    MaritalStatus = MaritalStatus.Married,
+                };
+                var res = await _userManager.CreateAsync(accountant, "Pass@12345");
+                if (res.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(accountant, "Accountant");
+                    _context.WorkExperiences.AddRange(
+                        new WorkExperience
+                        {
+                            WorkName = "شركة عسل",
+                            WorkLocation = "نابلس",
+                            JobTitle = "محاسب",
+                            EmployeeId = accountant.Id
+                        },
+                        new WorkExperience
+                        {
+                            WorkName = "شركة فوتهيل",
+                            WorkLocation = "رام الله",
+                            JobTitle = "محاسب مساعد",
+                            EmployeeId = accountant.Id
+                        }
+                    );
+                }
+
+                var chef = new Employee
+                {
+                    NationalId = "222333444",
+                    Email = "chef@gmail.com",
+                    FullName = "سمر أحمد علي",
+                    PhoneNumber = "0590000002",
+                    UserName = "Chef1",
+                    City = "Nablus",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true,
+                    EducationLevel = EducationLevel.Secondary,
+                    FieldOfStudy = "فنون الطبخ",
+                    YearsOfStudy = 2,
+                    YearOfGraduation = "2018",
+                    MaritalStatus = MaritalStatus.Married,
+                };
+                var resChef = await _userManager.CreateAsync(chef, "Pass@12345");
+                if (resChef.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(chef, "Chef");
+
+                    _context.WorkExperiences.AddRange(
+                        new WorkExperience
+                        {
+                            WorkName = "مطعم الياسمين",
+                            WorkLocation = "نابلس",
+                            JobTitle = "طباخة",
+                            EmployeeId = chef.Id
+                        },
+                        new WorkExperience
+                        {
+                            WorkName = "مطبخ البيت السعيد",
+                            WorkLocation = "رام الله",
+                            JobTitle = "مساعدة طباخة",
+                            EmployeeId = chef.Id
+                        }
+                    );
+                }
+
             }
+           
 
             await _context.SaveChangesAsync();
         }

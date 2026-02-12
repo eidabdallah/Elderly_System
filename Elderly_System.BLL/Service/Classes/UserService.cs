@@ -21,9 +21,9 @@ namespace Elderly_System.BLL.Service.Classes
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null)
+        public async Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null, string? name = null)
         {
-            var users = await _repository.GetUsersAsync(status);
+            var users = await _repository.GetUsersAsync(status, name);
 
             var data = new List<UserResponse>();
 
@@ -31,15 +31,19 @@ namespace Elderly_System.BLL.Service.Classes
             {
                 var roles = await _userManager.GetRolesAsync(u);
                 var roleName = roles.FirstOrDefault();
-                Role roleEnum;
-                if (!Enum.TryParse(roleName, true, out roleEnum))
-                    roleEnum = Role.Employee;
 
-                if (string.Equals(roleName, nameof(Role.Admin), StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(roleName))
+                    continue;
+
+                if (!Enum.TryParse<Role>(roleName, true, out var roleEnum))
+                    continue;
+
+                if (roleEnum == Role.Admin)
                     continue;
 
                 if (role is not null && roleEnum != role.Value)
                     continue;
+
                 data.Add(new UserResponse
                 {
                     Id = u.Id,
@@ -48,8 +52,10 @@ namespace Elderly_System.BLL.Service.Classes
                     RoleUser = UserResponse.ToArabic(roleEnum)
                 });
             }
+
             return ServiceResult.SuccessWithData(data, "تم جلب المستخدمين بنجاح");
         }
+
         public async Task<ServiceResult> ChangeStatusAsync(string userId, Status newStatus)
         {
             if (newStatus != Status.Pending && newStatus != Status.Active && newStatus != Status.InActive)
@@ -103,7 +109,7 @@ namespace Elderly_System.BLL.Service.Classes
             if (!addResult.Succeeded)
                 return ServiceResult.Failure("فشل تعيين الدور الجديد للمستخدم.");
 
-            var msg = $"تم تغيير دور المستخدم إلى {ToArabic(newRole)} بنجاح.";
+            var msg = $"تم تغيير دور المستخدم إلى {UserResponse.ToArabic(newRole)} بنجاح.";
             return ServiceResult.SuccessMessage(msg);
         }
         public async Task<ServiceResult> GetUserDetailsAsync(string userId)
@@ -113,10 +119,13 @@ namespace Elderly_System.BLL.Service.Classes
                 return ServiceResult.Failure("المستخدم غير موجود.");
 
             var roles = await _userManager.GetRolesAsync(baseUser);
-            var roleName = roles.FirstOrDefault() ?? Role.Employee.ToString();
+            var roleName = roles.FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(roleName))
+                return ServiceResult.Failure("لم يتم تعيين صلاحية (Role) لهذا المستخدم.");
 
             if (!Enum.TryParse<Role>(roleName, true, out var roleEnum))
-                roleEnum = Role.Employee;
+                return ServiceResult.Failure("صلاحية المستخدم غير معروفة.");
 
             var dto = new UserDetailsResponse
             {
@@ -139,7 +148,7 @@ namespace Elderly_System.BLL.Service.Classes
                 FillEmployee(dto, nurse);
                 dto.ImageCertificate = nurse.ImageCertificate;
             }
-            else if (roleEnum == Role.Employee)
+            else if (roleEnum is Role.Accountant or Role.Chef)
             {
                 var emp = await _repository.GetEmployeeAsync(userId);
                 if (emp is null) return ServiceResult.Failure("بيانات الموظف غير موجودة.");
@@ -150,7 +159,6 @@ namespace Elderly_System.BLL.Service.Classes
             {
                 var sponsor = await _repository.GetSponsorWithElderlyAsync(userId);
                 if (sponsor is null) return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
-
 
                 dto.ElderlyNames = sponsor.ElderlySponsors
                     .Select(es => es.Elderly.Name)
@@ -164,8 +172,6 @@ namespace Elderly_System.BLL.Service.Classes
 
         private static void FillEmployee(UserDetailsResponse dto, Employee emp)
         {
-            dto.JobTitle = emp.JobTitle;
-
 
             dto.EducationLevel = emp.EducationLevel.HasValue
                 ? UserDetailsResponse.ToArabic(emp.EducationLevel.Value)
@@ -178,21 +184,17 @@ namespace Elderly_System.BLL.Service.Classes
             dto.FieldOfStudy = emp.FieldOfStudy;
             dto.YearsOfStudy = emp.YearsOfStudy;
             dto.YearOfGraduation = emp.YearOfGraduation;
-            dto.WorkExperiences = emp.WorkExperiences?.Select(w => new WorkExperienceResponse
-            {
-                WorkName = w.WorkName ?? "",
-                WorkLocation = w.WorkLocation ?? "",
-            }).ToList();
+
+            dto.WorkExperiences = emp.WorkExperiences?
+                .Select(w => new WorkExperienceResponse
+                {
+                    WorkName = w.WorkName ?? "",
+                    WorkLocation = w.WorkLocation ?? "",
+                })
+                .ToList();
         }
 
-        private static string ToArabic(Role role) => role switch
-        {
-            Role.Admin => "أدمن",
-            Role.Employee => "موظف",
-            Role.Nurse => "ممرض",
-            Role.Sponsor => "كفيل",
-            _ => "غير معروف"
-        };
+
         public async Task<ServiceResult> CompleteProfileAsync(string nurseId, CompleteNurseProfileRequest request)
         {
             var nurse = await _repository.GetByIdAsync(nurseId);

@@ -2,6 +2,13 @@
 {
     public enum Role
     {
-        Admin, Employee, Nurse, Sponsor
+        Admin,
+        Nurse,
+        Sponsor,
+        Accountant,
+        Chef,
+        Security,
+        Cleaner,
+        Secretary
     }
 }

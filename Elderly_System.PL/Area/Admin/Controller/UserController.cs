@@ -30,9 +30,9 @@ namespace Elderly_System.PL.Area.Admin.Controller
             return Ok(new { message = result.Message, User = result.Data });
         }
         [HttpGet("")]
-        public async Task<IActionResult> GetUsers([FromQuery] Status? status, [FromQuery] Role? role)
+        public async Task<IActionResult> GetUsers([FromQuery] Status? status, [FromQuery] Role? role , [FromQuery] string? name)
         {
-            var result = await _service.GetUsersAsync(status, role);
+            var result = await _service.GetUsersAsync(status, role , name);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });

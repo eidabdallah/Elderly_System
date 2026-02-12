@@ -11,9 +11,13 @@ namespace Elderly_System.DAL.DTO.Response.User
         public static string ToArabic(Role role) => role switch
         {
             Role.Admin => "أدمن",
-            Role.Employee => "موظف",
             Role.Nurse => "ممرض",
             Role.Sponsor => "كفيل",
+            Role.Accountant => "محاسب",
+            Role.Chef => "طباخة",
+            Role.Security => "حارس",
+            Role.Cleaner => "عاملة نظافة",
+            Role.Secretary => "سكرتيرة",
             _ => "غير معروف"
         };
         public static string ToArabic(Status status) => status switch

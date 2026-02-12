@@ -362,6 +362,11 @@
         "Name": "role",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

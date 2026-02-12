@@ -14,7 +14,7 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
-        public async Task<List<ApplicationUser>> GetUsersAsync(Status? status = null)
+        public async Task<List<ApplicationUser>> GetUsersAsync(Status? status = null, string? name = null)
         {
             var q = _context.Users.AsNoTracking().AsQueryable();
 
@@ -23,8 +23,15 @@ namespace Elderly_System.DAL.Repositories.Classes
             else
                 q = q.Where(u => u.Status == status.Value);
 
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                q = q.Where(u => u.FullName != null && u.FullName.Contains(name));
+            }
+
             return await q.OrderByDescending(u => u.CreatedAt).ToListAsync();
         }
+
         public async Task<ApplicationUser?> GetUserByIdAsync(string id)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);

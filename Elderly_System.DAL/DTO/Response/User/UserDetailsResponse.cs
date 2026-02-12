@@ -13,7 +13,6 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string Gender { get; set; } = "";
         public string Status { get; set; } = "";
         public string RoleUser { get; set; } = "";
-        public string? JobTitle { get; set; }
         public string? EducationLevel { get; set; }
         public string? FieldOfStudy { get; set; }
         public float? YearsOfStudy { get; set; }
@@ -28,11 +27,16 @@ namespace Elderly_System.DAL.DTO.Response.User
         public static string ToArabic(Role role) => role switch
         {
             Role.Admin => "أدمن",
-            Role.Employee => "موظف",
             Role.Nurse => "ممرض",
             Role.Sponsor => "كفيل",
+            Role.Accountant => "محاسب",
+            Role.Chef => "طباخة",
+            Role.Security => "حارس",
+            Role.Cleaner => "عاملة نظافة",
+            Role.Secretary => "سكرتيرة",
             _ => "غير معروف"
         };
+
         public static string ToArabic(Gender g) => g switch
         {
             Enums.Gender.Male => "ذكر",

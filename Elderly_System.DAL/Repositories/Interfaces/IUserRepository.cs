@@ -10,7 +10,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<List<ApplicationUser>> GetUsersAsync(Status? status = null);
+        Task<List<ApplicationUser>> GetUsersAsync(Status? status = null, string? name = null);
         Task<ApplicationUser?> GetUserByIdAsync(string id);
         Task<bool> UpdateUserAsync(ApplicationUser user);
         Task<ApplicationUser?> GetBaseAsync(string id);
