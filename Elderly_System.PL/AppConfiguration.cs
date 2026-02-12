@@ -30,6 +30,9 @@ namespace Elderly_System.PL
             services.AddScoped<IVistorService, VistorService>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+            services.AddScoped<IElderlyAdminService , ElderlyAdminService>();
+            services.AddScoped<IElderlyAdminRepository, ElderlyAdminRepository>();
+
 
         }
     }
