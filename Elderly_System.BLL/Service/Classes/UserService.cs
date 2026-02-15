@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Nurse;
+using Elderly_System.DAL.DTO.Response.Elderly;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
@@ -160,11 +161,17 @@ namespace Elderly_System.BLL.Service.Classes
                 var sponsor = await _repository.GetSponsorWithElderlyAsync(userId);
                 if (sponsor is null) return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
 
-                dto.ElderlyNames = sponsor.ElderlySponsors
-                    .Select(es => es.Elderly.Name)
-                    .Where(n => !string.IsNullOrWhiteSpace(n))
-                    .Distinct()
-                    .ToList();
+                dto.ElderlyList = sponsor.ElderlySponsors
+                    .Select(es => new ElderlyMiniDto
+                        {
+                            Id = es.ElderlyId,
+                            Name = es.Elderly.Name
+                        })
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Name))
+                        .GroupBy(x => x.Id)  
+                        .Select(g => g.First())
+                        .ToList();
+
             }
 
             return ServiceResult.SuccessWithData(dto, "تم جلب تفاصيل المستخدم بنجاح");

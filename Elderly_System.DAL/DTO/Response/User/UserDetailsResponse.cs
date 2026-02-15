@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.Enums;
+﻿using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.Enums;
 
 namespace Elderly_System.DAL.DTO.Response.User
 {
@@ -20,7 +21,7 @@ namespace Elderly_System.DAL.DTO.Response.User
         public string? YearOfGraduation { get; set; }
         public string? MaritalStatus { get; set; }
         public string? ImageCertificate { get; set; }
-        public List<string>? ElderlyNames { get; set; }
+        public List<ElderlyMiniDto>? ElderlyList { get; set; } = new();
         public List<WorkExperienceResponse>? WorkExperiences { get; set; }
 
 

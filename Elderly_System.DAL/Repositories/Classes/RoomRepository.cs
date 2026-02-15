@@ -29,8 +29,11 @@ namespace Elderly_System.DAL.Repositories.Classes
         }
         public async Task<List<Room>> GetAllRoomAsync()
         {
-            return await _context.Rooms.ToListAsync();
+            return await _context.Rooms
+                .OrderBy(r => r.RoomNumber)
+                .ToListAsync();
         }
+
         public async Task<bool> DeleteRoomAsync(Room room)
         {
             _context.RoomImages.RemoveRange(room.RoomImages);
