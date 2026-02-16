@@ -236,6 +236,26 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.UpdateAsync(nurse);
             return ServiceResult.SuccessMessage("تم استكمال بيانات الممرض بنجاح");
         }
+        public async Task<ServiceResult> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Any(r => string.Equals(r, Role.Admin.ToString(), StringComparison.OrdinalIgnoreCase)))
+                return ServiceResult.Failure("لا يمكن حذف حساب الأدمن.");
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                var err = string.Join(" | ", result.Errors.Select(e => e.Description));
+                return ServiceResult.Failure($"فشل حذف المستخدم. {err}");
+            }
+
+            return ServiceResult.SuccessMessage("تم حذف المستخدم بنجاح.");
+        }
+
 
     }
 }

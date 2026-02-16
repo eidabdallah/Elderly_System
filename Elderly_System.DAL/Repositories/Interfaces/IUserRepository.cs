@@ -21,5 +21,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task UpdateAsync(Nurse nurse);
 
 
+
     }
 }

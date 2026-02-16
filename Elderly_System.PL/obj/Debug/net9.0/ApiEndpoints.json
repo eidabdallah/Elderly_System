@@ -389,6 +389,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/Admin/User/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
     "Method": "ChangeRole",
     "RelativePath": "api/Admin/User/change-role/{id}",
     "HttpMethod": "PATCH",
