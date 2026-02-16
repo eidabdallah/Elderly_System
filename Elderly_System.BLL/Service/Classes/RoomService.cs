@@ -30,12 +30,20 @@ namespace Elderly_System.BLL.Service.Classes
             var result = await _repository.GetRoomByIdWithImagesAsync(id);
             if (result is null)
                 return ServiceResult.Failure("الغرفة غير متوفرة.");
+
             var roomDto = result.Adapt<RoomDetailsResponse>();
+
             roomDto.Images = result.RoomImages
-                .Select(ri => ri.Url)
+                .Select(ri => new RoomImageResponse
+                {
+                    Url = ri.Url,
+                    PublicId = ri.PublicId
+                })
                 .ToList();
-            return ServiceResult.SuccessWithData(roomDto, "تم جلب الغرف بنجاح");
+
+            return ServiceResult.SuccessWithData(roomDto, "تم جلب الغرفة بنجاح");
         }
+
         public async Task<ServiceResult> AddRoomAsync(RoomCreateRequest request)
         {
             var checkRoomNumber = await _repository.CheckRoomNumberAsync(request.RoomNumber);
@@ -124,22 +132,49 @@ namespace Elderly_System.BLL.Service.Classes
             if (room is null)
                 return ServiceResult.Failure("الغرفة غير متوفرة.");
 
-            if (request.Images is null || !request.Images.Any())
-                return ServiceResult.Failure("يجب إرسال صورة واحدة على الأقل.");
-            foreach (var img in room.RoomImages.ToList())
+            var hasNewImages = request.Images != null && request.Images.Any();
+            var hasDeletes = request.DeletedPublicIds != null && request.DeletedPublicIds.Any();
+
+            if (!hasNewImages && !hasDeletes)
+                return ServiceResult.Failure("لا يوجد تغييرات لإجراءها.");
+
+            if (hasDeletes)
             {
-                await _file.DeleteAsync(img.PublicId);
+                var toDelete = room.RoomImages
+                    .Where(x => request.DeletedPublicIds!.Contains(x.PublicId))
+                    .ToList();
+
+                foreach (var img in toDelete)
+                {
+                    await _file.DeleteAsync(img.PublicId);
+                    room.RoomImages.Remove(img); 
+                }
             }
 
-            var uploadedImages = await _file.UploadMultipleAsync(request.Images, "rooms");
+            if (hasNewImages)
+            {
+                var uploadedImages = await _file.UploadMultipleAsync(request.Images!, "rooms");
 
-            var updated = await _repository.UpdateRoomImagesAsync(room, uploadedImages);
+
+                foreach (var up in uploadedImages)
+                {
+                    room.RoomImages.Add(new RoomImage
+                    {
+                        Url = up.Url,
+                        PublicId = up.PublicId
+                    });
+                }
+            }
+            if (!room.RoomImages.Any())
+                return ServiceResult.Failure("يجب أن تحتوي الغرفة على صورة واحدة على الأقل.");
+
+            var updated = await _repository.SaveChangesAsync();
             if (!updated)
                 return ServiceResult.Failure("حدث خطأ أثناء تحديث صور الغرفة.");
 
             return ServiceResult.SuccessMessage("تم تحديث صور الغرفة بنجاح.");
-
         }
+
 
     }
 }

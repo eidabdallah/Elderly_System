@@ -63,5 +63,10 @@ namespace Elderly_System.DAL.Repositories.Classes
             }
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
     }
 }
