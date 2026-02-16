@@ -45,6 +45,26 @@ namespace Elderly_System.DAL.Repositories.Classes
                     .ThenInclude(es => es.Sponsor)
                 .FirstOrDefaultAsync(e => e.Id == elderlyId);
         }
+        public async Task<Elderly?> GetByIdFullDetailsAsync(int elderlyId)
+        {
+            return await _context.Elderlies
+                .AsNoTracking()
+                .Include(e => e.ElderlySponsors)
+                    .ThenInclude(es => es.Sponsor)
+                .Include(e => e.ResidentStays)
+                    .ThenInclude(rs => rs.Room)
+                .Include(e => e.MedicalReports)
+                    .ThenInclude(m => m.Doctor)
+                .FirstOrDefaultAsync(e => e.Id == elderlyId);
+        }
+        public async Task<Room?> GetRoomByIdAsync(int roomId)
+    => await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
+
+        public async Task<bool> HasActiveStayAsync(int elderlyId)
+            => await _context.ResidentStays.AnyAsync(s => s.ElderlyId == elderlyId && s.Status == Status.Active);
+
+        public async Task AddResidentStayAsync(ResidentStay stay)
+            => await _context.ResidentStays.AddAsync(stay);
 
     }
 }

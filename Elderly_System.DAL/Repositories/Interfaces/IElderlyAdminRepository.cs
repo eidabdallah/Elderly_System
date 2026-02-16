@@ -10,5 +10,11 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Elderly?> GetByIdAsync(int id);
         Task<Elderly?> GetByIdWithSponsorsAsync(int elderlyId);
         Task SaveChangesAsync();
+        Task<Elderly?> GetByIdFullDetailsAsync(int elderlyId);
+        Task<Room?> GetRoomByIdAsync(int roomId);
+        Task<bool> HasActiveStayAsync(int elderlyId);
+
+        Task AddResidentStayAsync(ResidentStay stay);
+
     }
 }

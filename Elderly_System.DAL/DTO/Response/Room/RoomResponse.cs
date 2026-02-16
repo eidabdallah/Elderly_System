@@ -25,6 +25,7 @@ namespace Elderly_System.DAL.DTO.Response.Room
         {
             Status.Active => "متاحة",
             Status.InActive => "غير متاحة",
+            Status.Full => "ممتلئة",
             _ => "غير معروف"
         };
     }

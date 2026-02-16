@@ -185,6 +185,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "GetElderlyDetails",
+    "RelativePath": "api/Admin/Elderly/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
     "Method": "ChangeStatus",
     "RelativePath": "api/Admin/Elderly/{id}/status",
     "HttpMethod": "PATCH",
@@ -200,6 +216,22 @@
         "Name": "status",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "AddStay",
+    "RelativePath": "api/Admin/Elderly/stay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "Elderly_System.DAL.DTO.Response.Elderly.AddResidentStayRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
