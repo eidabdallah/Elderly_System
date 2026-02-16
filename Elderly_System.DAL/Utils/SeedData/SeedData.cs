@@ -94,6 +94,26 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 {
                     await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
                 }
+                var cleaner3 = new Employee
+                {
+                    NationalId = "555666888",
+                    Email = "cleaner3@gmail.com",
+                    FullName = "هبة محمد احمد",
+                    PhoneNumber = "0590005105",
+                    UserName = "Cleaner3",
+                    City = "نابلس",
+                    Gender = Gender.Female,
+                    EmailConfirmed = true,
+                    Status = Status.Active,
+                    IsProfileCompleted = true,
+                    MaritalStatus = MaritalStatus.Single
+                };
+
+                var resCleaner3 = await _userManager.CreateAsync(cleaner3, "Pass@12345");
+                if (resCleaner3.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
+                }
 
                 var security = new Employee
                 {

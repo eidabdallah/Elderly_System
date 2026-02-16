@@ -100,8 +100,9 @@ namespace Elderly_System.BLL.Service.Classes
                     Room = new RoomShortResponse
                     {
                         RoomNumber = stay.Room.RoomNumber,
-                        RoomType = stay.Room.RoomType.ToString()
+                        RoomType = stay.Room.RoomType,
                     }
+
                 },
 
                 MedicalReports = elderly.MedicalReports?
