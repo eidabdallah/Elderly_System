@@ -1,5 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
-using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

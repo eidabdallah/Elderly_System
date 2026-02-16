@@ -1,4 +1,4 @@
-﻿using Elderly_System.DAL.DTO.Response.Elderly;
+﻿using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.Enums;
 using ElderlySystem.BLL.Helpers;
 

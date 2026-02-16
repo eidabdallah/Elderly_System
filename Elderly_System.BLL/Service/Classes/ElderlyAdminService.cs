@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.DTO.Response.Elderly;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
@@ -92,8 +93,10 @@ namespace Elderly_System.BLL.Service.Classes
                 {
                     StayId = stay.Id,
                     StartDate = stay.StartDate.ToString("yyyy-MM-dd"),
-                    EndDate = elderly.BDate.ToString("yyyy-MM-dd"),
-                    DaysLeftText = DaysLeftText(stay.EndDate),
+                    EndDate = stay.EndDate == null
+                    ? "مستمر"
+                    : stay.EndDate.Value.ToString("yyyy-MM-dd"),
+
                     Room = new RoomShortResponse
                     {
                         RoomNumber = stay.Room.RoomNumber,
@@ -142,7 +145,7 @@ namespace Elderly_System.BLL.Service.Classes
                 return ServiceResult.Failure("المسن لديه حجز/إقامة نشطة مسبقا");
 
             var start =req.StartDate.Date;
-            DateTime? end = req.EndDate.Date;
+            DateTime? end = req.EndDate?.Date;
 
             if (end != null && end.Value.Date < start)
                 return ServiceResult.Failure("تاريخ النهاية لا يمكن أن يكون قبل تاريخ البداية");
@@ -165,17 +168,6 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.SaveChangesAsync();
 
             return ServiceResult.SuccessMessage("تم إضافة الحجز للمسن بنجاح");
-        }
-        private  string DaysLeftText(DateTime? endDate)
-        {
-            if (endDate == null) return "مقيم حاليا";
-
-            var today = DateTime.Today;
-            var days = (endDate.Value.Date - today).Days;
-
-            if (days > 0) return $"متبقي {days} يوم";
-            if (days == 0) return "ينتهي اليوم";
-            return $"منتهي منذ {Math.Abs(days)} يوم";
         }
 
     }

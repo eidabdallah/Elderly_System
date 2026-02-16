@@ -230,7 +230,7 @@
     "Parameters": [
       {
         "Name": "req",
-        "Type": "Elderly_System.DAL.DTO.Response.Elderly.AddResidentStayRequest",
+        "Type": "Elderly_System.DAL.DTO.Request.Elderly.AddResidentStayRequest",
         "IsRequired": true
       }
     ],
