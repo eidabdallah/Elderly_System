@@ -6,7 +6,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
 {
     public interface IElderlyAdminRepository
     {
-        Task<List<ElderlyWithSponsorsDto>> GetAllWithSponsorsAsync(Status status);
+        Task<List<ElderlyResponse>> GetAllWithSponsorsAsync(Status status);
         Task<Elderly?> GetByIdAsync(int id);
         Task<Elderly?> GetByIdWithSponsorsAsync(int elderlyId);
         Task SaveChangesAsync();

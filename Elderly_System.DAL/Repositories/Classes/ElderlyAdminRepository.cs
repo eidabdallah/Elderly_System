@@ -16,24 +16,16 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
-        public async Task<List<ElderlyWithSponsorsDto>> GetAllWithSponsorsAsync(Status status)
+        public async Task<List<ElderlyResponse>> GetAllWithSponsorsAsync(Status status)
         {
             return await _context.Elderlies
                 .Where(e => e.status == status)
                 .AsNoTracking()
-                .Select(e => new ElderlyWithSponsorsDto
+                .Select(e => new ElderlyResponse
                 {
                     ElderlyId = e.Id,
                     ElderlyName = e.Name,
-                    ReasonRegister = e.ReasonRegister,
                     Status = UserResponse.ToArabic(e.status),
-                    Sponsors = e.ElderlySponsors
-                        .Select(es => new ElderlySponsorBriefDTO
-                        {
-                            SponsorName = es.Sponsor.FullName, 
-                            KinShip = es.KinShip             
-                        })
-                        .ToList()
                 })
                 .ToListAsync();
         }

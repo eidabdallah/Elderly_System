@@ -29,14 +29,16 @@ namespace Elderly_System.DAL.Repositories.Classes
 
         public async Task<int> CountDonationsToDateAsync(DateTime today)
         {
+            var tomorrow = today.Date.AddDays(1);
             return await _context.Donations
-                .CountAsync(d => d.DonationDate <= today.Date);
+                .CountAsync(d => d.DonationDate < tomorrow);
         }
 
         public async Task<int> CountEventsToDateAsync(DateTime today)
         {
+            var tomorrow = today.Date.AddDays(1);
             return await _context.Activities
-                .CountAsync(e => e.Date <= today.Date);
+                .CountAsync(e => e.Date < tomorrow);
         }
     }
 }
