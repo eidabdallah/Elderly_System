@@ -26,6 +26,7 @@ namespace Elderly_System.DAL.Repositories.Classes
                     ElderlyId = e.Id,
                     ElderlyName = e.Name,
                     ReasonRegister = e.ReasonRegister,
+                    Status = UserResponse.ToArabic(e.status),
                     Sponsors = e.ElderlySponsors
                         .Select(es => new ElderlySponsorBriefDTO
                         {
@@ -45,5 +46,13 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<Elderly?> GetByIdWithSponsorsAsync(int elderlyId)
+        {
+            return await _context.Elderlies
+                .Include(e => e.ElderlySponsors)
+                    .ThenInclude(es => es.Sponsor)
+                .FirstOrDefaultAsync(e => e.Id == elderlyId);
+        }
+
     }
 }

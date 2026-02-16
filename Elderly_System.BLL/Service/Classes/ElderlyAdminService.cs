@@ -27,14 +27,25 @@ namespace Elderly_System.BLL.Service.Classes
             if (status != Status.Active && status != Status.InActive)
                 return ServiceResult.Failure("الحالة المسموحة فقط: نشط أو غير نشط");
 
-            var elderly = await _repository.GetByIdAsync(elderlyId);
+            var elderly = await _repository.GetByIdWithSponsorsAsync(elderlyId);
             if (elderly == null)
                 return ServiceResult.Failure("المسن غير موجود");
 
             elderly.status = status;
-            await _repository.SaveChangesAsync();
 
-            return ServiceResult.SuccessMessage("تم تغيير حالة المسن بنجاح");
+            if (elderly.ElderlySponsors != null && elderly.ElderlySponsors.Any())
+            {
+                foreach (var link in elderly.ElderlySponsors)
+                {
+                    if (link.Sponsor != null)
+                    {
+                        link.Sponsor.Status = status; 
+                    }
+                }
+            }
+            await _repository.SaveChangesAsync();
+            return ServiceResult.SuccessMessage("تم تغيير حالة المسن  بنجاح");
         }
+
     }
 }
