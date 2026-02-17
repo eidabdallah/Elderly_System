@@ -49,6 +49,8 @@ namespace Elderly_System.DAL.DTO.Response.User
             Enums.Status.Pending => "انتظار القبول",
             Enums.Status.Active => "نشط",
             Enums.Status.InActive => "غير نشط",
+            Enums.Status.Finish => "انتهت",
+
             _ => "غير معروف"
         };
         public static string ToArabic(EducationLevel e) => e switch

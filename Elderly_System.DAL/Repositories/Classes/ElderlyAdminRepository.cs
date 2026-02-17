@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Response.Room;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
@@ -66,5 +67,24 @@ namespace Elderly_System.DAL.Repositories.Classes
         public async Task AddResidentStayAsync(ResidentStay stay)
             => await _context.ResidentStays.AddAsync(stay);
 
+        public async Task<List<AvailableRoomResponse>> GetAvailableRoomsAsync()
+        {
+            return await _context.Rooms
+                .AsNoTracking()
+                .Where(r => r.Status == Status.Active && r.CurrentCapacity < r.Capacity)
+                .OrderBy(r => r.RoomNumber)
+                .Select(r => new AvailableRoomResponse
+                {
+                    RoomId = r.Id,
+                    RoomNumber = r.RoomNumber,
+                    RoomType = r.RoomType
+                })
+                .ToListAsync();
+        }
+        public async Task<ResidentStay?> GetStayByIdAsync(int stayId)
+            => await _context.ResidentStays
+                .Include(s => s.Room)
+                .FirstOrDefaultAsync(s => s.Id == stayId);
     }
 }
+

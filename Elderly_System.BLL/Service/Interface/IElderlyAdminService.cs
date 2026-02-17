@@ -10,7 +10,9 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> ChangeElderlyStatusAsync(int elderlyId, Status status);
         Task<ServiceResult> GetElderlyDetailsAsync(int elderlyId);
         Task<ServiceResult> AddResidentStayAsync(AddResidentStayRequest req);
-
+        Task<ServiceResult> GetAvailableRoomsAsync();
+        Task<ServiceResult> UpdateStayEndDateAsync(int stayId, DateTime? endDate);
+        Task<ServiceResult> TransferStayAsync(int stayId, int newRoomId);
 
     }
 }

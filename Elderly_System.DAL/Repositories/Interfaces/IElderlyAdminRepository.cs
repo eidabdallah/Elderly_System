@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Response.Room;
 using Elderly_System.DAL.Enums;
 using ElderlySystem.DAL.Model;
 
@@ -15,6 +16,8 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<bool> HasActiveStayAsync(int elderlyId);
 
         Task AddResidentStayAsync(ResidentStay stay);
+        Task<List<AvailableRoomResponse>> GetAvailableRoomsAsync();
+        Task<ResidentStay?> GetStayByIdAsync(int stayId);
 
     }
 }
