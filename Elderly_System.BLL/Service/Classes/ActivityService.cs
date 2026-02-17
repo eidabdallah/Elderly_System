@@ -47,17 +47,9 @@ namespace Elderly_System.BLL.Service.Classes
             {
                 Id = a.Id,
                 ActivityName = a.ActivityName,
-                Description = a.Description,
                 Location = a.Location,
                 Date = a.Date.ToString("dd/MM/yyyy"),
                 StartTime = a.StartTime,
-                ActivityOrganizations = (a.ActivityOrganizations != null && a.ActivityOrganizations.Count > 0)
-                    ? a.ActivityOrganizations.Select(p => new ParticipantResponse
-                    {
-                        Id = p.Id,
-                        OrganizationName = p.OrganizationName
-                    }).ToList()
-                    : null
             }).ToList();
         }
 
