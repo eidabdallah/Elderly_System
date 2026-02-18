@@ -64,7 +64,7 @@ namespace Elderly_System.BLL.Service.Classes
                 ReasonRegister = request.ReasonRegister,
                 NationalIdImage = idImg.Url,
                 HealthInsurance = insurance.Url,
-                status = Status.Pending
+                status = Status.Active
             };
             var doctor = new Doctor
             {
