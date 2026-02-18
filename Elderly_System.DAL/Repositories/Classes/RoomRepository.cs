@@ -20,6 +20,8 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             return await _context.Rooms
                 .Include(r => r.RoomImages)
+                .Include(r => r.ResidentStays)
+                    .ThenInclude(rs => rs.Elderly)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
         public async Task AddRoomAsync(Room room)

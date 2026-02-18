@@ -41,8 +41,18 @@ namespace Elderly_System.BLL.Service.Classes
                 })
                 .ToList();
 
+                roomDto.CurrentElderlies = result.ResidentStays
+                .Where(rs => rs.Status == Status.Active)
+                .Select(rs => new RoomElderlyResponse
+                {
+                    Id = rs.Elderly.Id,
+                    Name = rs.Elderly.Name,
+                })
+                .ToList();
+
             return ServiceResult.SuccessWithData(roomDto, "تم جلب الغرفة بنجاح");
         }
+
 
         public async Task<ServiceResult> AddRoomAsync(RoomCreateRequest request)
         {
