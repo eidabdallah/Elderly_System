@@ -85,6 +85,69 @@ namespace Elderly_System.DAL.Repositories.Classes
             => await _context.ResidentStays
                 .Include(s => s.Room)
                 .FirstOrDefaultAsync(s => s.Id == stayId);
+        public async Task<List<ElderlyResponse>> GetElderliesByStayAsync(StayFilter filter)
+        {
+            var baseQuery =
+                from e in _context.Elderlies.AsNoTracking()
+                let hasAnyStay = e.ResidentStays.Any()
+                let hasActiveStay = e.ResidentStays.Any(s => s.Status == Status.Active)
+                let latestFinishedStay = e.ResidentStays
+                    .Where(s => s.Status == Status.Finish)
+                    .OrderByDescending(s => s.StartDate)
+                    .FirstOrDefault()
+                select new
+                {
+                    Elderly = e,
+                    HasAnyStay = hasAnyStay,
+                    HasActiveStay = hasActiveStay,
+                    LatestFinishedStay = latestFinishedStay
+                };
+
+            baseQuery = filter switch
+            {
+                StayFilter.Active => baseQuery.Where(x => x.HasActiveStay),
+
+                StayFilter.None => baseQuery.Where(x => !x.HasAnyStay),
+
+                StayFilter.Finish => baseQuery.Where(x =>
+                    !x.HasActiveStay && x.LatestFinishedStay != null
+                ),
+
+                _ => baseQuery
+            };
+
+            return await baseQuery
+                .OrderBy(x => x.Elderly.Name)
+                .Select(x => new ElderlyResponse
+                {
+                    ElderlyId = x.Elderly.Id,
+                    ElderlyName = x.Elderly.Name,
+                    Status = UserResponse.ToArabic(x.Elderly.status),
+                })
+                .ToListAsync();
+        }
+        public async Task<ResidentStay?> GetActiveStayByElderlyIdAsync(int elderlyId)
+            => await _context.ResidentStays
+                .Include(s => s.Room)
+                .FirstOrDefaultAsync(s => s.ElderlyId == elderlyId && s.Status == Status.Active);
+        public async Task<List<AvailableRoomResponse>> GetAvailableRoomsExcludingAsync(int excludeRoomId)
+        {
+            return await _context.Rooms
+                .AsNoTracking()
+                .Where(r =>
+                    r.Id != excludeRoomId &&
+                    r.Status == Status.Active &&
+                    r.CurrentCapacity < r.Capacity
+                )
+                .OrderBy(r => r.RoomNumber)
+                .Select(r => new AvailableRoomResponse
+                {
+                    RoomId = r.Id,
+                    RoomNumber = r.RoomNumber,
+                    RoomType = r.RoomType
+                })
+                .ToListAsync();
+        }
     }
 }
 

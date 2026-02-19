@@ -32,9 +32,7 @@ namespace Elderly_System.PL
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<IElderlyAdminService , ElderlyAdminService>();
             services.AddScoped<IElderlyAdminRepository, ElderlyAdminRepository>();
-            services.AddScoped<IAutoFinishStaysService, AutoFinishStaysService>();
-            services.AddScoped<IStaySchedulerRepository, StaySchedulerRepository>();
-            services.AddHostedService<StayAutoFinishHostedService>();
+           
 
 
         }

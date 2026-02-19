@@ -18,6 +18,9 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task AddResidentStayAsync(ResidentStay stay);
         Task<List<AvailableRoomResponse>> GetAvailableRoomsAsync();
         Task<ResidentStay?> GetStayByIdAsync(int stayId);
+        Task<List<ElderlyResponse>> GetElderliesByStayAsync(StayFilter filter);
+        Task<ResidentStay?> GetActiveStayByElderlyIdAsync(int elderlyId);
+        Task<List<AvailableRoomResponse>> GetAvailableRoomsExcludingAsync(int excludeRoomId);
 
     }
 }

@@ -11,8 +11,9 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> GetElderlyDetailsAsync(int elderlyId);
         Task<ServiceResult> AddResidentStayAsync(AddResidentStayRequest req);
         Task<ServiceResult> GetAvailableRoomsAsync();
-        Task<ServiceResult> UpdateStayEndDateAsync(int stayId, DateTime? endDate);
-        Task<ServiceResult> TransferStayAsync(int stayId, int newRoomId);
-
+        Task<ServiceResult> GetElderliesByStayAsync(StayFilter? filter);
+        Task<ServiceResult> ChangeResidentRoomAsync(int elderlyId, int newRoomId);
+        Task<ServiceResult> GetAvailableRoomsForChangeAsync(int elderlyId);
+        Task<ServiceResult> EndResidentStayAsync(int elderlyId);
     }
 }

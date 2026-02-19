@@ -1,5 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Elderly;
+using Elderly_System.DAL.DTO.Request.Room;
 using Elderly_System.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,21 +70,45 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message, data = result.Data });
         }
-        [HttpPatch("stay/{stayId}/endDate")]
-        public async Task<IActionResult> UpdateStayEndDate([FromRoute] int stayId, [FromBody] UpdateStayEndDateRequest req)
+        [HttpGet("by-stay")]
+        public async Task<IActionResult> GetElderliesByStay([FromQuery] StayFilter? filter)
         {
-            var result = await _service.UpdateStayEndDateAsync(stayId, req.EndDate);
+            var result = await _service.GetElderliesByStayAsync(filter);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
+        }
+        [HttpGet("{elderlyId}/rooms/available-for-change")]
+        public async Task<IActionResult> GetRoomsForChange([FromRoute] int elderlyId)
+        {
+            var result = await _service.GetAvailableRoomsForChangeAsync(elderlyId);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
+        }
+
+        [HttpPatch("{elderlyId}/stay/change-room")]
+        public async Task<IActionResult> ChangeRoom([FromRoute] int elderlyId, [FromBody] ChangeRoomRequest req)
+        {
+            var result = await _service.ChangeResidentRoomAsync(elderlyId, req.NewRoomId);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message });
         }
-        [HttpPatch("stay/{stayId}/transfer")]
-        public async Task<IActionResult> TransferStay([FromRoute] int stayId, [FromBody] TransferStayRequest req)
+        [HttpPatch("{elderlyId}/stay/end")]
+        public async Task<IActionResult> EndStay([FromRoute] int elderlyId)
         {
-            var result = await _service.TransferStayAsync(stayId, req.RoomId);
-            if (!result.Success) return BadRequest(new { message = result.Message });
+            var result = await _service.EndResidentStayAsync(elderlyId);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
             return Ok(new { message = result.Message });
         }
     }

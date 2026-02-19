@@ -176,92 +176,83 @@ namespace Elderly_System.BLL.Service.Classes
             var rooms = await _repository.GetAvailableRoomsAsync();
             return ServiceResult.SuccessWithData(rooms, "تم جلب الغرف المتاحة بنجاح");
         }
-
-        public async Task<ServiceResult> UpdateStayEndDateAsync(int stayId, DateTime? endDate)
+        public async Task<ServiceResult> GetElderliesByStayAsync(StayFilter? filter)
         {
-            var stay = await _repository.GetStayByIdAsync(stayId);
+            var finalFilter = filter ?? StayFilter.Active;
+
+            var data = await _repository.GetElderliesByStayAsync(finalFilter);
+
+            return ServiceResult.SuccessWithData(data, "تم جلب قائمة المسنين بنجاح");
+        }
+        public async Task<ServiceResult> EndResidentStayAsync(int elderlyId)
+        {
+            var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
             if (stay == null)
-                return ServiceResult.Failure("الإقامة غير موجودة");
+                return ServiceResult.Failure("لا توجد إقامة نشطة لهذا المسن");
 
-            if (endDate != null && endDate.Value.Date < stay.StartDate.Date)
-                return ServiceResult.Failure("تاريخ النهاية لا يمكن أن يكون قبل تاريخ البداية");
+            if (stay.Room == null)
+                return ServiceResult.Failure("بيانات الغرفة غير موجودة");
 
-            var room = stay.Room;
-            if (room == null)
-                return ServiceResult.Failure("الغرفة غير موجودة");
+            stay.Status = Status.Finish;
+            stay.EndDate = DateTime.UtcNow.Date; 
 
-            var today = DateTime.Today;
+            if (stay.Room.CurrentCapacity > 0)
+                stay.Room.CurrentCapacity -= 1;
 
-            bool wasCounted = (stay.EndDate == null || stay.EndDate.Value.Date >= today);
-            bool willBeCounted = (endDate == null || endDate.Value.Date >= today);
-
-            if (wasCounted && !willBeCounted)
-            {
-                room.CurrentCapacity = Math.Max(0, room.CurrentCapacity - 1);
-                room.Status = (room.CurrentCapacity >= room.Capacity) ? Status.Full : Status.Active;
-                stay.Status = Status.Finish;
-            }
-            else if (!wasCounted && willBeCounted)
-            {
-                if (room.Status != Status.Active && room.Status != Status.Full)
-                    return ServiceResult.Failure("الغرفة غير متاحة للحجز حاليا");
-
-                if (room.CurrentCapacity >= room.Capacity)
-                    return ServiceResult.Failure("لا يمكنك الحجز بهذه الغرفة لأنها ممتلئة");
-
-                room.CurrentCapacity += 1;
-                room.Status = (room.CurrentCapacity >= room.Capacity) ? Status.Full : Status.Active;
-                stay.Status = Status.Active;
-            }
-            else
-            {
-                if (willBeCounted)
-                    stay.Status = Status.Active;
-
-                if (!willBeCounted)
-                    stay.Status = Status.Finish;
-            }
-
-            stay.EndDate = endDate?.Date;
+            if (stay.Room.Status == Status.Full && stay.Room.CurrentCapacity < stay.Room.Capacity)
+                stay.Room.Status = Status.Active;
 
             await _repository.SaveChangesAsync();
-            return ServiceResult.SuccessMessage("تم تعديل تاريخ النهاية بنجاح");
+            return ServiceResult.SuccessMessage("تم إنهاء الإقامة بنجاح");
         }
-        public async Task<ServiceResult> TransferStayAsync(int stayId, int newRoomId)
+        public async Task<ServiceResult> GetAvailableRoomsForChangeAsync(int elderlyId)
         {
-            var stay = await _repository.GetStayByIdAsync(stayId);
-            if (stay == null) return ServiceResult.Failure("الإقامة غير موجودة");
+            var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
+            if (stay == null || stay.Room == null)
+                return ServiceResult.Failure("لا توجد إقامة نشطة لهذا المسن");
 
-            var oldRoom = stay.Room;
-            if (oldRoom == null) return ServiceResult.Failure("الغرفة الحالية غير موجودة");
+            var rooms = await _repository.GetAvailableRoomsExcludingAsync(stay.RoomId);
+            return ServiceResult.SuccessWithData(rooms, "تم جلب الغرف المتاحة بنجاح");
+        }
+        public async Task<ServiceResult> ChangeResidentRoomAsync(int elderlyId, int newRoomId)
+        {
+            var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
+            if (stay == null)
+                return ServiceResult.Failure("لا توجد إقامة نشطة لهذا المسن");
 
             if (stay.RoomId == newRoomId)
-                return ServiceResult.Failure("المسن موجود في نفس الغرفة بالفعل");
+                return ServiceResult.Failure("لا يمكن اختيار نفس الغرفة الحالية");
+
+            var oldRoom = await _repository.GetRoomByIdAsync(stay.RoomId);
+            if (oldRoom == null)
+                return ServiceResult.Failure("الغرفة الحالية غير موجودة");
 
             var newRoom = await _repository.GetRoomByIdAsync(newRoomId);
-            if (newRoom == null) return ServiceResult.Failure("الغرفة الجديدة غير موجودة");
+            if (newRoom == null)
+                return ServiceResult.Failure("الغرفة الجديدة غير موجودة");
 
-            if (newRoom.Status != Status.Active && newRoom.Status != Status.Full)
-                return ServiceResult.Failure("الغرفة غير متاحة للحجز حاليا");
+            if (newRoom.Status != Status.Active)
+                return ServiceResult.Failure("الغرفة الجديدة غير متاحة حاليا");
 
             if (newRoom.CurrentCapacity >= newRoom.Capacity)
-                return ServiceResult.Failure("لا يمكنك الحجز بهذه الغرفة لأنها ممتلئة");
+                return ServiceResult.Failure("الغرفة الجديدة ممتلئة");
 
-          
-            if (stay.Status == Status.Active)
-            {
-                oldRoom.CurrentCapacity = Math.Max(0, oldRoom.CurrentCapacity - 1);
-                oldRoom.Status = (oldRoom.CurrentCapacity >= oldRoom.Capacity) ? Status.Full : Status.Active;
-            }
+            if (oldRoom.CurrentCapacity > 0)
+                oldRoom.CurrentCapacity -= 1;
+
+            if (oldRoom.Status == Status.Full && oldRoom.CurrentCapacity < oldRoom.Capacity)
+                oldRoom.Status = Status.Active;
 
             newRoom.CurrentCapacity += 1;
-            newRoom.Status = (newRoom.CurrentCapacity >= newRoom.Capacity) ? Status.Full : Status.Active;
+            if (newRoom.CurrentCapacity >= newRoom.Capacity)
+                newRoom.Status = Status.Full;
 
             stay.RoomId = newRoomId;
 
             await _repository.SaveChangesAsync();
-            return ServiceResult.SuccessMessage("تم نقل الغرفة بنجاح");
+            return ServiceResult.SuccessMessage("تم تغيير الغرفة بنجاح");
         }
+
 
 
 

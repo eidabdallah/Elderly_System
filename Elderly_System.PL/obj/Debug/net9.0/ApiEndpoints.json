@@ -185,6 +185,59 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "GetRoomsForChange",
+    "RelativePath": "api/Admin/Elderly/{elderlyId}/rooms/available-for-change",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "ChangeRoom",
+    "RelativePath": "api/Admin/Elderly/{elderlyId}/stay/change-room",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "req",
+        "Type": "Elderly_System.DAL.DTO.Request.Room.ChangeRoomRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "EndStay",
+    "RelativePath": "api/Admin/Elderly/{elderlyId}/stay/end",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
     "Method": "GetElderlyDetails",
     "RelativePath": "api/Admin/Elderly/{id}",
     "HttpMethod": "GET",
@@ -222,6 +275,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "GetElderliesByStay",
+    "RelativePath": "api/Admin/Elderly/by-stay",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
     "Method": "GetAvailableRooms",
     "RelativePath": "api/Admin/Elderly/rooms/available",
     "HttpMethod": "GET",
@@ -241,48 +310,6 @@
       {
         "Name": "req",
         "Type": "Elderly_System.DAL.DTO.Request.Elderly.AddResidentStayRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
-    "Method": "UpdateStayEndDate",
-    "RelativePath": "api/Admin/Elderly/stay/{stayId}/endDate",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "stayId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "req",
-        "Type": "Elderly_System.DAL.DTO.Request.Elderly.UpdateStayEndDateRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
-    "Method": "TransferStay",
-    "RelativePath": "api/Admin/Elderly/stay/{stayId}/transfer",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "stayId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "req",
-        "Type": "Elderly_System.DAL.DTO.Request.Elderly.TransferStayRequest",
         "IsRequired": true
       }
     ],
