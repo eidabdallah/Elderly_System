@@ -17,13 +17,27 @@ namespace Elderly_System.BLL.Service.Classes
         {
             _repository = repository;
         }
+
+        private void SetSponsorsStatus(Elderly elderly, Status status)
+        {
+            if (elderly.ElderlySponsors == null || !elderly.ElderlySponsors.Any())
+                return;
+
+            foreach (var link in elderly.ElderlySponsors)
+            {
+                if (link.Sponsor != null)
+                    link.Sponsor.Status = status;
+            }
+        }
+
         public async Task<ServiceResult> GetElderliesAsync(Status? newStatus)
         {
             if (newStatus != null && (newStatus != Status.Pending && newStatus != Status.Active && newStatus != Status.InActive))
                 return ServiceResult.Failure("الحالة المسموحة فقط: انتظار القبول / نشط / غير نشط.");
+
             var finalStatus = newStatus ?? Status.Active;
             var elderlies = await _repository.GetAllWithSponsorsAsync(finalStatus);
-            return ServiceResult.SuccessWithData(elderlies , "تم جلب قائمة المسنين بنجاح");
+            return ServiceResult.SuccessWithData(elderlies, "تم جلب قائمة المسنين بنجاح");
         }
 
         public async Task<ServiceResult> ChangeElderlyStatusAsync(int elderlyId, Status status)
@@ -37,19 +51,12 @@ namespace Elderly_System.BLL.Service.Classes
 
             elderly.status = status;
 
-            if (elderly.ElderlySponsors != null && elderly.ElderlySponsors.Any())
-            {
-                foreach (var link in elderly.ElderlySponsors)
-                {
-                    if (link.Sponsor != null)
-                    {
-                        link.Sponsor.Status = status; 
-                    }
-                }
-            }
+            SetSponsorsStatus(elderly, status);
+
             await _repository.SaveChangesAsync();
-            return ServiceResult.SuccessMessage("تم تغيير حالة المسن  بنجاح");
+            return ServiceResult.SuccessMessage("تم تغيير حالة المسن بنجاح");
         }
+
         public async Task<ServiceResult> GetElderlyDetailsAsync(int elderlyId)
         {
             var elderly = await _repository.GetByIdFullDetailsAsync(elderlyId);
@@ -93,9 +100,7 @@ namespace Elderly_System.BLL.Service.Classes
                 {
                     StayId = stay.Id,
                     StartDate = stay.StartDate.ToString("yyyy-MM-dd"),
-                    EndDate = stay.EndDate == null
-                    ? "مستمر"
-                    : stay.EndDate.Value.ToString("yyyy-MM-dd"),
+                    EndDate = stay.EndDate == null ? "مستمر" : stay.EndDate.Value.ToString("yyyy-MM-dd"),
                     Status = UserDetailsResponse.ToArabic(stay.Status),
 
                     Room = new RoomShortResponse
@@ -103,7 +108,6 @@ namespace Elderly_System.BLL.Service.Classes
                         RoomNumber = stay.Room.RoomNumber,
                         RoomType = stay.Room.RoomType,
                     }
-
                 },
 
                 MedicalReports = elderly.MedicalReports?
@@ -126,9 +130,10 @@ namespace Elderly_System.BLL.Service.Classes
 
             return ServiceResult.SuccessWithData(response, "تم جلب تفاصيل المسن بنجاح");
         }
+
         public async Task<ServiceResult> AddResidentStayAsync(AddResidentStayRequest req)
         {
-            var elderly = await _repository.GetByIdAsync(req.ElderlyId);
+            var elderly = await _repository.GetByIdWithSponsorsAsync(req.ElderlyId);
             if (elderly == null)
                 return ServiceResult.Failure("المسن غير موجود");
 
@@ -146,7 +151,7 @@ namespace Elderly_System.BLL.Service.Classes
             if (hasActive)
                 return ServiceResult.Failure("المسن لديه حجز/إقامة نشطة مسبقا");
 
-            var start =req.StartDate.Date;
+            var start = req.StartDate.Date;
             DateTime? end = req.EndDate?.Date;
 
             if (end != null && end.Value.Date < start)
@@ -162,28 +167,31 @@ namespace Elderly_System.BLL.Service.Classes
             };
 
             room.CurrentCapacity += 1;
-            if(room.CurrentCapacity == room.Capacity)
+            if (room.CurrentCapacity == room.Capacity)
                 room.Status = Status.Full;
 
-            
             await _repository.AddResidentStayAsync(stay);
-            await _repository.SaveChangesAsync();
 
+            // ✅ sponsors => Active عند التحديد أو التجديد
+            SetSponsorsStatus(elderly, Status.Active);
+
+            await _repository.SaveChangesAsync();
             return ServiceResult.SuccessMessage("تم إضافة الحجز للمسن بنجاح");
         }
+
         public async Task<ServiceResult> GetAvailableRoomsAsync()
         {
             var rooms = await _repository.GetAvailableRoomsAsync();
             return ServiceResult.SuccessWithData(rooms, "تم جلب الغرف المتاحة بنجاح");
         }
+
         public async Task<ServiceResult> GetElderliesByStayAsync(StayFilter? filter)
         {
             var finalFilter = filter ?? StayFilter.Active;
-
             var data = await _repository.GetElderliesByStayAsync(finalFilter);
-
             return ServiceResult.SuccessWithData(data, "تم جلب قائمة المسنين بنجاح");
         }
+
         public async Task<ServiceResult> EndResidentStayAsync(int elderlyId)
         {
             var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
@@ -193,8 +201,12 @@ namespace Elderly_System.BLL.Service.Classes
             if (stay.Room == null)
                 return ServiceResult.Failure("بيانات الغرفة غير موجودة");
 
+            var elderly = await _repository.GetByIdWithSponsorsAsync(elderlyId);
+            if (elderly == null)
+                return ServiceResult.Failure("المسن غير موجود");
+
             stay.Status = Status.Finish;
-            stay.EndDate = DateTime.UtcNow.Date; 
+            stay.EndDate = DateTime.UtcNow.Date;
 
             if (stay.Room.CurrentCapacity > 0)
                 stay.Room.CurrentCapacity -= 1;
@@ -202,9 +214,12 @@ namespace Elderly_System.BLL.Service.Classes
             if (stay.Room.Status == Status.Full && stay.Room.CurrentCapacity < stay.Room.Capacity)
                 stay.Room.Status = Status.Active;
 
+            SetSponsorsStatus(elderly, Status.InActive);
+
             await _repository.SaveChangesAsync();
             return ServiceResult.SuccessMessage("تم إنهاء الإقامة بنجاح");
         }
+
         public async Task<ServiceResult> GetAvailableRoomsForChangeAsync(int elderlyId)
         {
             var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
@@ -214,6 +229,7 @@ namespace Elderly_System.BLL.Service.Classes
             var rooms = await _repository.GetAvailableRoomsExcludingAsync(stay.RoomId);
             return ServiceResult.SuccessWithData(rooms, "تم جلب الغرف المتاحة بنجاح");
         }
+
         public async Task<ServiceResult> ChangeResidentRoomAsync(int elderlyId, int newRoomId)
         {
             var stay = await _repository.GetActiveStayByElderlyIdAsync(elderlyId);
@@ -252,9 +268,5 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.SaveChangesAsync();
             return ServiceResult.SuccessMessage("تم تغيير الغرفة بنجاح");
         }
-
-
-
-
     }
 }
