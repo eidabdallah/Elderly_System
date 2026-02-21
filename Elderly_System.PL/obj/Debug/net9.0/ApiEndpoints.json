@@ -862,15 +862,15 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
-    "Method": "RegisterCoSponsor",
-    "RelativePath": "api/Sponsor/Elderly/register-co-sponsor",
+    "Method": "VerifyLink",
+    "RelativePath": "api/Sponsor/Elderly/verify-link",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Elderly_System.DAL.DTO.Request.Elderly.RegisterCoSponsorRequest",
+        "Type": "Elderly_System.DAL.DTO.Request.Elderly.VerifyElderlySponsorLinkRequest",
         "IsRequired": true
       }
     ],

@@ -57,5 +57,26 @@ namespace Elderly_System.DAL.Repositories.Classes
             await _context.ElderlySponsors.AddAsync(link);
             await _context.SaveChangesAsync();
         }
+        public async Task<int?> GetElderlyIdByNationalIdAsync(string nationalId)
+        {
+            return await _context.Elderlies
+                .Where(e => e.NationalId == nationalId)
+                .Select(e => (int?)e.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string?> GetSponsorIdByNationalIdAsync(string nationalId)
+        {
+            return await _context.Users
+                .Where(u => u.NationalId == nationalId)
+                .Select(u => u.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> IsLinkBetweenAsync(int elderlyId, string sponsorId)
+        {
+            return await _context.ElderlySponsors
+                .AnyAsync(x => x.ElderlyId == elderlyId && x.SponsorId == sponsorId);
+        }
     }
 }

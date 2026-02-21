@@ -7,7 +7,6 @@ using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elderly_System.BLL.Service.Classes
@@ -17,15 +16,12 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly IElderlySponsorRepository _repository;
         private readonly IFileService _file;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
 
-        public ElderlySponsorService(IElderlySponsorRepository repository , IFileService file , UserManager<ApplicationUser> userManager,
-            IEmailSender emailSender)
+        public ElderlySponsorService(IElderlySponsorRepository repository , IFileService file , UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
             _file = file;
             _userManager = userManager;
-            _emailSender = emailSender;
         }
         private static bool HasAllowedExt(IFormFile file, params string[] allowed)
         {
@@ -85,62 +81,33 @@ namespace Elderly_System.BLL.Service.Classes
                 Degree = request.Degree
             };
             await _repository.AddAsync(elderly, doctor, report, link);
+            var sponsorUser = await _userManager.FindByIdAsync(sponsorId);
+            if (sponsorUser != null && sponsorUser.IsProfileCompleted == false)
+            {
+                sponsorUser.IsProfileCompleted = true;
+                await _userManager.UpdateAsync(sponsorUser);
+            }
             return ServiceResult.SuccessMessage("تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح. .");
         }
-        public async Task<ServiceResult> RegisterCoSponsorAsync(string currentSponsorId, RegisterCoSponsorRequest request, HttpRequest httpRequest)
+        public async Task<ServiceResult> VerifyLinkAsync(VerifyElderlySponsorLinkRequest req)
         {
-            var elderlyId = await _repository.GetElderlyIdForSponsorAsync(currentSponsorId);
-            if (elderlyId is null)
-                return ServiceResult.Failure("لا يوجد مسن مرتبط بهذا الكفيل.");
+            if (string.IsNullOrWhiteSpace(req.ElderlyNationalId) || string.IsNullOrWhiteSpace(req.SponsorNationalId))
+                return ServiceResult.Failure("يرجى إدخال رقم هوية المسن ورقم هوية الكفيل.");
 
-            var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-            if (existingEmail is not null)
-                return ServiceResult.Failure("البريد الإلكتروني مستخدم بالفعل.");
+            var elderlyId = await _repository.GetElderlyIdByNationalIdAsync(req.ElderlyNationalId);
+            if (elderlyId == null)
+                return ServiceResult.SuccessWithData(new { isLinked = false }, "المسن غير موجود.");
 
-            var existingPhoneNumber = await _userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber);
-            if (existingPhoneNumber)
-                return ServiceResult.Failure("رقم الهاتف مستخدم بالفعل.");
+            var sponsorId = await _repository.GetSponsorIdByNationalIdAsync(req.SponsorNationalId);
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.SuccessWithData(new { isLinked = false }, "الكفيل غير موجود.");
 
-            var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
-            if (nationalIdExists)
-                return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+            var isLinked = await _repository.IsLinkBetweenAsync(elderlyId.Value, sponsorId);
 
-            var newSponsor = new Sponsor
-            {
-                FullName = request.FullName,
-                Status = Status.Active,
-                Email = request.Email,
-                UserName = request.Email,
-                Gender = request.Gender,
-                PhoneNumber = request.PhoneNumber,
-                City = request.City,
-                NationalId = request.NationalId,
-                Note = string.IsNullOrWhiteSpace(request.Note) ? "لا يوجد" : request.Note
-            };
+            if (!isLinked)
+                return ServiceResult.SuccessWithData(new { isLinked = false }, "لا يوجد ارتباط بين هذا الكفيل وهذا المسن.");
 
-            var create = await _userManager.CreateAsync(newSponsor, request.Password);
-             if (!create.Succeeded)
-                 return ServiceResult.Failure("فشل في إنشاء الحساب.");
-            await _userManager.AddToRoleAsync(newSponsor, "Sponsor");
-
-            var linkExists = await _repository.LinkExistsAsync(elderlyId.Value, newSponsor.Id);
-            if (!linkExists)
-            {
-                await _repository.AddLinkAsync(
-                    elderlyId.Value,
-                    newSponsor.Id,
-                    request.KinShip,
-                    request.Degree);
-            }
-
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newSponsor);
-            var tokenEncoded = Uri.EscapeDataString(token);
-            var emailUrl = $"{httpRequest.Scheme}://{httpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={newSponsor.Id}";
-
-            await _emailSender.SendEmailAsync(newSponsor.Email!, "تأكيد البريد الالكتروني",
-                $"<h1>Hello {newSponsor.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>");
-
-            return ServiceResult.SuccessMessage("تم تسجيل الكفيل وربطه بالمسن بنجاح، يرجى تأكيد البريد الإلكتروني.");
+            return ServiceResult.SuccessWithData(new { isLinked = true }, "الارتباط صحيح.");
         }
     }
 }

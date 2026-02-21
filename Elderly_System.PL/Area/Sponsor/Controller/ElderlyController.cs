@@ -32,18 +32,15 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
 
             return Ok(new { message = result.Message });
         }
-        
-        [HttpPost("register-co-sponsor")]
-        public async Task<IActionResult> RegisterCoSponsor([FromBody] RegisterCoSponsorRequest request)
+        [HttpPost("verify-link")]
+        public async Task<IActionResult> VerifyLink([FromBody] VerifyElderlySponsorLinkRequest request)
         {
-            var currentSponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-         
-            var result = await _service.RegisterCoSponsorAsync(currentSponsorId!, request, Request);
+            var result = await _service.VerifyLinkAsync(request);
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
 
-            return Ok(new { message = result.Message });
+            return Ok(new { message = result.Message, data = result.Data });
         }
     }
 }

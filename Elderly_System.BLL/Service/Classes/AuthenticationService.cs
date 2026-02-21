@@ -105,6 +105,7 @@ namespace Elderly_System.BLL.Service.Classes
                 City = request.City,
                 NationalId = request.NationalId,
                 Note = string.IsNullOrWhiteSpace(request.Note) ? "لا يوجد" : request.Note,
+                IsProfileCompleted = false
             };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
