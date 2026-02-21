@@ -16,12 +16,14 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly IElderlySponsorRepository _repository;
         private readonly IFileService _file;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAuthenticationService _service;
 
-        public ElderlySponsorService(IElderlySponsorRepository repository , IFileService file , UserManager<ApplicationUser> userManager)
+        public ElderlySponsorService(IElderlySponsorRepository repository , IFileService file , UserManager<ApplicationUser> userManager , IAuthenticationService service)
         {
             _repository = repository;
             _file = file;
             _userManager = userManager;
+            _service = service;
         }
         private static bool HasAllowedExt(IFormFile file, params string[] allowed)
         {
@@ -82,10 +84,21 @@ namespace Elderly_System.BLL.Service.Classes
             };
             await _repository.AddAsync(elderly, doctor, report, link);
             var sponsorUser = await _userManager.FindByIdAsync(sponsorId);
+            bool profileChanged = false;
             if (sponsorUser != null && sponsorUser.IsProfileCompleted == false)
             {
                 sponsorUser.IsProfileCompleted = true;
                 await _userManager.UpdateAsync(sponsorUser);
+                profileChanged = true;
+            }
+            if (profileChanged)
+            {
+                var newToken = await _service.GenerateTokenAsync(sponsorId);
+
+                return ServiceResult.SuccessWithData(new
+                {
+                    token = newToken,
+                }, "تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح.");
             }
             return ServiceResult.SuccessMessage("تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح. .");
         }
@@ -108,6 +121,42 @@ namespace Elderly_System.BLL.Service.Classes
                 return ServiceResult.SuccessWithData(new { isLinked = false }, "لا يوجد ارتباط بين هذا الكفيل وهذا المسن.");
 
             return ServiceResult.SuccessWithData(new { isLinked = true }, "الارتباط صحيح.");
+        }
+        public async Task<ServiceResult> LinkSponsorToElderlyAsync(string sponsorId, LinkSponsorToElderlyRequest req)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("غير مصرح.");
+
+            req.ElderlyNationalId = req.ElderlyNationalId.Trim();
+
+            var elderlyId = await _repository.GetElderlyIdByNationalIdAsync(req.ElderlyNationalId);
+            if (elderlyId == null)
+                return ServiceResult.Failure("المسن غير موجود.");
+
+            var alreadyLinked = await _repository.IsLinkBetweenAsync(elderlyId.Value, sponsorId);
+            if (alreadyLinked)
+                return ServiceResult.SuccessWithData(new { isLinked = true }, "أنت مرتبط بهذا المسن مسبقًا.");
+
+            await _repository.CreateLinkAsync(elderlyId.Value, sponsorId, req.KinShip, req.Degree);
+            var sponsorUser = await _userManager.FindByIdAsync(sponsorId);
+            bool profileChanged = false;
+            if (sponsorUser != null && sponsorUser.IsProfileCompleted == false)
+            {
+                sponsorUser.IsProfileCompleted = true;
+                await _userManager.UpdateAsync(sponsorUser);
+                profileChanged = true;
+
+            }
+            if (profileChanged)
+            {
+                var newToken = await _service.GenerateTokenAsync(sponsorId);
+
+                return ServiceResult.SuccessWithData(new
+                {
+                    token = newToken,
+                }, "تم ربط الكفيل بالمسن بنجاح");
+            }
+            return ServiceResult.SuccessWithData(new { isLinked = true }, "تم ربط الكفيل بالمسن بنجاح.");
         }
     }
 }

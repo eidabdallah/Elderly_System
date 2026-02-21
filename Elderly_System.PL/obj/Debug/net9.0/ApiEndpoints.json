@@ -862,6 +862,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "Link",
+    "RelativePath": "api/Sponsor/Elderly/link",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Elderly.LinkSponsorToElderlyRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "VerifyLink",
     "RelativePath": "api/Sponsor/Elderly/verify-link",
     "HttpMethod": "POST",

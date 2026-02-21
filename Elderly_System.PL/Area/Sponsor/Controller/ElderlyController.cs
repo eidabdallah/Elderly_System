@@ -42,5 +42,19 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
 
             return Ok(new { message = result.Message, data = result.Data });
         }
+        [HttpPost("link")]
+        public async Task<IActionResult> Link([FromBody] LinkSponsorToElderlyRequest request)
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return Unauthorized(new { message = "غير مصرح." });
+
+            var result = await _service.LinkSponsorToElderlyAsync(sponsorId, request);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }

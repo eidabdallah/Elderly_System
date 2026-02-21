@@ -7,6 +7,8 @@ namespace Elderly_System.BLL.Service.Interface
     {
         Task<ServiceResult> AddElderlyWithDoctorAsync(string sponsorId, AddElderlyWithDoctorRequest request);
         Task<ServiceResult> VerifyLinkAsync(VerifyElderlySponsorLinkRequest req);
+        Task<ServiceResult> LinkSponsorToElderlyAsync(string sponsorId, LinkSponsorToElderlyRequest request);
+
     }
 }
 

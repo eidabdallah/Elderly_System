@@ -13,5 +13,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<int?> GetElderlyIdByNationalIdAsync(string nationalId);
         Task<string?> GetSponsorIdByNationalIdAsync(string nationalId);
         Task<bool> IsLinkBetweenAsync(int elderlyId, string sponsorId);
+        Task CreateLinkAsync(int elderlyId, string sponsorId, string kinShip, string degree);
     }
 }

@@ -15,12 +15,14 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly IUserRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IAuthenticationService _service;
 
-        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager , IAuthenticationService service)
         {
             _repository = userRepository;
             _userManager = userManager;
             _roleManager = roleManager;
+            _service = service;
         }
         public async Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null, string? name = null)
         {
@@ -234,7 +236,13 @@ namespace Elderly_System.BLL.Service.Classes
             nurse.IsProfileCompleted = true;
 
             await _repository.UpdateAsync(nurse);
-            return ServiceResult.SuccessMessage("تم استكمال بيانات الممرض بنجاح");
+
+            var newToken = await _service.GenerateTokenAsync(nurseId);
+
+            return ServiceResult.SuccessWithData(new
+            {
+                token = newToken,
+            }, "تم استكمال بيانات الممرض بنجاح");
         }
         public async Task<ServiceResult> DeleteUserAsync(string userId)
         {

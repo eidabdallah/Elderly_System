@@ -30,7 +30,7 @@ namespace Elderly_System.PL.Area.Nurse
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
 
-            return Ok(new { message = result.Message });
+            return Ok(new { data = result.Data, message = result.Message });
         }
     }
 }

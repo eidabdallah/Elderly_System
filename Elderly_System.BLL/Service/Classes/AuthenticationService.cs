@@ -167,7 +167,8 @@ namespace Elderly_System.BLL.Service.Classes
             {
                 new Claim(ClaimTypes.Email, user.Email!),
                 new Claim(ClaimTypes.Name, user.UserName!),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("profileCompleted", user.IsProfileCompleted ? "true" : "false")
             };
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)
@@ -261,6 +262,14 @@ namespace Elderly_System.BLL.Service.Classes
                 Gender = user.Gender
             };
             return ServiceResult.SuccessWithData(response, "تم جلب معلومات المستخدم");
+        }
+        public async Task<string> GenerateTokenAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return await CreateTokenAsync(user);
         }
     }
 }

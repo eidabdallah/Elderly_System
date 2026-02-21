@@ -78,5 +78,17 @@ namespace Elderly_System.DAL.Repositories.Classes
             return await _context.ElderlySponsors
                 .AnyAsync(x => x.ElderlyId == elderlyId && x.SponsorId == sponsorId);
         }
+        public async Task CreateLinkAsync(int elderlyId, string sponsorId, string kinShip, string degree)
+        {
+            _context.ElderlySponsors.Add(new ElderlySponsor
+            {
+                ElderlyId = elderlyId,
+                SponsorId = sponsorId,
+                KinShip = kinShip,
+                Degree = degree
+            });
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
