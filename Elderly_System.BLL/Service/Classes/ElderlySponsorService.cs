@@ -40,7 +40,8 @@ namespace Elderly_System.BLL.Service.Classes
             var allowed = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
 
             if (!HasAllowedExt(request.DiagnosisFile, allowed) || !HasAllowedExt(request.NationalIdImage, allowed) ||
-                !HasAllowedExt(request.HealthInsurance, allowed)){
+                !HasAllowedExt(request.HealthInsurance, allowed))
+            {
                 return ServiceResult.Failure("يجب أن تكون جميع الملفات صورًا أو ملفات PDF.");
             }
 
@@ -84,23 +85,14 @@ namespace Elderly_System.BLL.Service.Classes
             };
             await _repository.AddAsync(elderly, doctor, report, link);
             var sponsorUser = await _userManager.FindByIdAsync(sponsorId);
-            bool profileChanged = false;
             if (sponsorUser != null && sponsorUser.IsProfileCompleted == false)
             {
                 sponsorUser.IsProfileCompleted = true;
                 await _userManager.UpdateAsync(sponsorUser);
-                profileChanged = true;
             }
-            if (profileChanged)
-            {
-                var newToken = await _service.GenerateTokenAsync(sponsorId);
+            var newToken = await _service.GenerateTokenAsync(sponsorId);
 
-                return ServiceResult.SuccessWithData(new
-                {
-                    token = newToken,
-                }, "تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح.");
-            }
-            return ServiceResult.SuccessMessage("تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح. .");
+            return ServiceResult.SuccessWithData( newToken, "تم إدخال بيانات المسن والطبيب ورفع التشخيص بنجاح.");
         }
         public async Task<ServiceResult> VerifyLinkAsync(VerifyElderlySponsorLinkRequest req)
         {
@@ -139,24 +131,16 @@ namespace Elderly_System.BLL.Service.Classes
 
             await _repository.CreateLinkAsync(elderlyId.Value, sponsorId, req.KinShip, req.Degree);
             var sponsorUser = await _userManager.FindByIdAsync(sponsorId);
-            bool profileChanged = false;
             if (sponsorUser != null && sponsorUser.IsProfileCompleted == false)
             {
                 sponsorUser.IsProfileCompleted = true;
                 await _userManager.UpdateAsync(sponsorUser);
-                profileChanged = true;
 
             }
-            if (profileChanged)
-            {
-                var newToken = await _service.GenerateTokenAsync(sponsorId);
+            var newToken = await _service.GenerateTokenAsync(sponsorId);
 
-                return ServiceResult.SuccessWithData(new
-                {
-                    token = newToken,
-                }, "تم ربط الكفيل بالمسن بنجاح");
-            }
-            return ServiceResult.SuccessWithData(new { isLinked = true }, "تم ربط الكفيل بالمسن بنجاح.");
+            return ServiceResult.SuccessWithData(newToken, "تم ربط الكفيل بالمسن بنجاح");
+
         }
     }
 }
