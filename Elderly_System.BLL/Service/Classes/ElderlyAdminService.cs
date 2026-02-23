@@ -172,7 +172,6 @@ namespace Elderly_System.BLL.Service.Classes
 
             await _repository.AddResidentStayAsync(stay);
 
-            // ✅ sponsors => Active عند التحديد أو التجديد
             SetSponsorsStatus(elderly, Status.Active);
 
             await _repository.SaveChangesAsync();
