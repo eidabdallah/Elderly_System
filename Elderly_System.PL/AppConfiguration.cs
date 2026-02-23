@@ -13,7 +13,9 @@ namespace Elderly_System.PL
         internal static void AddConfig(this IServiceCollection services)
         {
             services.AddScoped<ISeedData, SeedData>();
+            
             services.AddScoped<IAuthenticationService,AuthenticationService>();
+            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<IEmailSender, EmailSetting>();
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IDonationRepository,DonationRepository>();

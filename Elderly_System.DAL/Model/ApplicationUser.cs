@@ -27,7 +27,6 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "رقم الهاتف مطلوب.")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يتكون من 10 أرقام.")]
         public string PhoneNumberForValidation => PhoneNumber ?? string.Empty;
-        public bool IsProfileCompleted { get; set; } = true;
         public ICollection<Donation> Donations { get; set; } = new List<Donation>();
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 

@@ -46,7 +46,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true
                 };
                 await _userManager.CreateAsync(userAdmin, "Pass@12345");
                 await _userManager.AddToRoleAsync(userAdmin, "Admin");
@@ -63,7 +62,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
 
                     MaritalStatus = MaritalStatus.Married
                 };
@@ -85,7 +83,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     MaritalStatus = MaritalStatus.Single
                 };
 
@@ -105,7 +102,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     MaritalStatus = MaritalStatus.Single
                 };
 
@@ -126,7 +122,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Male,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     MaritalStatus = MaritalStatus.Married
                 };
 
@@ -147,7 +142,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Male,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     EducationLevel = EducationLevel.University,
                     FieldOfStudy = "محاسبة",
                     YearsOfStudy = 4,
@@ -187,7 +181,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     EducationLevel = EducationLevel.Secondary,
                     FieldOfStudy = "فنون الطبخ",
                     YearsOfStudy = 2,
@@ -227,7 +220,6 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                     Gender = Gender.Female,
                     EmailConfirmed = true,
                     Status = Status.Active,
-                    IsProfileCompleted = true,
                     EducationLevel = EducationLevel.Secondary,
                     FieldOfStudy = "سكرتيرة",
                     YearsOfStudy = 2,

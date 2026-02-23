@@ -19,6 +19,8 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
             _authenticationService = authenticationService;
         }
         [HttpPost("register-staff")]
+        [Consumes("multipart/form-data")]
+
         public async Task<IActionResult> RegisterStaff([FromForm] RegisterStaffRequest request)
         {
             var result = await _authenticationService.RegisterStaffAsync(request , Request);
@@ -29,7 +31,9 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
             return Ok(new { message = result.Message });
         }
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        [Consumes("multipart/form-data")]
+
+        public async Task<IActionResult> Register([FromForm] RegisterRequest request)
         {
             var result = await _authenticationService.RegisterAsync(request , Request);
             if (!result.Success)
@@ -57,7 +61,7 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
                 return BadRequest(new { message = result.Message });
 
             if (result.Data != null)
-                return Ok(new { message = result.Message, data = result.Data });
+                return Ok(new { message = result.Message, token = result.Data });
             return StatusCode(403, new { message = result.Message });
         }
         [HttpPost("forgot-password")]

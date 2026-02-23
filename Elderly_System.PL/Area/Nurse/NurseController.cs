@@ -1,9 +1,6 @@
 ﻿using Elderly_System.BLL.Service.Interface;
-using Elderly_System.DAL.DTO.Request.Nurse;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Elderly_System.PL.Area.Nurse
 {
@@ -18,19 +15,6 @@ namespace Elderly_System.PL.Area.Nurse
         {
             _service = service;
         }
-        [HttpPost("complete")]
-        public async Task<IActionResult> CompleteProfile([FromBody] CompleteNurseProfileRequest request)
-        {
-            var nurseId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrWhiteSpace(nurseId))
-                return Unauthorized(new { message = "رقم المستخدم غير موجود بالتوكن" });
-
-            var result = await _service.CompleteProfileAsync(nurseId, request);
-
-            if (!result.Success)
-                return BadRequest(new { message = result.Message });
-
-            return Ok(new { data = result.Data, message = result.Message });
-        }
+       
     }
 }

@@ -36,7 +36,7 @@ namespace ElderlySystem.DAL.Model
         [Required(ErrorMessage = "الحالة الصحية مطلوبة.")]
         [StringLength(200, ErrorMessage = "الحالة الصحية يجب ألا تتجاوز 200 حرف.")]
         public string HealthStatus { get; set; } = null!;
-        public ICollection<string> Diseases { get; set; } = new List<string>();
+        public ICollection<string>? Diseases { get; set; } = new List<string>();
 
         [Required(ErrorMessage = "تاريخ الميلاد مطلوب.")]
         public DateTime BDate { get; set; }

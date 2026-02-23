@@ -202,48 +202,6 @@ namespace Elderly_System.BLL.Service.Classes
                 })
                 .ToList();
         }
-
-
-        public async Task<ServiceResult> CompleteProfileAsync(string nurseId, CompleteNurseProfileRequest request)
-        {
-            var nurse = await _repository.GetByIdAsync(nurseId);
-            if (nurse == null)
-                return ServiceResult.Failure("الممرض غير موجود");
-            nurse.JobTitle = "ممرض";
-            nurse.EducationLevel = request.EducationLevel;
-            nurse.MaritalStatus = request.MaritalStatus;
-            nurse.FieldOfStudy = request.FieldOfStudy.Trim();
-            nurse.YearsOfStudy = request.YearsOfStudy;
-            nurse.YearOfGraduation = request.YearOfGraduation.Trim();
-
-            if (request.WorkExperiences != null && request.WorkExperiences.Count > 0)
-            {
-                foreach (var we in request.WorkExperiences)
-                {
-                    if (string.IsNullOrWhiteSpace(we.WorkName) || string.IsNullOrWhiteSpace(we.JobTitle))
-                        return ServiceResult.Failure("كل خبرة لازم يكون فيها مكان العمل و الدور الوظيفي");
-
-                    nurse.WorkExperiences.Add(new WorkExperience
-                    {
-                        WorkName = we.WorkName.Trim(),
-                        WorkLocation = we.WorkLocation.Trim(),
-                        JobTitle = we.JobTitle.Trim(),
-                        EmployeeId = nurseId
-                    });
-                }
-            }
-
-            nurse.IsProfileCompleted = true;
-
-            await _repository.UpdateAsync(nurse);
-
-            var newToken = await _service.GenerateTokenAsync(nurseId);
-
-            return ServiceResult.SuccessWithData(new
-            {
-                token = newToken,
-            }, "تم استكمال بيانات الممرض بنجاح");
-        }
         public async Task<ServiceResult> DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);

@@ -10,7 +10,6 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> ChangeStatusAsync(string userId, Status newStatus);
         Task<ServiceResult> ChangeRoleAsync(string userId, Role newRole);
         Task<ServiceResult> GetUserDetailsAsync(string userId);
-        Task<ServiceResult> CompleteProfileAsync(string nurseId, CompleteNurseProfileRequest request);
         Task<ServiceResult> DeleteUserAsync(string userId);
 
 

@@ -664,9 +664,139 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "ElderlySystem.DAL.DTO.Request.Auth.RegisterRequest",
-        "IsRequired": true
+        "Name": "Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Password",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FullName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PhoneNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "NationalId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "City",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "GenderSponsor",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SponsorDegree",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "NationalIdElderly",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Doctrine",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MaritalStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CityElderly",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Street",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "BDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ReasonRegister",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Diseases",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "NationalIdImage",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthInsurance",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "KinShip",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Degree",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DoctorName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "WorkPlace",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DoctorPhone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ReportDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiagnosisFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -718,6 +848,36 @@
         "Name": "Certificate",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
+      },
+      {
+        "Name": "EducationLevel",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MaritalStatus",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FieldOfStudy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "YearsOfStudy",
+        "Type": "System.Single",
+        "IsRequired": false
+      },
+      {
+        "Name": "YearOfGraduation",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "WorkExperiences",
+        "Type": "System.Collections.Generic.List\u00601[[Elderly_System.DAL.DTO.Request.Nurse.WorkExperienceRequest, Elderly_System.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -733,160 +893,6 @@
       {
         "Name": "request",
         "Type": "ElderlySystem.DAL.DTO.Request.Auth.ResetPasswordRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
-    "Method": "CompleteProfile",
-    "RelativePath": "api/Nurse/complete",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Elderly_System.DAL.DTO.Request.Nurse.CompleteNurseProfileRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
-    "Method": "AddWithDoctor",
-    "RelativePath": "api/Sponsor/Elderly/add-with-doctor",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "NationalId",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Doctrine",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "MaritalStatus",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "City",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Street",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "HealthStatus",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "BDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "ReasonRegister",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Diseases",
-        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "NationalIdImage",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "HealthInsurance",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "KinShip",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Degree",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "WorkPlace",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorPhone",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ReportDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "DiagnosisFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
-    "Method": "Link",
-    "RelativePath": "api/Sponsor/Elderly/link",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Elderly_System.DAL.DTO.Request.Elderly.LinkSponsorToElderlyRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
-    "Method": "VerifyLink",
-    "RelativePath": "api/Sponsor/Elderly/verify-link",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Elderly_System.DAL.DTO.Request.Elderly.VerifyElderlySponsorLinkRequest",
         "IsRequired": true
       }
     ],

@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -16,7 +17,6 @@ namespace ElderlySystem.DAL.DTO.Request.Auth
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,100}$",
             ErrorMessage = "كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز (مثل !@#).")]
         public string Password { get; set; } = default!;
-
 
         [Required(ErrorMessage = "الاسم الكامل مطلوب.")]
         [MaxLength(200, ErrorMessage = "الاسم الكامل طويل جدًا.")]
@@ -37,9 +37,39 @@ namespace ElderlySystem.DAL.DTO.Request.Auth
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [Required(ErrorMessage = "الجنس مطلوب.")]
-        public Gender Gender { get; set; }
+        public Gender GenderSponsor { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [Required(ErrorMessage = "درجة الكفيل مطلوب.")]
+        public SponsorDegree SponsorDegree { get; set; }
 
-        [MaxLength(500, ErrorMessage = "الملاحظة طويلة جدًا.")]
-        public string? Note { get; set; }
+
+
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "رقم الهوية مطلوب.")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "رقم الهوية يجب أن يكون مكونًا من 9 أرقام.")]
+        public string NationalIdElderly { get; set; } = default!;
+        public string? Doctrine { get; set; }
+        public MaritalStatus? MaritalStatus { get; set; }
+        public string? CityElderly { get; set; }
+        public string? Street { get; set; }
+        public string? HealthStatus { get; set; }
+        public DateTime? BDate { get; set; }
+        public string? ReasonRegister { get; set; }
+        public List<string>? Diseases { get; set; }
+        public IFormFile? NationalIdImage { get; set; }
+        public IFormFile? HealthInsurance { get; set; }
+        [Required(ErrorMessage = "صلة القرابة مطلوبة.")]
+        public string KinShip { get; set; } = default!;
+        [Required(ErrorMessage = "الدرجة مطلوبة.")]
+        public string Degree { get; set; } = default!;
+        public string? DoctorName { get; set; }
+        public string? WorkPlace { get; set; }
+
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يتكون من 10 أرقام.")]
+        public string? DoctorPhone { get; set; }
+        public DateTime? ReportDate { get; set; }
+        public IFormFile? DiagnosisFile { get; set; }
+
     }
 }
