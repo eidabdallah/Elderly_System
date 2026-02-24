@@ -521,6 +521,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
+    "Method": "Approve",
+    "RelativePath": "api/Admin/User/approve/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
     "Method": "ChangeRole",
     "RelativePath": "api/Admin/User/change-role/{id}",
     "HttpMethod": "PATCH",

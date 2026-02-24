@@ -5,8 +5,10 @@ using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
+using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elderly_System.BLL.Service.Classes
 {
@@ -16,13 +18,15 @@ namespace Elderly_System.BLL.Service.Classes
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IAuthenticationService _service;
+        private readonly ApplicationDbContext _context;
 
-        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager , IAuthenticationService service)
+        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager , IAuthenticationService service , ApplicationDbContext context)
         {
             _repository = userRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _service = service;
+            _context = context;
         }
         public async Task<ServiceResult> GetUsersAsync(Status? status = null, Role? role = null, string? name = null)
         {
@@ -158,7 +162,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                 FillEmployee(dto, emp);
             }
-            else if (roleEnum == Role.Sponsor)
+            else if (roleEnum == Role.FirstSponsor || roleEnum == Role.SecondSponsor)
             {
                 var sponsor = await _repository.GetSponsorWithElderlyAsync(userId);
                 if (sponsor is null) return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
@@ -209,6 +213,95 @@ namespace Elderly_System.BLL.Service.Classes
                 return ServiceResult.Failure("المستخدم غير موجود.");
 
             var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Any(r => r.Equals(Role.Admin.ToString(), StringComparison.OrdinalIgnoreCase)))
+                return ServiceResult.Failure("لا يمكن حذف حساب الأدمن.");
+
+            await using var tx = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                if (roles.Any(r => r.Equals(Role.FirstSponsor.ToString(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    var ok = await _repository.DeleteElderlyAndLinkBySponsorIdAsync(userId);
+                    if (!ok)
+                    {
+                        await tx.RollbackAsync();
+                        return ServiceResult.Failure("فشل حذف بيانات المسن أو العلاقة.");
+                    }
+
+                    var del = await _userManager.DeleteAsync(user);
+                    if (!del.Succeeded)
+                    {
+                        var err = string.Join(" | ", del.Errors.Select(e => e.Description));
+                        await tx.RollbackAsync();
+                        return ServiceResult.Failure($"فشل حذف المستخدم. {err}");
+                    }
+
+                    await tx.CommitAsync();
+                    return ServiceResult.SuccessMessage("تم حذف الكفيل الأول بنجاح.");
+                }
+
+                if (roles.Any(r => r.Equals(Role.SecondSponsor.ToString(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    var ok = await _repository.DeleteElderlySponsorLinkBySponsorIdAsync(userId);
+                    if (!ok)
+                    {
+                        await tx.RollbackAsync();
+                        return ServiceResult.Failure("فشل حذف العلاقة.");
+                    }
+
+                    var del = await _userManager.DeleteAsync(user);
+                    if (!del.Succeeded)
+                    {
+                        var err = string.Join(" | ", del.Errors.Select(e => e.Description));
+                        await tx.RollbackAsync();
+                        return ServiceResult.Failure($"فشل حذف المستخدم. {err}");
+                    }
+
+                    await tx.CommitAsync();
+                    return ServiceResult.SuccessMessage("تم حذف الكفيل الثاني بنجاح.");
+                }
+
+                if (roles.Any(r => r.Equals(Role.Nurse.ToString(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    var del = await _userManager.DeleteAsync(user);
+                    if (!del.Succeeded)
+                    {
+                        var err = string.Join(" | ", del.Errors.Select(e => e.Description));
+                        await tx.RollbackAsync();
+                        return ServiceResult.Failure($"فشل حذف المستخدم. {err}");
+                    }
+
+                    await tx.CommitAsync();
+                    return ServiceResult.SuccessMessage("تم حذف الممرض بنجاح.");
+                }
+
+                var result = await _userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    var err = string.Join(" | ", result.Errors.Select(e => e.Description));
+                    await tx.RollbackAsync();
+                    return ServiceResult.Failure($"فشل حذف المستخدم. {err}");
+                }
+
+                await tx.CommitAsync();
+                return ServiceResult.SuccessMessage("تم حذف المستخدم بنجاح.");
+            }
+            catch (Exception ex)
+            {
+                await tx.RollbackAsync();
+                return ServiceResult.Failure($"حدث خطأ أثناء الحذف. {ex.Message}");
+            }
+        }
+
+        /*public async Task<ServiceResult> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            var roles = await _userManager.GetRolesAsync(user);
             if (roles.Any(r => string.Equals(r, Role.Admin.ToString(), StringComparison.OrdinalIgnoreCase)))
                 return ServiceResult.Failure("لا يمكن حذف حساب الأدمن.");
 
@@ -220,6 +313,74 @@ namespace Elderly_System.BLL.Service.Classes
             }
 
             return ServiceResult.SuccessMessage("تم حذف المستخدم بنجاح.");
+        }*/
+        public async Task<ServiceResult> ApproveUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return ServiceResult.Failure("المستخدم غير موجود.");
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleName = roles.FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(roleName))
+                return ServiceResult.Failure("لم يتم تعيين صلاحية (Role) لهذا المستخدم.");
+
+            if (!Enum.TryParse<Role>(roleName, true, out var roleEnum))
+                return ServiceResult.Failure("صلاحية المستخدم غير معروفة.");
+
+            if (roleEnum == Role.Admin)
+                return ServiceResult.Failure("لا يمكن تنفيذ العملية على الأدمن.");
+
+            if (roleEnum == Role.Nurse)
+            {
+                if (user.Status != Status.Active)
+                {
+                    user.Status = Status.Active;
+                    var ok = await _repository.UpdateUserAsync(user);
+                    if (!ok) return ServiceResult.Failure("حدث خطأ أثناء تفعيل الممرض.");
+                }
+
+                return ServiceResult.SuccessMessage("تم قبول الممرض وتفعيله بنجاح.");
+            }
+
+            if (roleEnum == Role.SecondSponsor)
+            {
+                if (user.Status != Status.Active)
+                {
+                    user.Status = Status.Active;
+                    var ok = await _repository.UpdateUserAsync(user);
+                    if (!ok) return ServiceResult.Failure("حدث خطأ أثناء تفعيل الكفيل الثاني.");
+                }
+
+                return ServiceResult.SuccessMessage("تم قبول الكفيل الثاني وتفعيله بنجاح.");
+            }
+
+            if (roleEnum == Role.FirstSponsor)
+            {
+                var sponsor = await _repository.GetSponsorWithElderlyForUpdateAsync(userId);
+                if (sponsor is null)
+                    return ServiceResult.Failure("بيانات الكفيل غير موجودة.");
+
+                sponsor.Status = Status.Active;
+
+                foreach (var es in sponsor.ElderlySponsors)
+                {
+                    if (es.Elderly is null) continue;
+                    es.Elderly.status = Status.Active;
+                }
+
+                var saved = await _repository.SaveChangesAsync();
+                if (saved <= 0)
+                    return ServiceResult.Failure("حدث خطأ أثناء تفعيل الكفيل الأول/المسن.");
+
+                return ServiceResult.SuccessMessage("تم قبول الكفيل الأول وتفعيل حسابه وحساب/حسابات المسن بنجاح.");
+            }
+
+            user.Status = Status.Active;
+            var updated = await _repository.UpdateUserAsync(user);
+            if (!updated) return ServiceResult.Failure("حدث خطأ أثناء تفعيل المستخدم.");
+
+            return ServiceResult.SuccessMessage("تم قبول المستخدم وتفعيله بنجاح.");
         }
 
 

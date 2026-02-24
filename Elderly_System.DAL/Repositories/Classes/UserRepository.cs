@@ -88,7 +88,44 @@ namespace Elderly_System.DAL.Repositories.Classes
             _context.Users.Update(nurse);
             await _context.SaveChangesAsync();
         }
+        public async Task<Sponsor?> GetSponsorWithElderlyForUpdateAsync(string id)
+        {
+            return await _context.Users
+                .OfType<Sponsor>()
+                .Include(s => s.ElderlySponsors)
+                    .ThenInclude(es => es.Elderly)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
 
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+        public async Task<bool> DeleteElderlySponsorLinkBySponsorIdAsync(string sponsorId)
+        {
+            var link = await _context.Set<ElderlySponsor>()
+                .SingleOrDefaultAsync(es => es.SponsorId == sponsorId);
 
+            if (link is null) return true;
+
+            _context.Remove(link);
+            return await _context.SaveChangesAsync() > 0;
+        }
+     
+        public async Task<bool> DeleteElderlyAndLinkBySponsorIdAsync(string sponsorId)
+        {
+            var link = await _context.Set<ElderlySponsor>()
+                .SingleOrDefaultAsync(es => es.SponsorId == sponsorId);
+
+            if (link is null) return true;
+
+            var elderly = await _context.Set<Elderly>()
+                .SingleOrDefaultAsync(e => e.Id == link.ElderlyId);
+
+            _context.Remove(link);              
+            if (elderly != null) _context.Remove(elderly);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

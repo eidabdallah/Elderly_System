@@ -11,6 +11,7 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> ChangeRoleAsync(string userId, Role newRole);
         Task<ServiceResult> GetUserDetailsAsync(string userId);
         Task<ServiceResult> DeleteUserAsync(string userId);
+        Task<ServiceResult> ApproveUserAsync(string userId);
 
 
 

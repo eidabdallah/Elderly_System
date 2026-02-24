@@ -157,7 +157,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                 var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
                 if (nationalIdExists)
-                    return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+                    return ServiceResult.Failure("رقم الهوية الكفيل مستخدم بالفعل.");
 
                 var user = new Sponsor
                 {
@@ -175,12 +175,14 @@ namespace Elderly_System.BLL.Service.Classes
                 if (!result.Succeeded)
                     return ServiceResult.Failure("فشل في انشاء الحساب");
 
-                var roleResult = await _userManager.AddToRoleAsync(user, "Sponsor");
-                if (!roleResult.Succeeded)
-                    return ServiceResult.Failure("فشل في إضافة صلاحية المستخدم.");
+               
 
                 if (request.SponsorDegree == SponsorDegree.First)
                 {
+                    var roleResult = await _userManager.AddToRoleAsync(user, "FirstSponsor");
+                    if (!roleResult.Succeeded)
+                        return ServiceResult.Failure("فشل في إضافة صلاحية المستخدم.");
+
                     var exists = await _repository.IsElderlyNationalIdExistsAsync(request.NationalIdElderly);
                     if (exists)
                         return ServiceResult.Failure("رقم هوية المسن مستخدم مسبقاً.");
@@ -212,7 +214,7 @@ namespace Elderly_System.BLL.Service.Classes
                         ReasonRegister = request.ReasonRegister!,
                         NationalIdImage = idImg.Url,
                         HealthInsurance = insurance.Url,
-                        status = Status.InActive
+                        status = Status.Pending,
                     };
 
                     var doctor = new Doctor
@@ -240,6 +242,9 @@ namespace Elderly_System.BLL.Service.Classes
                 }
                 else if (request.SponsorDegree == SponsorDegree.Second)
                 {
+                    var roleResult = await _userManager.AddToRoleAsync(user, "SecondSponsor");
+                    if (!roleResult.Succeeded)
+                        return ServiceResult.Failure("فشل في إضافة صلاحية المستخدم.");
                     if (string.IsNullOrWhiteSpace(request.NationalIdElderly))
                         return ServiceResult.Failure("رقم هوية المسن مطلوب.");
 

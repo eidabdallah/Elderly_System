@@ -107,7 +107,7 @@ namespace Elderly_System.DAL.Repositories.Classes
             {
                 StayFilter.Active => baseQuery.Where(x => x.HasActiveStay),
 
-                StayFilter.None => baseQuery.Where(x => !x.HasAnyStay),
+                StayFilter.None => baseQuery.Where(x => !x.HasAnyStay && x.Elderly.status == Status.Active),
 
                 StayFilter.Finish => baseQuery.Where(x =>
                     !x.HasActiveStay && x.LatestFinishedStay != null

@@ -12,7 +12,8 @@ namespace Elderly_System.DAL.DTO.Response.User
         {
             Role.Admin => "أدمن",
             Role.Nurse => "ممرض",
-            Role.Sponsor => "كفيل",
+            Role.FirstSponsor => "كفيل أول",
+            Role.SecondSponsor => "كفيل ثاني",
             Role.Accountant => "محاسب",
             Role.Chef => "مسؤولة طبخ",
             Role.Security => "حارس",

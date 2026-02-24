@@ -19,8 +19,10 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Sponsor?> GetSponsorWithElderlyAsync(string id);
         Task<Nurse?> GetByIdAsync(string id);
         Task UpdateAsync(Nurse nurse);
-
-
+        Task<Sponsor?> GetSponsorWithElderlyForUpdateAsync(string id);
+        Task<bool> DeleteElderlyAndLinkBySponsorIdAsync(string sponsorId);
+        Task<bool> DeleteElderlySponsorLinkBySponsorIdAsync(string sponsorId);
+        Task<int> SaveChangesAsync();
 
     }
 }

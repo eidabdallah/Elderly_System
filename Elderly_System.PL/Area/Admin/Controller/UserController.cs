@@ -69,6 +69,16 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
+        [HttpPatch("approve/{id}")]
+        public async Task<IActionResult> Approve([FromRoute] string id)
+        {
+            var result = await _service.ApproveUserAsync(id);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
 
     }
 }

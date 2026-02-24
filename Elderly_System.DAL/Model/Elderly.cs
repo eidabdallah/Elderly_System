@@ -52,7 +52,7 @@ namespace ElderlySystem.DAL.Model
         [StringLength(300, ErrorMessage = "السبب يجب ألا يتجاوز 300 حرف.")]
         public string ReasonRegister { get; set; } = null!;
 
-        public Status status { get; set; } = Status.Active;
+        public Status status { get; set; } = Status.Pending;
 
 
         public int Age
