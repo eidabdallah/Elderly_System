@@ -2,6 +2,7 @@
 using Elderly_System.DAL.DTO.Response.Room;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
@@ -147,6 +148,13 @@ namespace Elderly_System.DAL.Repositories.Classes
                     RoomType = r.RoomType
                 })
                 .ToListAsync();
+        }
+        public async Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId)
+        {
+            return await _context.MedicalReports
+                .AsNoTracking()
+                .Include(x => x.Doctor)
+                .FirstOrDefaultAsync(x => x.Id == reportId);
         }
     }
 }

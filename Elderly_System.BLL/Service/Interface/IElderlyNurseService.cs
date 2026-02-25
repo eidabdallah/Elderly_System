@@ -5,5 +5,7 @@ namespace Elderly_System.BLL.Service.Interface
     public interface IElderlyNurseService
     {
         Task<ServiceResult> GetActiveResidentElderliesAsync();
+        Task<ServiceResult> GetElderlyDetailsAsync(int elderlyId);
+        Task<ServiceResult> GetMedicalReportDiagnosisAsync(int reportId);
     }
 }

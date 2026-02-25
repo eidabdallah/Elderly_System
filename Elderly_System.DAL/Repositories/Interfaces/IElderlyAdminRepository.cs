@@ -1,6 +1,7 @@
 ﻿using Elderly_System.DAL.DTO.Response.Elderly;
 using Elderly_System.DAL.DTO.Response.Room;
 using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
 using ElderlySystem.DAL.Model;
 
 namespace Elderly_System.DAL.Repositories.Interfaces
@@ -21,6 +22,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<List<ElderlyResponse>> GetElderliesByStayAsync(StayFilter filter);
         Task<ResidentStay?> GetActiveStayByElderlyIdAsync(int elderlyId);
         Task<List<AvailableRoomResponse>> GetAvailableRoomsExcludingAsync(int excludeRoomId);
-
+        Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Elderly_System.BLL.Service.Interface;
 using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Response.MedicalReport;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
 using ElderlySystem.DAL.Model;
@@ -68,6 +70,12 @@ namespace Elderly_System.BLL.Service.Classes
                 .FirstOrDefault(s => s.Status == Status.Active)
                 ?? elderly.ResidentStays?.OrderByDescending(s => s.StartDate).FirstOrDefault();
 
+            var reportsOrdered = elderly.MedicalReports?
+              .OrderByDescending(r => r.Date)
+              .ToList() ?? new List<MedicalReport>();
+
+            var latestReport = reportsOrdered.FirstOrDefault();
+
             var response = new ElderlyDetailsResponse
             {
                 ElderlyId = elderly.Id,
@@ -110,22 +118,27 @@ namespace Elderly_System.BLL.Service.Classes
                     }
                 },
 
-                MedicalReports = elderly.MedicalReports?
-                    .OrderByDescending(r => r.Date)
-                    .Select(r => new MedicalReportInfoResponse
+                LatestMedicalReport = latestReport == null ? null : new MedicalReportInfoResponse
+                {
+                    ReportId = latestReport.Id,
+                    Date = latestReport.Date.ToString("yyyy-MM-dd"),
+                    DiagnosisUrl = latestReport.DiagnosisUrl,
+                    Doctor = new DoctorInfoResponse
                     {
-                        ReportId = r.Id,
-                        Date = r.Date.ToString("yyyy-MM-dd"),
-                        DiagnosisUrl = r.DiagnosisUrl,
-                        Doctor = new DoctorInfoResponse
-                        {
-                            DoctorId = r.Doctor.Id,
-                            Name = r.Doctor.Name,
-                            WorkPlace = r.Doctor.WorkPlace,
-                            Phone = r.Doctor.Phone
-                        }
-                    })
-                    .ToList() ?? new List<MedicalReportInfoResponse>()
+                        DoctorId = latestReport.Doctor.Id,
+                        Name = latestReport.Doctor.Name,
+                        WorkPlace = latestReport.Doctor.WorkPlace,
+                        Phone = latestReport.Doctor.Phone
+                    }
+                },
+
+                MedicalReportDates = reportsOrdered
+            .Select(r => new MedicalReportDateResponse
+            {
+                ReportId = r.Id,
+                Date = r.Date.ToString("yyyy-MM-dd")
+            })
+            .ToList()
             };
 
             return ServiceResult.SuccessWithData(response, "تم جلب تفاصيل المسن بنجاح");
@@ -266,6 +279,32 @@ namespace Elderly_System.BLL.Service.Classes
 
             await _repository.SaveChangesAsync();
             return ServiceResult.SuccessMessage("تم تغيير الغرفة بنجاح");
+        }
+        public async Task<ServiceResult> GetMedicalReportDiagnosisAsync(int reportId)
+        {
+            if (reportId <= 0)
+                return ServiceResult.Failure("رقم التقرير غير صحيح.");
+
+            var report = await _repository.GetMedicalReportByIdAsync(reportId);
+            if (report == null)
+                return ServiceResult.Failure("التقرير غير موجود.");
+
+            var dto = new MedicalReportDiagnosisResponse
+            {
+                ReportId = report.Id,
+                Date = report.Date.ToString("yyyy-MM-dd"),
+                DiagnosisUrl = report.DiagnosisUrl,
+                DiagnosisPublicId = report.DiagnosisPublicId,
+                Doctor = new DoctorInfoResponse
+                {
+                    DoctorId = report.Doctor.Id,
+                    Name = report.Doctor.Name,
+                    WorkPlace = report.Doctor.WorkPlace,
+                    Phone = report.Doctor.Phone
+                }
+            };
+
+            return ServiceResult.SuccessWithData(dto, "تم جلب التشخيص بنجاح");
         }
     }
 }

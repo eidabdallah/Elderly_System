@@ -1,4 +1,6 @@
-﻿namespace Elderly_System.DAL.DTO.Response.Elderly
+﻿using Elderly_System.DAL.DTO.Response.MedicalReport;
+
+namespace Elderly_System.DAL.DTO.Response.Elderly
 {
     public class ElderlyDetailsResponse
     {
@@ -21,6 +23,8 @@
 
         public List<ElderlySponsorInfoResponse> Sponsors { get; set; } = new();
         public ResidentStayInfoResponse? CurrentStay { get; set; }
-        public List<MedicalReportInfoResponse> MedicalReports { get; set; } = new();
+
+        public MedicalReportInfoResponse? LatestMedicalReport { get; set; }
+        public List<MedicalReportDateResponse> MedicalReportDates { get; set; } = new();
     }
 }

@@ -15,5 +15,6 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> ChangeResidentRoomAsync(int elderlyId, int newRoomId);
         Task<ServiceResult> GetAvailableRoomsForChangeAsync(int elderlyId);
         Task<ServiceResult> EndResidentStayAsync(int elderlyId);
+        Task<ServiceResult> GetMedicalReportDiagnosisAsync(int reportId);
     }
 }

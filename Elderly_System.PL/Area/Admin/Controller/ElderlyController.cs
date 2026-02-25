@@ -111,5 +111,12 @@ namespace Elderly_System.PL.Area.Admin.Controller
 
             return Ok(new { message = result.Message });
         }
+        
+        [HttpGet("medical-reports/{reportId}")]
+        public async Task<IActionResult> GetMedicalReportDiagnosis(int reportId)
+        {
+            var result = await _service.GetMedicalReportDiagnosisAsync(reportId);
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }

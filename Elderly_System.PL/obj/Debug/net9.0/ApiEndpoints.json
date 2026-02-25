@@ -291,6 +291,22 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
+    "Method": "GetMedicalReportDiagnosis",
+    "RelativePath": "api/Admin/Elderly/medical-reports/{reportId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reportId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ElderlyController",
     "Method": "GetAvailableRooms",
     "RelativePath": "api/Admin/Elderly/rooms/available",
     "HttpMethod": "GET",
@@ -922,6 +938,38 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.ElderlyController",
+    "Method": "GetDetails",
+    "RelativePath": "api/Nurse/Elderly/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.ElderlyController",
+    "Method": "GetDiagnosis",
+    "RelativePath": "api/Nurse/Elderly/medical-reports/{reportId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reportId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

@@ -22,5 +22,17 @@ namespace Elderly_System.PL.Area.Nurse
             var result = await _service.GetActiveResidentElderliesAsync();
             return Ok(new { message = result.Message, Elderlies = result.Data });
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetails([FromRoute] int id)
+        {
+            var result = await _service.GetElderlyDetailsAsync(id);
+            return Ok(new { message = result.Message, Elderly = result.Data });
+        }
+        [HttpGet("medical-reports/{reportId}")]
+        public async Task<IActionResult> GetDiagnosis(int reportId)
+        {
+            var result = await _service.GetMedicalReportDiagnosisAsync(reportId);
+            return Ok(new { message = result.Message, Elderly = result.Data });
+        }
     }
 }
