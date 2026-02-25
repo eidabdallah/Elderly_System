@@ -915,6 +915,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.ElderlyController",
+    "Method": "GetActiveElderlies",
+    "RelativePath": "api/Nurse/Elderly",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.VisitorController",
     "Method": "Add",
     "RelativePath": "api/Sponsor/Visitor",

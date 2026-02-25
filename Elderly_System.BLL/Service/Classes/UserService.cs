@@ -48,8 +48,19 @@ namespace Elderly_System.BLL.Service.Classes
                 if (roleEnum == Role.Admin)
                     continue;
 
-                if (role is not null && roleEnum != role.Value)
-                    continue;
+                if (role is not null)
+                {
+                    if (role.Value == Role.Sponsor)
+                    {
+                        if (roleEnum != Role.FirstSponsor && roleEnum != Role.SecondSponsor)
+                            continue;
+                    }
+                    else
+                    {
+                        if (roleEnum != role.Value)
+                            continue;
+                    }
+                }
 
                 data.Add(new UserResponse
                 {

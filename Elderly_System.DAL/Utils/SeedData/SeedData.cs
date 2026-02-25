@@ -109,7 +109,7 @@ namespace EA_Ecommerce.DAL.utils.SeedData
                 var resCleaner3 = await _userManager.CreateAsync(cleaner3, "Pass@12345");
                 if (resCleaner3.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(cleaner2, "Cleaner");
+                    await _userManager.AddToRoleAsync(cleaner3, "Cleaner");
                 }
 
                 var security = new Employee

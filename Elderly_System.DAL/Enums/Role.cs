@@ -4,6 +4,7 @@
     {
         Admin,
         Nurse,
+        Sponsor,
         FirstSponsor,
         SecondSponsor,
         Accountant,
