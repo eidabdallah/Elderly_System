@@ -1,6 +1,8 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Elderly;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Elderly_System.PL.Area.Nurse
 {
@@ -33,6 +35,13 @@ namespace Elderly_System.PL.Area.Nurse
         {
             var result = await _service.GetMedicalReportDiagnosisAsync(reportId);
             return Ok(new { message = result.Message, Elderly = result.Data });
+        }
+        [HttpPost("{id}/comprehensive-examination")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadComprehensiveExam(int id, [FromForm] UploadComprehensiveExamRequest request)
+        {
+            var result = await _service.UploadComprehensiveExamAsync(id, request);
+            return Ok(new { message = result.Message});
         }
     }
 }

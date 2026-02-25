@@ -5,6 +5,7 @@ using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
+using ElderlySystem.DAL.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elderly_System.DAL.Repositories.Classes
@@ -110,5 +111,10 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .Include(x => x.Doctor)
                 .FirstOrDefaultAsync(x => x.Id == reportId);
         }
+        public async Task<Elderly?> GetByIdAsync(int id)
+       => await _context.Elderlies.FirstOrDefaultAsync(e => e.Id == id);
+
+        public async Task SaveChangesAsync()
+            => await _context.SaveChangesAsync();
     }
 }

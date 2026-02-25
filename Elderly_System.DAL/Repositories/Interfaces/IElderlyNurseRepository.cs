@@ -9,5 +9,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<List<NurseElderlyListDto>> GetActiveResidentElderliesAsync();
         Task<NurseElderlyDetailsDto?> GetElderlyDetailsAsync(int elderlyId);
         Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
+        Task<Elderly?> GetByIdAsync(int id);
+        Task SaveChangesAsync();
     }
 }
