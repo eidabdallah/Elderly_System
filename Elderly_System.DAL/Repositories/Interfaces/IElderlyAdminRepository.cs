@@ -23,5 +23,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<ResidentStay?> GetActiveStayByElderlyIdAsync(int elderlyId);
         Task<List<AvailableRoomResponse>> GetAvailableRoomsExcludingAsync(int excludeRoomId);
         Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
+
     }
 }

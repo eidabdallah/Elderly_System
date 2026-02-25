@@ -43,5 +43,36 @@ namespace Elderly_System.PL.Area.Nurse
             var result = await _service.UploadComprehensiveExamAsync(id, request);
             return Ok(new { message = result.Message});
         }
+        [HttpDelete("{id}/comprehensive-examination")]
+        public async Task<IActionResult> DeleteComprehensiveExam([FromRoute] int id)
+        {
+            var result = await _service.DeleteComprehensiveExamAsync(id);
+            return Ok(new { message = result.Message });
+        }
+        [HttpPost("{id}/diseases")]
+        public async Task<IActionResult> AddDisease(int id, [FromBody] AddDiseasesRequest request)
+        {
+            var result = await _service.AddDiseasesAsync(id, request);
+            return Ok(new { message = result.Message });
+        }
+        [HttpPost("{id}/diseases/remove")]
+        public async Task<IActionResult> RemoveDisease(int id, [FromBody] RemoveDiseaseRequest request)
+        {
+            var result = await _service.RemoveDiseaseAsync(id, request);
+            return Ok(new { message = result.Message });
+        }
+        [HttpGet("Doctor")]
+        public async Task<IActionResult> GetDoctors()
+        {
+            var result = await _service.GetDoctorsAsync();
+            return Ok(new { message = result.Message, doctors = result.Data });
+        }
+        [HttpPost("{id}/medical-reports")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddMedicalReport(int id, [FromForm] AddMedicalReportRequest request)
+        {
+            var result = await _service.AddMedicalReportAsync(id, request);
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }

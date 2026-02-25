@@ -31,7 +31,7 @@ namespace Elderly_System.DAL.Repositories.Classes
                     Name = e.Name,
                     RoomNumber = e.ResidentStays
                         .Where(rs => rs.Status == Status.Active)
-                        .Select(rs => rs.Room.RoomNumber) 
+                        .Select(rs => rs.Room.RoomNumber)
                         .FirstOrDefault()
                 })
                 .OrderBy(x => x.RoomNumber)
@@ -116,5 +116,36 @@ namespace Elderly_System.DAL.Repositories.Classes
 
         public async Task SaveChangesAsync()
             => await _context.SaveChangesAsync();
+    
+    public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
+    => await _context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
+
+        public async Task<bool> DoctorPhoneExistsAsync(string phone)
+            => await _context.Doctors.AnyAsync(d => d.Phone == phone);
+
+        public async Task AddDoctorAsync(Doctor doctor)
+        {
+            await _context.Doctors.AddAsync(doctor);
+        }
+
+        public async Task AddMedicalReportAsync(MedicalReport report)
+        {
+            await _context.MedicalReports.AddAsync(report);
+        }
+
+        public async Task<List<DoctorInfoDto>> GetDoctorsAsync()
+        {
+            return await _context.Doctors
+                .AsNoTracking()
+                .OrderBy(d => d.Name)
+                .Select(d => new DoctorInfoDto
+                {
+                    DoctorId = d.Id,
+                    Name = d.Name,
+                    WorkPlace = d.WorkPlace,
+                    Phone = d.Phone
+                })
+                .ToListAsync();
+        }
     }
 }
