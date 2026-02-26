@@ -30,16 +30,15 @@ namespace Elderly_System.BLL.Service.Classes
 
             var checkList = new CheckList
             {
-                ElderlyId = request.ElderlyId,
+                ElderlyId = request.ElderlyId ,
                 NurseId = nurseId,
-                Notes = request.Notes,
-                Temperature = request.Temperature,
-                Pulse = request.Pulse,
-                BloodSugar = request.BloodSugar,
-                BloodPressure = request.BloodPressure,
-                Intake = request.Intake,
-                Output = request.Output,
-                InOut = request.InOut,
+                Notes = request.Notes ?? "-",
+                Temperature = request.Temperature ?? "-",
+                Pulse = request.Pulse ?? "-",
+                BloodSugar = request.BloodSugar ?? "-",
+                BloodPressure = request.BloodPressure ?? "-",
+                Intake = request.Intake ?? "-",
+                Output = request.Output ?? "-",
                 DateTime = DateTime.Now
             };
 
@@ -80,14 +79,13 @@ namespace Elderly_System.BLL.Service.Classes
                 NurseId = checkList.NurseId,
                 NurseName = checkList.Nurse.FullName,
                 DateTime = checkList.DateTime.ToString("MM-dd-yyyy"),
-                Notes = checkList.Notes,
-                Temperature = checkList.Temperature,
-                Pulse = checkList.Pulse,
-                BloodSugar = checkList.BloodSugar,
-                BloodPressure = checkList.BloodPressure,
-                Intake = checkList.Intake,
-                Output = checkList.Output,
-                InOut = checkList.InOut
+                Notes = checkList.Notes ?? "-",
+                Temperature = checkList.Temperature ?? "-",
+                Pulse = checkList.Pulse ?? "-",
+                BloodSugar = checkList.BloodSugar ?? "-",
+                BloodPressure = checkList.BloodPressure ?? "-",
+                Intake = checkList.Intake ?? "-",
+                Output = checkList.Output ?? "-",
             };
 
             return ServiceResult.SuccessWithData(dto, "تم جلب الفحص بنجاح.");
@@ -109,7 +107,6 @@ namespace Elderly_System.BLL.Service.Classes
             checkList.BloodPressure = request.BloodPressure;
             checkList.Intake = request.Intake;
             checkList.Output = request.Output;
-            checkList.InOut = request.InOut;
 
             await _repository.SaveChangesAsync();
 

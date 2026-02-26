@@ -7,30 +7,19 @@ namespace Elderly_System.DAL.DTO.Request.Elderly
         [Required(ErrorMessage = "المسن مطلوب.")]
         public int ElderlyId { get; set; }
 
-        [Required(ErrorMessage = "الملاحظات مطلوبة.")]
         [StringLength(500, ErrorMessage = "الملاحظات يجب ألا تتجاوز 500 حرف.")]
-        public string Notes { get; set; } = null!;
+        public string? Notes { get; set; }
 
-        [Required(ErrorMessage = "درجة الحرارة مطلوبة.")]
-        public string Temperature { get; set; } = null!;
+        public string? Temperature { get; set; }
 
-        [Required(ErrorMessage = "النبض مطلوب.")]
-        public string Pulse { get; set; } = null!;
+        public string? Pulse { get; set; }
 
-        [Required(ErrorMessage = "سكر الدم مطلوب.")]
-        public string BloodSugar { get; set; } = null!;
+        public string? BloodSugar { get; set; }
 
-        [Required(ErrorMessage = "ضغط الدم مطلوب.")]
-        [StringLength(20, ErrorMessage = "ضغط الدم يجب ألا يتجاوز 20 حرف.")]
-        public string BloodPressure { get; set; } = null!;
+        public string? BloodPressure { get; set; }
 
-        [Required(ErrorMessage = "المدخول مطلوب.")]
-        public string Intake { get; set; } = null!;
+        public string? Intake { get; set; }
 
-        [Required(ErrorMessage = "الإخراج مطلوب.")]
-        public string Output { get; set; } = null!;
-
-        [Required(ErrorMessage = "الفرق بين المدخول والإخراج مطلوب.")]
-        public string InOut { get; set; } = null!;
+        public string? Output { get; set; }
     }
 }

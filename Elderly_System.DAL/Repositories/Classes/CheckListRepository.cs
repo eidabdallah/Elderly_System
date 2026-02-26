@@ -50,10 +50,10 @@ namespace Elderly_System.DAL.Repositories.Classes
                 {
                     CheckListId = x.Id,
                     DateTime = x.DateTime.ToString("MM-dd-yyyy"),
-                    Temperature = x.Temperature,
-                    Pulse = x.Pulse,
-                    BloodSugar = x.BloodSugar,
-                    BloodPressure = x.BloodPressure
+                    Temperature = x.Temperature ?? "-",
+                    Pulse = x.Pulse ?? "-",
+                    BloodSugar = x.BloodSugar ?? "-",
+                    BloodPressure = x.BloodPressure ?? "-"
                 })
                 .ToListAsync();
         }

@@ -26,7 +26,7 @@ namespace Elderly_System.PL.Area.Nurse
                 return Unauthorized(new { message = "الممرضة غير معروفة." });
 
             var result = await _service.AddCheckListAsync(request, nurseId);
-            return Ok(new { message = result.Message, data = result.Data });
+            return Ok(new { message = result.Message });
         }
 
         [HttpGet("elderly/{elderlyId}")]
