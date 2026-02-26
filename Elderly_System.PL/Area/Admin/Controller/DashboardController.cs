@@ -17,10 +17,10 @@ namespace Elderly_System.PL.Area.Admin.Controller
             _service = service;
         }
 
-        [HttpGet("stats")]
-        public async Task<IActionResult> GetStats()
+        [HttpGet]
+        public async Task<IActionResult> GetDashboard()
         {
-            var result = await _service.GetStatsAsync();
+            var result = await _service.GetDashboardAsync();
 
             if (!result.Success)
                 return BadRequest(new { message = result.Message });

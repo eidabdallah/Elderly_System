@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.Repositories.Interfaces;
+﻿using Elderly_System.DAL.DTO.Response.Statistics;
+using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
 using Microsoft.AspNetCore.Identity;
@@ -26,19 +27,65 @@ namespace Elderly_System.DAL.Repositories.Classes
             var users = await _userManager.GetUsersInRoleAsync(roleName);
             return users.Count;
         }
-
-        public async Task<int> CountDonationsToDateAsync(DateTime today)
+        public async Task<int> CountSponsorAsync()
         {
-            var tomorrow = today.Date.AddDays(1);
-            return await _context.Donations
-                .CountAsync(d => d.DonationDate < tomorrow);
+            return await _context.Sponsors.CountAsync();
         }
 
-        public async Task<int> CountEventsToDateAsync(DateTime today)
+        public async Task<int> CountDonationsAsync()
         {
-            var tomorrow = today.Date.AddDays(1);
-            return await _context.Activities
-                .CountAsync(e => e.Date < tomorrow);
+            return await _context.Donations.CountAsync();
+        }
+
+        public async Task<int> CountActivitiesAsync()
+        {
+            return await _context.Activities.CountAsync();
+        }
+
+        public async Task<int> CountRoomsAsync()
+        {
+            return await _context.Rooms.CountAsync();
+        }
+
+        public async Task<List<DonationMonthDto>> GetDonationsOverTimeAsync()
+        {
+            var currentYear = DateTime.Now.Year;
+
+            var donations = await _context.Donations
+                .Where(d => d.DonationDate.Year == currentYear)
+                .GroupBy(d => d.DonationDate.Month)
+                .Select(g => new
+                {
+                    MonthNumber = g.Key,
+                    Donations = g.Count()
+                })
+                .ToListAsync();
+
+            var arabicMonths = new[]
+            {
+        "يناير",
+        "فبراير",
+        "مارس",
+        "أبريل",
+        "مايو",
+        "يونيو",
+        "يوليو",
+        "أغسطس",
+        "سبتمبر",
+        "أكتوبر",
+        "نوفمبر",
+        "ديسمبر"
+    };
+
+            var result = Enumerable.Range(1, 12)
+                .Select(month => new DonationMonthDto
+                {
+                    Month = arabicMonths[month - 1],
+                    Donations = donations.FirstOrDefault(d => d.MonthNumber == month)?.Donations ?? 0
+                })
+                .ToList();
+
+            return result;
         }
     }
 }

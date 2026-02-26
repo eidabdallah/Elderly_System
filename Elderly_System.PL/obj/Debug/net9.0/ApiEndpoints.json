@@ -80,8 +80,8 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.DashboardController",
-    "Method": "GetStats",
-    "RelativePath": "api/Admin/dashboard/stats",
+    "Method": "GetDashboard",
+    "RelativePath": "api/Admin/dashboard",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

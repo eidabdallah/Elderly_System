@@ -49,11 +49,13 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .Select(x => new CheckListListResponse
                 {
                     CheckListId = x.Id,
-                    DateTime = x.DateTime.ToString("MM-dd-yyyy"),
+                    Date = x.DateTime.ToString("MM-dd-yyyy"),
                     Temperature = x.Temperature ?? "-",
                     Pulse = x.Pulse ?? "-",
                     BloodSugar = x.BloodSugar ?? "-",
-                    BloodPressure = x.BloodPressure ?? "-"
+                    BloodPressure = x.BloodPressure ?? "-",
+                    Intake = x.Intake ?? "-",
+                    Output = x.Output ?? "-",
                 })
                 .ToListAsync();
         }

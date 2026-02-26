@@ -21,20 +21,23 @@ namespace Elderly_System.BLL.Service.Classes
         {
             _repo = repo;
         }
-        public async Task<ServiceResult> GetStatsAsync()
+        public async Task<ServiceResult> GetDashboardAsync()
         {
-            var today = DateTime.UtcNow.Date;
-
-            var dto = new AdminDashboardStatsDto
+            var dto = new AdminDashboardDto
             {
-                ElderlyCount = await _repo.CountElderliesAsync(),
-                SponsorsCount = await _repo.CountUsersInRoleAsync("Sponsor"),
-                NursesCount = await _repo.CountUsersInRoleAsync("Nurse"),
-                DonationsCountToDate = await _repo.CountDonationsToDateAsync(today),
-                EventsCountToDate = await _repo.CountEventsToDateAsync(today),
+                Stats = new AdminDashboardStatsDto
+                {
+                    ElderliesCount = await _repo.CountElderliesAsync(),
+                    SponsorsCount = await _repo.CountSponsorAsync(),
+                    NursesCount = await _repo.CountUsersInRoleAsync("Nurse"),
+                    DonationsCount = await _repo.CountDonationsAsync(),
+                    ActivitiesCount = await _repo.CountActivitiesAsync(),
+                    RoomsCount = await _repo.CountRoomsAsync()
+                },
+                DonationsOverTime = await _repo.GetDonationsOverTimeAsync()
             };
-            return ServiceResult.SuccessWithData(dto , "تم جلب الإحصائيات بنجاح");
 
+            return ServiceResult.SuccessWithData(dto, "تم جلب بيانات لوحة التحكم بنجاح");
         }
     }
 }

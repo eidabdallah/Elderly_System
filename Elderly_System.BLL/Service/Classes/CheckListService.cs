@@ -76,16 +76,10 @@ namespace Elderly_System.BLL.Service.Classes
                 CheckListId = checkList.Id,
                 ElderlyId = checkList.ElderlyId,
                 ElderlyName = checkList.Elderly.Name,
-                NurseId = checkList.NurseId,
                 NurseName = checkList.Nurse.FullName,
-                DateTime = checkList.DateTime.ToString("MM-dd-yyyy"),
+                Time = checkList.DateTime.ToString("HH:mm"),
+                Shift = "A",
                 Notes = checkList.Notes ?? "-",
-                Temperature = checkList.Temperature ?? "-",
-                Pulse = checkList.Pulse ?? "-",
-                BloodSugar = checkList.BloodSugar ?? "-",
-                BloodPressure = checkList.BloodPressure ?? "-",
-                Intake = checkList.Intake ?? "-",
-                Output = checkList.Output ?? "-",
             };
 
             return ServiceResult.SuccessWithData(dto, "تم جلب الفحص بنجاح.");

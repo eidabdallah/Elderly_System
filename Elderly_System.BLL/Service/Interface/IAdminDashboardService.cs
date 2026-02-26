@@ -4,6 +4,6 @@ namespace Elderly_System.BLL.Service.Interface
 {
     public interface IAdminDashboardService
     {
-        Task<ServiceResult> GetStatsAsync();
+        Task<ServiceResult> GetDashboardAsync();
     }
 }

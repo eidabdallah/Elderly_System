@@ -2,11 +2,12 @@
 {
     public class AdminDashboardStatsDto
     {
-        public int ElderlyCount { get; set; }
-        public int SponsorsCount { get; set; }
+        public int ElderliesCount { get; set; }
         public int NursesCount { get; set; }
-        public int DonationsCountToDate { get; set; }
-        public int EventsCountToDate { get; set; }
+        public int ActivitiesCount { get; set; }
+        public int DonationsCount { get; set; }
+        public int RoomsCount { get; set; }
+        public int SponsorsCount { get; set; }
     }
 
 }
