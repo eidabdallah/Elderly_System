@@ -36,6 +36,9 @@ namespace Elderly_System.PL
             services.AddScoped<IElderlyAdminRepository, ElderlyAdminRepository>();
             services.AddScoped<IElderlyNurseRepository, ElderlyNurseRepository>();
             services.AddScoped<IElderlyNurseService, ElderlyNurseService>();
+            services.AddScoped<ICheckListService,CheckListService>();
+            services.AddScoped<ICheckListRepository, CheckListRepository>();
+
 
 
 

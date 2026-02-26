@@ -74,5 +74,6 @@ namespace Elderly_System.PL.Area.Nurse
             var result = await _service.AddMedicalReportAsync(id, request);
             return Ok(new { message = result.Message, data = result.Data });
         }
+
     }
 }
