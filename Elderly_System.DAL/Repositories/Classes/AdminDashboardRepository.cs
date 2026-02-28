@@ -39,7 +39,10 @@ namespace Elderly_System.DAL.Repositories.Classes
 
         public async Task<int> CountActivitiesAsync()
         {
-            return await _context.Activities.CountAsync();
+            var tomorrow = DateTime.Today.AddDays(1);
+
+            return await _context.Activities
+                .CountAsync(e => e.Date < tomorrow);
         }
 
         public async Task<int> CountRoomsAsync()
