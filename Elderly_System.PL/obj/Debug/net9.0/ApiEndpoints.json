@@ -478,6 +478,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "Method": "GetActiveNurses",
+    "RelativePath": "api/Admin/Shift/active-nurses",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "Method": "AssignDaily",
+    "RelativePath": "api/Admin/Shift/assign-daily",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Nurse.AssignDailyShiftsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
     "Method": "GetUsers",
     "RelativePath": "api/Admin/User",

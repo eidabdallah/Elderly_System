@@ -38,6 +38,10 @@ namespace Elderly_System.PL
             services.AddScoped<IElderlyNurseService, ElderlyNurseService>();
             services.AddScoped<ICheckListService,CheckListService>();
             services.AddScoped<ICheckListRepository, CheckListRepository>();
+            services.AddScoped<INurseShiftService , NurseShiftService>();
+            services.AddScoped<INurseShiftRepository, NurseShiftRepository>();
+            //services.AddScoped<>();
+             
 
 
 

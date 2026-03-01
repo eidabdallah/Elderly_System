@@ -250,9 +250,9 @@ namespace EA_Ecommerce.DAL.utils.SeedData
             if (await _context.Shifts.AnyAsync())
                 return;
             _context.Shifts.AddRange(
-                new Shift { ShiftKey = 'A', StartTime = new TimeSpan(2, 0, 0), EndTime = new TimeSpan(9, 0, 0) },
-                new Shift { ShiftKey = 'B', StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(16, 0, 0) },
-                new Shift { ShiftKey = 'C', StartTime = new TimeSpan(16, 0, 0), EndTime = new TimeSpan(22, 0, 0) }
+                new Shift { ShiftKey = 'A', StartTime = new TimeSpan(3, 0, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new Shift { ShiftKey = 'B', StartTime = new TimeSpan(10, 0, 0), EndTime = new TimeSpan(17, 0, 0) },
+                new Shift { ShiftKey = 'C', StartTime = new TimeSpan(17, 0, 0), EndTime = new TimeSpan(0, 0, 0) }
             );
             await _context.SaveChangesAsync();
 
