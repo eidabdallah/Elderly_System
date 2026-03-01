@@ -197,12 +197,73 @@ namespace Elderly_System.BLL.Service.Classes
             return ServiceResult.SuccessWithData(response, "تم جلب جدول الشفتات بنجاح");
         }
 
+        public async Task<ServiceResult> GetMyWeeklyScheduleAsync(string nurseId, int offset = 0)
+        {
+            var nurse = await _repository.GetActiveNurseByIdAsync(nurseId);
+            if (nurse is null)
+                return ServiceResult.Failure("الممرضة غير موجودة أو غير نشطة.");
+
+            var baseDate = DateTime.Now.Date.AddDays(offset * 7);
+
+            var start = GetSaturdayStart(baseDate);
+            var dates = Enumerable.Range(0, 7).Select(i => start.AddDays(i)).ToList();
+
+            var startDate = dates.First().Date;
+            var endDate = dates.Last().Date;
+
+            var dateKeys = dates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+
+            var nurseAssignments = await _repository.GetAssignmentsInRangeByNurseAsync(nurseId, startDate, endDate);
+
+            var scheduledDaysList = await _repository.GetScheduledDaysInRangeAsync(startDate, endDate);
+            var scheduledDays = scheduledDaysList.ToHashSet();
+
+            var nurseMap = nurseAssignments.ToDictionary(
+                a => a.Date.Date,
+                a => a.Shift.ShiftKey.ToString()
+            );
+
+            var days = new Dictionary<string, string>();
+
+            foreach (var d in dates)
+            {
+                var key = d.ToString("yyyy-MM-dd");
+
+                if (nurseMap.TryGetValue(d.Date, out var shiftVal))
+                {
+                    days[key] = shiftVal;         
+                }
+                else
+                {
+                    days[key] = scheduledDays.Contains(d.Date) ? "عطلة" : "-";
+                }
+            }
+
+            var response = new NurseShiftScheduleResponse
+            {
+                Dates = dateKeys,
+                Rows = new List<NurseShiftScheduleRowDto>
+        {
+            new NurseShiftScheduleRowDto
+            {
+                NurseId = nurse.Id,
+                NurseName = nurse.FullName ?? "",
+                Days = days
+            }
+        }
+            };
+
+            return ServiceResult.SuccessWithData(response, "تم جلب جدولك الأسبوعي بنجاح");
+        }
+
+
         private static DateTime GetSaturdayStart(DateTime anyDate)
         {
             var d = anyDate.Date;
             int diff = ((int)d.DayOfWeek - (int)DayOfWeek.Saturday + 7) % 7;
             return d.AddDays(-diff);
         }
+       
 
 
     }

@@ -1255,6 +1255,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
+    "Method": "GetMySchedule",
+    "RelativePath": "api/Nurse/Nurse/my-schedule",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "offset",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.VisitorController",
     "Method": "Add",
     "RelativePath": "api/Sponsor/Visitor",

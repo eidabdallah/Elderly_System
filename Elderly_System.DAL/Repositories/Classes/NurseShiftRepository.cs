@@ -72,6 +72,38 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .Where(a => a.Date >= s && a.Date < endExclusive)
                 .ToListAsync();
         }
+        public async Task<Nurse?> GetActiveNurseByIdAsync(string nurseId)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .OfType<Nurse>()
+                .FirstOrDefaultAsync(n => n.Id == nurseId && n.Status == Status.Active);
+        }
+
+        public async Task<List<NurseShiftAssignment>> GetAssignmentsInRangeByNurseAsync(string nurseId, DateTime start, DateTime end)
+        {
+            var s = start.Date;
+            var e = end.Date.AddDays(1); 
+
+            return await _context.Set<NurseShiftAssignment>()
+                .AsNoTracking()
+                .Include(a => a.Shift) 
+                .Where(a => a.NurseId == nurseId && a.Date >= s && a.Date < e)
+                .ToListAsync();
+        }
+
+        public async Task<List<DateTime>> GetScheduledDaysInRangeAsync(DateTime start, DateTime end)
+        {
+            var s = start.Date;
+            var e = end.Date.AddDays(1);
+
+            return await _context.Set<NurseShiftAssignment>()
+                .AsNoTracking()
+                .Where(a => a.Date >= s && a.Date < e)
+                .Select(a => a.Date.Date)
+                .Distinct()
+                .ToListAsync();
+        }
 
         public async Task<int> SaveChangesAsync()
         {

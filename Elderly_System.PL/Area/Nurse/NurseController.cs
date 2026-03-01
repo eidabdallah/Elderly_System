@@ -13,10 +13,12 @@ namespace Elderly_System.PL.Area.Nurse
     public class NurseController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly INurseShiftService _shiftService;
 
-        public NurseController(IUserService service)
+        public NurseController(IUserService service , INurseShiftService shiftService)
         {
             _service = service;
+            _shiftService = shiftService;
         }
         [HttpGet("")]
         public async Task<IActionResult> GetDetails()
@@ -32,6 +34,20 @@ namespace Elderly_System.PL.Area.Nurse
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message, User = result.Data });
+        }
+        [HttpGet("my-schedule")]
+        public async Task<IActionResult> GetMySchedule([FromQuery] int offset = 0)
+        {
+            var nurseId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(nurseId))
+                return Unauthorized("لم يتم العثور على بيانات المستخدم داخل التوكن. يرجى تسجيل الدخول مرة أخرى.");
+
+            var result = await _shiftService.GetMyWeeklyScheduleAsync(nurseId, offset);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
         }
     }
 }

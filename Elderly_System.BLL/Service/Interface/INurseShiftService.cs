@@ -9,5 +9,6 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> GetActiveNursesAsync();
         Task<ServiceResult> AssignDailyShiftsAsync(AssignDailyShiftsRequest request);
         Task<ServiceResult> GetScheduleAsync(string? view = "week", DateTime? date = null, int offset = 0);
+        Task<ServiceResult> GetMyWeeklyScheduleAsync(string nurseId, int offset = 0);
     }
 }

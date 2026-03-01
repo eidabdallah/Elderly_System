@@ -13,6 +13,11 @@ namespace Elderly_System.DAL.Repositories.Interfaces
 
         Task AddAssignmentsAsync(List<NurseShiftAssignment> assignments);
         Task<List<NurseShiftAssignment>> GetAssignmentsInRangeAsync(DateTime start, DateTime end);
+        Task<Nurse?> GetActiveNurseByIdAsync(string nurseId);
+
+        Task<List<NurseShiftAssignment>> GetAssignmentsInRangeByNurseAsync(string nurseId, DateTime start, DateTime end);
+
+        Task<List<DateTime>> GetScheduledDaysInRangeAsync(DateTime start, DateTime end);
 
         Task<int> SaveChangesAsync();
     }
