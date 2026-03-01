@@ -59,6 +59,19 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             await _context.Set<NurseShiftAssignment>().AddRangeAsync(assignments);
         }
+        public async Task<List<NurseShiftAssignment>> GetAssignmentsInRangeAsync(DateTime start, DateTime end)
+        {
+            var s = start.Date;
+            var e = end.Date;
+
+            var endExclusive = e.AddDays(1);
+
+            return await _context.Set<NurseShiftAssignment>()
+                .AsNoTracking()
+                .Include(a => a.Shift) 
+                .Where(a => a.Date >= s && a.Date < endExclusive)
+                .ToListAsync();
+        }
 
         public async Task<int> SaveChangesAsync()
         {

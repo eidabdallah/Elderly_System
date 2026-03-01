@@ -36,5 +36,15 @@ namespace Elderly_System.PL.Area.Admin
 
             return Ok(new { message = result.Message });
         }
+        [HttpGet("schedule")]
+        public async Task<IActionResult> GetSchedule([FromQuery] string? view = "week", [FromQuery] DateTime? date = null, [FromQuery] int offset = 0)
+        {
+            var result = await _service.GetScheduleAsync(view, date, offset);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }

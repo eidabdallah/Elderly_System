@@ -12,6 +12,8 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<Dictionary<char, Shift>> GetShiftsByKeysAsync(List<char> keys);
 
         Task AddAssignmentsAsync(List<NurseShiftAssignment> assignments);
+        Task<List<NurseShiftAssignment>> GetAssignmentsInRangeAsync(DateTime start, DateTime end);
+
         Task<int> SaveChangesAsync();
     }
 }

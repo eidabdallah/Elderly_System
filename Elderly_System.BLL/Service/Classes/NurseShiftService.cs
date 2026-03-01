@@ -39,6 +39,10 @@ namespace Elderly_System.BLL.Service.Classes
 
             var date = request.Date.Date;
 
+            var today = DateTime.UtcNow.Date; 
+            if (date < today)
+                return ServiceResult.Failure("التاريخ يجب أن يكون اليوم أو بعده. لا يمكن اختيار تاريخ سابق.");
+
             static List<string> Clean(List<string> ids) =>
                 (ids ?? new List<string>())
                     .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -64,7 +68,7 @@ namespace Elderly_System.BLL.Service.Classes
 
             var existing = await _repository.GetAssignmentsByDateAndNurseIdsAsync(date, all);
             if (existing.Any())
-                return ServiceResult.Failure("يوجد ممرضة/ممرضات لديها شفت معين مسبقاً في نفس التاريخ.");
+                return ServiceResult.Failure("تم اختيار شفتات الممرضين لهذا اليوم.");
 
             var shifts = await _repository.GetShiftsByKeysAsync(new List<char> { 'A', 'B', 'C' });
             if (!shifts.ContainsKey('A') || !shifts.ContainsKey('B') || !shifts.ContainsKey('C'))
@@ -118,6 +122,86 @@ namespace Elderly_System.BLL.Service.Classes
                 await tx.RollbackAsync();
                 return ServiceResult.Failure($"حدث خطأ غير متوقع: {ex.Message}");
             }
+        }
+        public async Task<ServiceResult> GetScheduleAsync(string? view = "week", DateTime? date = null, int offset = 0)
+        {
+            var baseDate = (date ?? DateTime.Now).Date;
+
+            bool isDayView = string.Equals(view, "day", StringComparison.OrdinalIgnoreCase);
+
+            if (!isDayView)
+                baseDate = baseDate.AddDays(offset * 7);
+
+            List<DateTime> dates;
+            if (isDayView)
+            {
+                dates = new List<DateTime> { baseDate };
+            }
+            else
+            {
+                var start = GetSaturdayStart(baseDate);
+                dates = Enumerable.Range(0, 7).Select(i => start.AddDays(i)).ToList();
+            }
+
+            var startDate = dates.First().Date;
+            var endDate = dates.Last().Date;
+
+            var dateKeys = dates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+
+            var nurses = await _repository.GetActiveNursesAsync();
+            var assignments = await _repository.GetAssignmentsInRangeAsync(startDate, endDate);
+
+            var map = assignments.ToDictionary(
+                a => (a.NurseId, a.Date.Date),
+                a => a.Shift.ShiftKey.ToString()
+            );
+
+            var scheduledDays = assignments
+                .Select(a => a.Date.Date)
+                .ToHashSet();
+
+            var rows = new List<NurseShiftScheduleRowDto>();
+
+            foreach (var n in nurses)
+            {
+                var days = new Dictionary<string, string>();
+
+                foreach (var d in dates)
+                {
+                    var key = d.ToString("yyyy-MM-dd");
+
+                    if (map.TryGetValue((n.Id, d.Date), out var shiftVal))
+                    {
+                        days[key] = shiftVal; 
+                    }
+                    else
+                    {
+                        days[key] = scheduledDays.Contains(d.Date) ? "عطلة" : "-";
+                    }
+                }
+
+                rows.Add(new NurseShiftScheduleRowDto
+                {
+                    NurseId = n.Id,
+                    NurseName = n.FullName ?? "",
+                    Days = days
+                });
+            }
+
+            var response = new NurseShiftScheduleResponse
+            {
+                Dates = dateKeys,
+                Rows = rows
+            };
+
+            return ServiceResult.SuccessWithData(response, "تم جلب جدول الشفتات بنجاح");
+        }
+
+        private static DateTime GetSaturdayStart(DateTime anyDate)
+        {
+            var d = anyDate.Date;
+            int diff = ((int)d.DayOfWeek - (int)DayOfWeek.Saturday + 7) % 7;
+            return d.AddDays(-diff);
         }
 
 

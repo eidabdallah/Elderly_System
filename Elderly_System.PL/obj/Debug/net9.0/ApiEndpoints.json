@@ -504,6 +504,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "Method": "GetSchedule",
+    "RelativePath": "api/Admin/Shift/schedule",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "view",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "date",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "offset",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Admin.Controller.UserController",
     "Method": "GetUsers",
     "RelativePath": "api/Admin/User",
