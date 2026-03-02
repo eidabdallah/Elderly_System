@@ -42,7 +42,8 @@ namespace Elderly_System.PL
             services.AddScoped<INurseShiftRepository, NurseShiftRepository>();
             services.AddScoped<IElderMealRepository, ElderMealRepository>();
             services.AddScoped<IElderMealService, ElderMealService>();
-            //services.AddScoped<>();
+            services.AddScoped<IContactMessageRepository, ContactMessageRepository>();
+            services.AddScoped<IContactMessageService, ContactMessageService>();
 
 
 

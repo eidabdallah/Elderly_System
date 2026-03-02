@@ -35,7 +35,7 @@ namespace ElderlySystem.DAL.Data
         public DbSet<DrugPlan> DrugPlans { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<CheckList> CheckLists { get; set; }
-        public DbSet<ContactMessage> contactMessages { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
 
 

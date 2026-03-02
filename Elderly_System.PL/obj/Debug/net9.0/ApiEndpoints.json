@@ -478,7 +478,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ShiftController",
     "Method": "GetActiveNurses",
     "RelativePath": "api/Admin/Shift/active-nurses",
     "HttpMethod": "GET",
@@ -488,7 +488,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ShiftController",
     "Method": "AssignDaily",
     "RelativePath": "api/Admin/Shift/assign-daily",
     "HttpMethod": "POST",
@@ -504,7 +504,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Elderly_System.PL.Area.Admin.ShiftController",
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ShiftController",
     "Method": "GetSchedule",
     "RelativePath": "api/Admin/Shift/schedule",
     "HttpMethod": "GET",
@@ -671,6 +671,53 @@
       {
         "Name": "request",
         "Type": "Elderly_System.DAL.DTO.Request.Vistor.AdminVisitorReplyRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ContactMessageController",
+    "Method": "GetMessages",
+    "RelativePath": "api/ContactMessage",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ContactMessageController",
+    "Method": "Reply",
+    "RelativePath": "api/ContactMessage/{id}/reply",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.ContactMessage.ReplyContactMessageRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Admin.Controller.ContactMessageController",
+    "Method": "AddMessage",
+    "RelativePath": "api/ContactMessage/msgUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.ContactMessage.AddContactMessageRequest",
         "IsRequired": true
       }
     ],
