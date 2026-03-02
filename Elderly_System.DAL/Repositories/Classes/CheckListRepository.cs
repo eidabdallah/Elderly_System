@@ -59,7 +59,16 @@ namespace Elderly_System.DAL.Repositories.Classes
                 })
                 .ToListAsync();
         }
+        public async Task<string?> GetNurseShiftKeyByDateAsync(string nurseId, DateTime date)
+        {
+            var d = date.Date;
 
+            return await _context.Set<NurseShiftAssignment>()
+               .AsNoTracking()
+               .Where(x => x.NurseId == nurseId && x.Date.Date == d)
+               .Select(x => x.Shift.ShiftKey.ToString())
+               .FirstOrDefaultAsync();
+        }
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

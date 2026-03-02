@@ -71,6 +71,12 @@ namespace Elderly_System.BLL.Service.Classes
             if (checkList == null)
                 return ServiceResult.Failure("الفحص غير موجود.");
 
+            var nurseId = checkList.Nurse?.Id;
+            if (string.IsNullOrWhiteSpace(nurseId))
+                return ServiceResult.Failure("لا يوجد ممرضة مرتبطة بهذا الفحص.");
+
+            var shiftKey = await _repository.GetNurseShiftKeyByDateAsync(nurseId, checkList.DateTime);
+
             var dto = new CheckListResponse
             {
                 CheckListId = checkList.Id,
@@ -78,7 +84,7 @@ namespace Elderly_System.BLL.Service.Classes
                 ElderlyName = checkList.Elderly.Name,
                 NurseName = checkList.Nurse.FullName,
                 Time = checkList.DateTime.ToString("HH:mm"),
-                Shift = "A",
+                Shift = shiftKey ?? "-",
                 Notes = checkList.Notes ?? "-",
             };
 

@@ -19,6 +19,10 @@ namespace Elderly_System.DAL.Model
 
         [Required(ErrorMessage = "نوع الوجبة مطلوب.")]
         [StringLength(30, ErrorMessage = "نوع الوجبة يجب ألا يتجاوز 30 حرف.")]
-        public MealType MealType { get; set; } 
+        public MealType MealType { get; set; }
+
+        [Required(ErrorMessage = "اسم الوجبة مطلوب.")]
+        [StringLength(30, ErrorMessage = "اسم الوجبة يجب ألا يتجاوز 30 حرف.")]
+        public string MealDetails { get; set; } = null!;
     }
 }

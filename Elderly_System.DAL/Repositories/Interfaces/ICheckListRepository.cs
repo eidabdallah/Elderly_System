@@ -12,6 +12,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task AddCheckListAsync(CheckList checkList);
         Task<CheckList?> GetCheckListByIdAsync(int checkListId);
         Task<List<CheckListListResponse>> GetCheckListsByElderlyIdAsync(int elderlyId);
+        Task<string?> GetNurseShiftKeyByDateAsync(string nurseId, DateTime date);
 
         Task SaveChangesAsync();
         Task DeleteCheckListAsync(CheckList checkList);
