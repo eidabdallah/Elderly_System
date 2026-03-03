@@ -60,11 +60,10 @@ namespace Elderly_System.BLL.Service.Classes
                 if (string.IsNullOrWhiteSpace(name))
                     return ServiceResult.Failure("اسم الدواء لا يمكن أن يكون فارغًا.");
 
+                name = name.Trim();
                 var already = await _repository.GetMedicineByNameAndTypeAsync(name, request.NewMedicine.Type);
                 if (already != null)
-                {
-                    medicine = already;
-                }
+                    return ServiceResult.Failure("هذا الدواء موجود مسبقًا (بنفس الاسم والنوع). يرجى البحث عنه واختياره من القائمة.");
                 else
                 {
                     medicine = new Medicine
@@ -296,5 +295,119 @@ namespace Elderly_System.BLL.Service.Classes
                 },
             }).ToList();
         }
+        public async Task<ServiceResult> GetElderlyWeeklyMedicationScheduleAsync(int elderlyId, int offset = 0)
+        {
+            var exists = await _repository.ElderlyExistsAsync(elderlyId);
+            if (!exists)
+                return ServiceResult.Failure("المسن غير موجود.");
+
+            var baseDate = DateTime.Now.Date.AddDays(offset * 7);
+            var start = GetSaturdayStart(baseDate);
+
+            var dates = Enumerable.Range(0, 7).Select(i => start.AddDays(i)).ToList();
+            var startDate = dates.First().Date;
+            var endDate = dates.Last().Date;
+
+            var dateKeys = dates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+
+            // 1) خطط الأدوية النشطة والمتداخلة مع الأسبوع
+            var plans = await _repository.GetActiveDrugPlansForElderlyInRangeAsync(elderlyId, startDate, endDate);
+
+            // 2) كل الجرعات المسجلة خلال الأسبوع (لهذه المسنة)
+            var meds = await _repository.GetMedicationsForElderlyInRangeAsync(elderlyId, startDate, endDate);
+
+            // Group: (DrugPlanId, Date)
+            var medsMap = meds
+                .GroupBy(m => new { m.DrugPlanId, Day = m.DateTime.Date })
+                .ToDictionary(g => (g.Key.DrugPlanId, g.Key.Day), g => g.ToList());
+
+            string TypeName(MedicineType t) => t switch
+            {
+                MedicineType.Tablet => "حبوب",
+                MedicineType.Syrup => "سائل",
+                _ => "غير محدد"
+            };
+
+            var rows = new List<ElderlyWeeklyMedicationRowDto>();
+
+            foreach (var dp in plans)
+            {
+                var row = new ElderlyWeeklyMedicationRowDto
+                {
+                    DrugPlanId = dp.Id,
+                    MedicineName = dp.Medicine?.Name ?? "",
+                    MedicineTypeName = dp.Medicine != null ? TypeName(dp.Medicine.Type) : "",
+                    DailyIntake = dp.DailyIntake,
+                    ScheduledTimes = dp.DrugPlanTimes
+                        .OrderBy(t => t.Time)
+                        .Select(t => t.Time.ToString(@"hh\:mm"))
+                        .ToList()
+                };
+
+                var days = new Dictionary<string, ElderlyMedicationDayCellDto>();
+
+                foreach (var d in dates)
+                {
+                    var key = d.ToString("yyyy-MM-dd");
+                    var inPeriod = d.Date >= dp.StartDate.Date && d.Date <= dp.EndDate.Date;
+
+                    if (!inPeriod)
+                    {
+                        days[key] = new ElderlyMedicationDayCellDto
+                        {
+                            InPlanPeriod = false,
+                            TakenCount = 0,
+                            RequiredCount = dp.DailyIntake,
+                            Taken = new List<MedicationTakenDto>(),
+                            Summary = "-"
+                        };
+                        continue;
+                    }
+
+                    medsMap.TryGetValue((dp.Id, d.Date), out var dayMeds);
+                    dayMeds ??= new List<Medication>();
+
+                    var takenList = dayMeds
+                        .OrderBy(x => x.DateTime)
+                        .Select(x => new MedicationTakenDto
+                        {
+                            Time = x.DateTime.ToString("HH:mm"),
+                            Dose = x.Dose
+                        })
+                        .ToList();
+
+                    var takenCount = takenList.Count;
+                    var required = dp.DailyIntake;
+
+                    days[key] = new ElderlyMedicationDayCellDto
+                    {
+                        InPlanPeriod = true,
+                        TakenCount = takenCount,
+                        RequiredCount = required,
+                        Taken = takenList,
+                        Summary = $"{takenCount}/{required}"
+                    };
+                }
+
+                row.Days = days;
+                rows.Add(row);
+            }
+
+            var response = new ElderlyWeeklyMedicationScheduleResponse
+            {
+                Dates = dateKeys,
+                Rows = rows
+            };
+
+            return ServiceResult.SuccessWithData(response, "تم جلب جدول الأدوية الأسبوعي بنجاح");
+        }
+
+        private static DateTime GetSaturdayStart(DateTime anyDate)
+        {
+            var d = anyDate.Date;
+            int diff = ((int)d.DayOfWeek - (int)DayOfWeek.Saturday + 7) % 7;
+            return d.AddDays(-diff);
+        }
     }
 }
+

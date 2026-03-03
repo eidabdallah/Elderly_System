@@ -100,5 +100,15 @@ namespace Elderly_System.PL.Area.Nurse
 
             return Ok(new { message = "تم جلب أدوية المسن بنجاح", data });
         }
+        [HttpGet("elderly/{elderlyId}/weekly")]
+        public async Task<IActionResult> GetElderlyWeekly([FromRoute] int elderlyId, [FromQuery] int offset = 0)
+        {
+            var result = await _service.GetElderlyWeeklyMedicationScheduleAsync(elderlyId, offset);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }

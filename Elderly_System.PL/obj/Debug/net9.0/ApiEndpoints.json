@@ -1462,6 +1462,27 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "GetElderlyWeekly",
+    "RelativePath": "api/Nurse/Medicine/elderly/{elderlyId}/weekly",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "offset",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
     "Method": "CreateMedication",
     "RelativePath": "api/Nurse/Medicine/Medication",
     "HttpMethod": "POST",

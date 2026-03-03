@@ -26,9 +26,12 @@ namespace Elderly_System.DAL.Repositories.Classes
 
         public async Task<Medicine?> GetMedicineByNameAndTypeAsync(string name, MedicineType type)
         {
-            var trimmed = name.Trim();
+            var trimmed = name.Trim().ToLower();
+
             return await _context.Medicines
-                .FirstOrDefaultAsync(m => m.Name == trimmed && m.Type == type);
+                .FirstOrDefaultAsync(m =>
+                    m.Type == type &&
+                    m.Name.Trim().ToLower() == trimmed);
         }
 
         public async Task AddMedicineAsync(Medicine medicine)
@@ -121,6 +124,39 @@ namespace Elderly_System.DAL.Repositories.Classes
             return await _context.DrugPlans
                 .Where(dp => dp.ElderlyId == elderlyId && dp.MedicineStatus == Status.Active)
                 .Include(dp => dp.Medicine)
+                .ToListAsync();
+        }
+        public async Task<List<DrugPlan>> GetActiveDrugPlansForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate)
+        {
+            var s = startDate.Date;
+            var e = endDate.Date;
+
+            return await _context.DrugPlans
+                .Where(dp =>
+                    dp.ElderlyId == elderlyId &&
+                    dp.MedicineStatus == Status.Active &&
+                    dp.StartDate.Date <= e &&
+                    dp.EndDate.Date >= s
+                )
+                .Include(dp => dp.Medicine)
+                .Include(dp => dp.DrugPlanTimes)
+                .OrderBy(dp => dp.Medicine.Name)
+                .ToListAsync();
+        }
+
+        public async Task<List<Medication>> GetMedicationsForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate)
+        {
+            var s = startDate.Date;
+            var eExclusive = endDate.Date.AddDays(1);
+
+            return await _context.Medications
+                .Include(m => m.DrugPlan)
+                .Where(m =>
+                    m.DrugPlan.ElderlyId == elderlyId &&
+                    m.DateTime >= s &&
+                    m.DateTime < eExclusive
+                )
+                .OrderBy(m => m.DateTime)
                 .ToListAsync();
         }
     }

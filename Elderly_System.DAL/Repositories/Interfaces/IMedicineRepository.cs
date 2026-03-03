@@ -18,5 +18,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<int> CountMedicationsForPlanOnDateAsync(int drugPlanId, DateTime date);
         Task AddMedicationAsync(Medication medication);
         Task<List<DrugPlan>> GetMedicineByElderlyIdAsync(int elderlyId);
+        Task<List<DrugPlan>> GetActiveDrugPlansForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate);
+        Task<List<Medication>> GetMedicationsForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate);
     }
 }

@@ -15,6 +15,8 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> UpdateDrugPlanStatusMedAsync(int drugPlanId, int status);
         Task<ServiceResult> AddMedicationAsync(MedicationCreateRequest request, string nurseId);
         Task<List<ElderlyDrugPlanResponse>?> GetElderlyMedicineAsync(int elderlyId);
+        Task<ServiceResult> GetElderlyWeeklyMedicationScheduleAsync(int elderlyId, int offset = 0);
+
 
 
     }
