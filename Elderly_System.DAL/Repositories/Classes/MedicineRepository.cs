@@ -93,5 +93,35 @@ namespace Elderly_System.DAL.Repositories.Classes
             await _context.DrugPlanTimes.AddRangeAsync(newTimes);
             await _context.SaveChangesAsync();
         }
+        public async Task<DrugPlan?> GetDrugPlanByIdAsync(int drugPlanId)
+        {
+            return await _context.DrugPlans
+                .FirstOrDefaultAsync(dp => dp.Id == drugPlanId);
+        }
+
+        public async Task<int> CountMedicationsForPlanOnDateAsync(int drugPlanId, DateTime date)
+        {
+            var start = date.Date;
+            var end = start.AddDays(1);
+
+            return await _context.Medications
+                .CountAsync(m =>
+                    m.DrugPlanId == drugPlanId &&
+                    m.DateTime >= start &&
+                    m.DateTime < end);
+        }
+
+        public async Task AddMedicationAsync(Medication medication)
+        {
+            await _context.Medications.AddAsync(medication);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<DrugPlan>> GetMedicineByElderlyIdAsync(int elderlyId)
+        {
+            return await _context.DrugPlans
+                .Where(dp => dp.ElderlyId == elderlyId && dp.MedicineStatus == Status.Active)
+                .Include(dp => dp.Medicine)
+                .ToListAsync();
+        }
     }
 }

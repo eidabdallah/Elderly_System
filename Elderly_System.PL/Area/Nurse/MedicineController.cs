@@ -3,6 +3,7 @@ using Elderly_System.DAL.DTO.Request.Medicine;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Elderly_System.PL.Area.Nurse
 {
@@ -74,6 +75,30 @@ namespace Elderly_System.PL.Area.Nurse
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message });
+        }
+        [HttpPost("Medication")]
+        public async Task<IActionResult> CreateMedication([FromBody] MedicationCreateRequest request)
+        {
+            var nurseId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(nurseId))
+                return Unauthorized(new { message = "تعذر تحديد المستخدم من التوكن." });
+
+            var result = await _service.AddMedicationAsync(request, nurseId);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
+        [HttpGet("elderly/{elderlyId}/Medicine")]
+        public async Task<IActionResult> GetElderlyMedicine([FromRoute] int elderlyId)
+        {
+            var data = await _service.GetElderlyMedicineAsync(elderlyId);
+
+            if (data == null)
+                return NotFound(new { message = "المسن غير موجود." });
+
+            return Ok(new { message = "تم جلب أدوية المسن بنجاح", data });
         }
     }
 }

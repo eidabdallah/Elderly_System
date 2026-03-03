@@ -243,5 +243,58 @@ namespace Elderly_System.BLL.Service.Classes
 
             return ServiceResult.SuccessMessage("تم تعديل حالة خطة الدواء بنجاح.");
         }
+        public async Task<ServiceResult> AddMedicationAsync(MedicationCreateRequest request, string nurseId)
+        {
+            if (string.IsNullOrWhiteSpace(nurseId))
+                return ServiceResult.Failure("تعذر تحديد الممرضة من التوكن.");
+
+            var plan = await _repository.GetDrugPlanByIdAsync(request.DrugPlanId);
+            if (plan == null)
+                return ServiceResult.Failure("الخطة الدوائية غير موجودة.");
+
+            if (plan.ElderlyId != request.ElderlyId)
+                return ServiceResult.Failure("هذه الخطة غير تابعة للمسن المحدد.");
+
+            var medDate = DateTime.Now.Date;
+            if (medDate < plan.StartDate.Date || medDate > plan.EndDate.Date)
+                return ServiceResult.Failure("لا يمكن إضافة الجرعة لأن التاريخ خارج فترة الخطة الدوائية.");
+
+            var countToday = await _repository.CountMedicationsForPlanOnDateAsync(plan.Id, medDate);
+
+            if (countToday >= plan.DailyIntake)
+                return ServiceResult.Failure("لا يمكن إضافة جرعة جديدة: تم تسجيل جميع جرعات اليوم لهذا الدواء.");
+
+            var medication = new Medication
+            {
+                DrugPlanId = plan.Id,
+                NurseId = nurseId,
+                DateTime = DateTime.Now,
+                Dose = request.Dose.Trim()
+            };
+
+            await _repository.AddMedicationAsync(medication);
+
+            return ServiceResult.SuccessMessage("تم تسجيل الجرعة بنجاح.");
+        }
+        public async Task<List<ElderlyDrugPlanResponse>?> GetElderlyMedicineAsync(int elderlyId)
+        {
+            var exists = await _repository.ElderlyExistsAsync(elderlyId);
+            if (!exists) return null;
+
+            var plans = await _repository.GetDrugPlansByElderlyIdAsync(elderlyId);
+
+            return plans.Select(dp => new ElderlyDrugPlanResponse
+            {
+                DrugPlanId = dp.Id,
+                MedicineId = dp.MedicineId,
+                MedicineName = dp.Medicine.Name,
+                MedicineTypeName = dp.Medicine.Type switch
+                {
+                    MedicineType.Tablet => "حبوب",
+                    MedicineType.Syrup => "سائل",
+                    _ => "غير محدد"
+                },
+            }).ToList();
+        }
     }
 }
