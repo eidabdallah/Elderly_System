@@ -1329,6 +1329,122 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "GetAll",
+    "RelativePath": "api/Nurse/Medicine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "type",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "AddDrugPlan",
+    "RelativePath": "api/Nurse/Medicine/drug-plan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Medicine.AddDrugPlanRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "UpdateDrugPlan",
+    "RelativePath": "api/Nurse/Medicine/drug-plan/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Medicine.DrugPlanUpdateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "UpdateStatusMed",
+    "RelativePath": "api/Nurse/Medicine/drug-plan/{id}/medicine-status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "medicineStatus",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/Nurse/Medicine/drug-plan/{id}/status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.MedicineController",
+    "Method": "GetElderlyDrugPlans",
+    "RelativePath": "api/Nurse/Medicine/elderly/{elderlyId}/drug-plans",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
     "Method": "GetDetails",
     "RelativePath": "api/Nurse/Nurse",

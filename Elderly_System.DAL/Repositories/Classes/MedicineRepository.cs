@@ -1,0 +1,97 @@
+﻿using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
+using Elderly_System.DAL.Repositories.Interfaces;
+using ElderlySystem.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Elderly_System.DAL.Repositories.Classes
+{
+    public class MedicineRepository : IMedicineRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public MedicineRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+        public async Task<bool> ElderlyExistsAsync(int elderlyId)
+        {
+            return await _context.Elderlies.AnyAsync(e => e.Id == elderlyId);
+        }
+
+        public async Task<Medicine?> GetMedicineByIdAsync(int id)
+        {
+            return await _context.Medicines.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<Medicine?> GetMedicineByNameAndTypeAsync(string name, MedicineType type)
+        {
+            var trimmed = name.Trim();
+            return await _context.Medicines
+                .FirstOrDefaultAsync(m => m.Name == trimmed && m.Type == type);
+        }
+
+        public async Task AddMedicineAsync(Medicine medicine)
+        {
+            await _context.Medicines.AddAsync(medicine);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddDrugPlanAsync(DrugPlan drugPlan)
+        {
+            await _context.DrugPlans.AddAsync(drugPlan);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<Medicine>> GetAllMedicinesAsync(string? search, int? type)
+        {
+            var query = _context.Medicines.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var s = search.Trim();
+                query = query.Where(m => m.Name.Contains(s));
+            }
+
+            if (type.HasValue)
+                query = query.Where(m => (int)m.Type == type.Value);
+
+            return await query
+                .OrderBy(m => m.Name)
+                .ToListAsync();
+        }
+        public async Task<List<DrugPlan>> GetDrugPlansByElderlyIdAsync(int elderlyId)
+        {
+            return await _context.DrugPlans
+                .Where(dp => dp.ElderlyId == elderlyId)
+                .Include(dp => dp.Medicine)
+                .Include(dp => dp.DrugPlanTimes)
+                .OrderByDescending(dp => dp.StartDate)
+                .ToListAsync();
+        }
+        public async Task<DrugPlan?> GetDrugPlanWithTimesAsync(int drugPlanId)
+        {
+            return await _context.DrugPlans
+                .Include(dp => dp.DrugPlanTimes)
+                .FirstOrDefaultAsync(dp => dp.Id == drugPlanId);
+        }
+
+        public async Task UpdateDrugPlanAsync(DrugPlan drugPlan)
+        {
+            _context.DrugPlans.Update(drugPlan);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ReplaceDrugPlanTimesAsync(int drugPlanId, List<DrugPlanTime> newTimes)
+        {
+            var oldTimes = await _context.DrugPlanTimes
+                .Where(t => t.DrugPlanId == drugPlanId)
+                .ToListAsync();
+
+            if (oldTimes.Count > 0)
+                _context.DrugPlanTimes.RemoveRange(oldTimes);
+
+            await _context.DrugPlanTimes.AddRangeAsync(newTimes);
+            await _context.SaveChangesAsync();
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using ElderlySystem.DAL.Model;
+﻿using Elderly_System.DAL.Enums;
+using ElderlySystem.DAL.Model;
 using System.ComponentModel.DataAnnotations;
 
 namespace Elderly_System.DAL.Model
@@ -27,7 +28,9 @@ namespace Elderly_System.DAL.Model
 
         [StringLength(500, ErrorMessage = "الملاحظات يجب ألا تتجاوز 500 حرف.")]
         public string? Notes { get; set; }
-
+        public Status Status { get; set; } = Status.Active;
+        public Status MedicineStatus { get; set; } = Status.Active;
+        public ICollection<DrugPlanTime> DrugPlanTimes { get; set; } = new List<DrugPlanTime>();
         public ICollection<Medication> Medications { get; set; } = new List<Medication>();
     }
 }

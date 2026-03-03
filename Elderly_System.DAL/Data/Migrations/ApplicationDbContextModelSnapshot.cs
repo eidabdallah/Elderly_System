@@ -726,12 +726,18 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Property<int>("MedicineId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MedicineStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -740,6 +746,27 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.HasIndex("MedicineId");
 
                     b.ToTable("DrugPlans");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlanTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DrugPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrugPlanId");
+
+                    b.ToTable("DrugPlanTimes");
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.ElderMeal", b =>
@@ -807,21 +834,6 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.ToTable("MedicalReports");
                 });
 
-            modelBuilder.Entity("Elderly_System.DAL.Model.MedicalReportMedicine", b =>
-                {
-                    b.Property<int>("MedicalReportId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MedicineId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MedicalReportId", "MedicineId");
-
-                    b.HasIndex("MedicineId");
-
-                    b.ToTable("MedicalReportMedicines");
-                });
-
             modelBuilder.Entity("Elderly_System.DAL.Model.Medication", b =>
                 {
                     b.Property<int>("Id")
@@ -862,15 +874,13 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1242,6 +1252,17 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Navigation("Medicine");
                 });
 
+            modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlanTime", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.DrugPlan", "DrugPlan")
+                        .WithMany("DrugPlanTimes")
+                        .HasForeignKey("DrugPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DrugPlan");
+                });
+
             modelBuilder.Entity("Elderly_System.DAL.Model.ElderMeal", b =>
                 {
                     b.HasOne("ElderlySystem.DAL.Model.Elderly", "Elderly")
@@ -1270,25 +1291,6 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Elderly");
-                });
-
-            modelBuilder.Entity("Elderly_System.DAL.Model.MedicalReportMedicine", b =>
-                {
-                    b.HasOne("Elderly_System.DAL.Model.MedicalReport", "MedicalReport")
-                        .WithMany("MedicalReportMedicines")
-                        .HasForeignKey("MedicalReportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Elderly_System.DAL.Model.Medicine", "Medicine")
-                        .WithMany("MedicalReportMedicines")
-                        .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MedicalReport");
-
-                    b.Navigation("Medicine");
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.Medication", b =>
@@ -1446,19 +1448,14 @@ namespace Elderly_System.DAL.Data.Migrations
 
             modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlan", b =>
                 {
-                    b.Navigation("Medications");
-                });
+                    b.Navigation("DrugPlanTimes");
 
-            modelBuilder.Entity("Elderly_System.DAL.Model.MedicalReport", b =>
-                {
-                    b.Navigation("MedicalReportMedicines");
+                    b.Navigation("Medications");
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.Medicine", b =>
                 {
                     b.Navigation("DrugPlans");
-
-                    b.Navigation("MedicalReportMedicines");
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Employee", b =>

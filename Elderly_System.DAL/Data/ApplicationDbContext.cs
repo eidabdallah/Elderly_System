@@ -31,11 +31,11 @@ namespace ElderlySystem.DAL.Data
         public DbSet<MedicalReport> MedicalReports { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
-        public DbSet<MedicalReportMedicine> MedicalReportMedicines { get; set; }
         public DbSet<DrugPlan> DrugPlans { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<CheckList> CheckLists { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<DrugPlanTime> DrugPlanTimes { get; set; }
 
 
 

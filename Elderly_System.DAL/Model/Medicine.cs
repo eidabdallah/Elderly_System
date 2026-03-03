@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Elderly_System.DAL.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Elderly_System.DAL.Model
 {
@@ -9,12 +10,8 @@ namespace Elderly_System.DAL.Model
         [Required(ErrorMessage = "اسم الدواء مطلوب.")]
         [StringLength(150, ErrorMessage = "اسم الدواء يجب ألا يتجاوز 150 حرف.")]
         public string Name { get; set; } = null!;
-
-        [Required(ErrorMessage = "وصف الدواء مطلوب.")]
-        [StringLength(500, ErrorMessage = "الوصف يجب ألا يتجاوز 500 حرف.")]
-        public string Description { get; set; } = null!;
-
+        [Required(ErrorMessage = "نوع الدواء مطلوب.")]
+        public MedicineType Type { get; set; }
         public ICollection<DrugPlan> DrugPlans { get; set; } = new List<DrugPlan>();
-        public ICollection<MedicalReportMedicine> MedicalReportMedicines { get; set; } = new List<MedicalReportMedicine>();
     }
 }

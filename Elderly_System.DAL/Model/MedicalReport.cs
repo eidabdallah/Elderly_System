@@ -22,6 +22,5 @@ namespace Elderly_System.DAL.Model
         public int DoctorId { get; set; }
         public Doctor Doctor { get; set; } = null!;
 
-        public ICollection<MedicalReportMedicine> MedicalReportMedicines { get; set; } = new List<MedicalReportMedicine>();
     }
 }
