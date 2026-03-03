@@ -2,6 +2,7 @@
 using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
+using ElderlySystem.DAL.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elderly_System.DAL.Repositories.Classes
@@ -151,12 +152,28 @@ namespace Elderly_System.DAL.Repositories.Classes
 
             return await _context.Medications
                 .Include(m => m.DrugPlan)
+                .Include(m => m.Nurse)
                 .Where(m =>
                     m.DrugPlan.ElderlyId == elderlyId &&
                     m.DateTime >= s &&
                     m.DateTime < eExclusive
                 )
                 .OrderBy(m => m.DateTime)
+                .ToListAsync();
+        }
+        public async Task<List<NurseShiftAssignment>> GetNurseShiftAssignmentsInRangeAsync(
+    List<string> nurseIds, DateTime startDate, DateTime endDate)
+        {
+            var s = startDate.Date;
+            var eExclusive = endDate.Date.AddDays(1);
+
+            return await _context.NurseShiftAssignments
+                .Include(a => a.Shift)               
+                .Where(a =>
+                    nurseIds.Contains(a.NurseId) &&
+                    a.Date >= s &&
+                    a.Date < eExclusive
+                )
                 .ToListAsync();
         }
     }

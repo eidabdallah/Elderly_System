@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.Model;
+using ElderlySystem.DAL.Model;
 
 namespace Elderly_System.DAL.Repositories.Interfaces
 {
@@ -20,5 +21,6 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<List<DrugPlan>> GetMedicineByElderlyIdAsync(int elderlyId);
         Task<List<DrugPlan>> GetActiveDrugPlansForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate);
         Task<List<Medication>> GetMedicationsForElderlyInRangeAsync(int elderlyId, DateTime startDate, DateTime endDate);
+        Task<List<NurseShiftAssignment>> GetNurseShiftAssignmentsInRangeAsync(List<string> nurseIds, DateTime startDate, DateTime endDate);
     }
 }

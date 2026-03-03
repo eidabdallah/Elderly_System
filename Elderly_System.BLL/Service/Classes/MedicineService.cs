@@ -5,6 +5,7 @@ using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.BLL.Helpers;
+using ElderlySystem.DAL.Model;
 
 namespace Elderly_System.BLL.Service.Classes
 {
@@ -310,13 +311,10 @@ namespace Elderly_System.BLL.Service.Classes
 
             var dateKeys = dates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
 
-            // 1) خطط الأدوية النشطة والمتداخلة مع الأسبوع
             var plans = await _repository.GetActiveDrugPlansForElderlyInRangeAsync(elderlyId, startDate, endDate);
 
-            // 2) كل الجرعات المسجلة خلال الأسبوع (لهذه المسنة)
             var meds = await _repository.GetMedicationsForElderlyInRangeAsync(elderlyId, startDate, endDate);
 
-            // Group: (DrugPlanId, Date)
             var medsMap = meds
                 .GroupBy(m => new { m.DrugPlanId, Day = m.DateTime.Date })
                 .ToDictionary(g => (g.Key.DrugPlanId, g.Key.Day), g => g.ToList());
@@ -363,7 +361,20 @@ namespace Elderly_System.BLL.Service.Classes
                         };
                         continue;
                     }
+                    var nurseIds = meds
+                        .Select(m => m.NurseId)
+                        .Where(id => !string.IsNullOrWhiteSpace(id))
+                        .Distinct()
+                        .ToList();
 
+                    var assignments = nurseIds.Count == 0
+                        ? new List<NurseShiftAssignment>()
+                        : await _repository.GetNurseShiftAssignmentsInRangeAsync(nurseIds, startDate, endDate);
+
+                    var shiftMap = assignments.ToDictionary(
+                        a => (a.NurseId, a.Date.Date),
+                        a => a.Shift?.ShiftKey.ToString() ?? "-"
+                    );
                     medsMap.TryGetValue((dp.Id, d.Date), out var dayMeds);
                     dayMeds ??= new List<Medication>();
 
@@ -372,7 +383,9 @@ namespace Elderly_System.BLL.Service.Classes
                         .Select(x => new MedicationTakenDto
                         {
                             Time = x.DateTime.ToString("HH:mm"),
-                            Dose = x.Dose
+                            Dose = x.Dose,
+                            NurseName = x.Nurse?.FullName ?? "", 
+                            ShiftKey = shiftMap.TryGetValue((x.NurseId, x.DateTime.Date), out var sk) ? sk : "-"
                         })
                         .ToList();
 

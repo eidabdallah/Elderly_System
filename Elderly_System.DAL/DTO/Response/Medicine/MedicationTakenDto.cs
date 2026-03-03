@@ -10,5 +10,7 @@ namespace Elderly_System.DAL.DTO.Response.Medicine
     {
         public string Time { get; set; } = ""; 
         public string Dose { get; set; } = "";
+        public string NurseName { get; set; } = "";
+        public string ShiftKey { get; set; } = "-";
     }
 }
