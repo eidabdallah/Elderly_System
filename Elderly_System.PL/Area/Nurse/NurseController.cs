@@ -56,12 +56,13 @@ namespace Elderly_System.PL.Area.Nurse
         public async Task<IActionResult> GetHome(
            [FromQuery] int graceMinutes = 30,
            [FromQuery] int expiringDays = 1,
+            [FromQuery] int reminderMinutes = 10,
            [FromQuery] int activityTake = 20)
         {
             var nurseId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                
 
-            var result = await _nurseService.GetHomeAsync(nurseId!, graceMinutes, expiringDays, activityTake);
+            var result = await _nurseService.GetHomeAsync(nurseId!, graceMinutes, reminderMinutes, expiringDays, activityTake);
             return Ok(result);
         }
     }

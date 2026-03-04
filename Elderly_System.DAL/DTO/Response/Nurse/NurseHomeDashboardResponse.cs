@@ -10,6 +10,8 @@
         public List<NurseMiniDto> TodayTeam { get; set; } = new();
 
         public List<NurseOverdueDoseAlertDto> OverdueDoses { get; set; } = new();
+        public List<NurseDueSoonDoseAlertDto> DueSoonDoses { get; set; } = new();  
+
         public List<NursePlanExpiringAlertDto> PlansExpiringSoon { get; set; } = new();
         public List<NurseStockAlertDto> LowOrOutStock { get; set; } = new();
 

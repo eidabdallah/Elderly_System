@@ -1526,6 +1526,11 @@
         "IsRequired": false
       },
       {
+        "Name": "reminderMinutes",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
         "Name": "activityTake",
         "Type": "System.Int32",
         "IsRequired": false

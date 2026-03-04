@@ -13,20 +13,17 @@ namespace Elderly_System.BLL.Service.Classes
         {
             _repository = repository;
         }
-        public async Task<ServiceResult> GetHomeAsync(string nurseId, int graceMinutes = 30, int expiringDays = 3, int activityTake = 20)
+        public async Task<ServiceResult> GetHomeAsync(string nurseId, int graceMinutes = 30, int reminderMinutes = 10,int expiringDays = 3, int activityTake = 20)
         {
             if (string.IsNullOrWhiteSpace(nurseId))
                 return ServiceResult.Failure("تعذر تحديد الممرضة من التوكن.");
 
-            // الأفضل توحيد TimeZone في مشروعك، لكن حالياً نمشي على DateTime.Now
             var now = DateTime.Now;
             var today = now.Date;
             var tomorrow = today.AddDays(1);
 
-            // 1) Active elderlies count
             var activeCount = await _repository.CountActiveElderliesAsync();
 
-            // 2) Weekly shift (current week Saturday->Friday)
             var weekStart = GetSaturdayStart(today);
             var weekEnd = weekStart.AddDays(6);
 
@@ -58,7 +55,6 @@ namespace Elderly_System.BLL.Service.Classes
                 Days = weeklyDays
             };
 
-            // 3) Today shift + team today
             var todayAssignment = await _repository.GetNurseAssignmentByDateAsync(nurseId, today);
 
             string todayShiftKey = todayAssignment != null
@@ -81,7 +77,6 @@ namespace Elderly_System.BLL.Service.Classes
                     .ToList();
             }
 
-            // 4) Plans active today (for notifications)
             var plans = await _repository.GetTodayActivePlansAsync(today);
             var planIds = plans.Select(p => p.DrugPlanId).Distinct().ToList();
 
@@ -92,7 +87,6 @@ namespace Elderly_System.BLL.Service.Classes
 
             var takenCounts = await _repository.GetTodayMedicationCountsByPlanAsync(planIds, today, tomorrow);
 
-            // 4.1) Overdue doses alerts
             var overdueAlerts = new List<NurseOverdueDoseAlertDto>();
             var grace = TimeSpan.FromMinutes(Math.Max(0, graceMinutes));
             var nowTime = now.TimeOfDay;
@@ -102,7 +96,6 @@ namespace Elderly_System.BLL.Service.Classes
                 if (!timesMap.TryGetValue(p.DrugPlanId, out var planTimes) || planTimes.Count == 0)
                     continue;
 
-                // الجرعات اللي صار وقتها + تجاوزت الـ grace
                 var dueCutoff = nowTime - grace;
                 var dueTimes = planTimes.Where(t => t <= dueCutoff).ToList();
                 if (dueTimes.Count == 0) continue;
@@ -113,8 +106,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                 if (takenToday < expectedByNow)
                 {
-                    // أول وقت "مفروض" يكون اتغطى لكن العدد أقل
-                    var missingIndex = takenToday; // افتراض عملي بدون ربط جرعة بوقت
+                    var missingIndex = takenToday; 
                     var due = dueTimes[Math.Min(missingIndex, dueTimes.Count - 1)];
 
                     var lateMinutes = (int)Math.Max(0, (nowTime - due).TotalMinutes);
@@ -136,10 +128,60 @@ namespace Elderly_System.BLL.Service.Classes
 
             overdueAlerts = overdueAlerts
                 .OrderByDescending(x => x.LateMinutes)
-                .ThenBy(x => x.RoomNumber)
                 .ToList();
 
-            // 4.2) Plans expiring soon
+            var dueSoonAlerts = new List<NurseDueSoonDoseAlertDto>();
+            var reminderWindow = TimeSpan.FromMinutes(Math.Max(0, reminderMinutes));
+
+            foreach (var p in plans)
+            {
+                if (!timesMap.TryGetValue(p.DrugPlanId, out var planTimes) || planTimes.Count == 0)
+                    continue;
+
+                takenCounts.TryGetValue(p.DrugPlanId, out var takenToday);
+
+                // الأوقات القادمة خلال نافذة التذكير
+                var upcoming = planTimes
+                    .Where(t => t > nowTime && (t - nowTime) <= reminderWindow)
+                    .OrderBy(t => t)
+                    .ToList();
+
+                if (upcoming.Count == 0) continue;
+
+                foreach (var due in upcoming)
+                {
+                    // محاولة بسيطة لتجنب التذكير إذا الجرعة "ممكن" تكون انأخذت بدري:
+                    // كم جرعة مفروض تكون مأخوذة بحلول وقت due
+                    var expectedByDue = planTimes.Count(t => t <= due);
+
+                    if (takenToday >= expectedByDue)
+                        continue;
+
+                    var minutesLeft = (int)Math.Ceiling((due - nowTime).TotalMinutes);
+                    if (minutesLeft < 0) continue;
+
+                    var dueText = due.ToString(@"hh\:mm");
+                    var key = $"{p.DrugPlanId}-{today:yyyyMMdd}-{dueText.Replace(":", "")}";
+
+                    dueSoonAlerts.Add(new NurseDueSoonDoseAlertDto
+                    {
+                        ElderlyId = p.ElderlyId,
+                        ElderlyName = p.ElderlyName,
+                        DrugPlanId = p.DrugPlanId,
+                        MedicineName = p.MedicineName,
+                        DueTime = dueText,
+                        MinutesLeft = minutesLeft,
+                        ReminderKey = key,
+                        Message = $"تذكير: جرعة قريبة خلال {minutesLeft} دقيقة — {p.ElderlyName} - {p.MedicineName} (الوقت {dueText})"
+                    });
+                }
+            }
+
+            dueSoonAlerts = dueSoonAlerts
+                .OrderBy(x => x.MinutesLeft)
+                .ThenBy(x => x.ElderlyName)
+                .ToList();
+
             expiringDays = Math.Max(0, expiringDays);
 
             var expiringAlerts = plans
@@ -164,10 +206,9 @@ namespace Elderly_System.BLL.Service.Classes
                 })
                 .ToList();
 
-            // 4.3) Stock alerts (DrugPlan.Status = 2/3)
             var stockAlerts = plans
                 .Where(p => (int)p.StockStatus == 2 || (int)p.StockStatus == 3)
-                .OrderBy(p => (int)p.StockStatus) // 2 ثم 3 (إذا بدك العكس اقلب)
+                .OrderBy(p => (int)p.StockStatus) 
                 .Select(p =>
                 {
                     var st = (int)p.StockStatus;
@@ -188,7 +229,6 @@ namespace Elderly_System.BLL.Service.Classes
                 })
                 .ToList();
 
-            // 5) Today Activity (medications)
             activityTake = Math.Max(0, activityTake);
             var rawActivity = await _repository.GetTodayMedicationActivityAsync(today, tomorrow, activityTake);
 
@@ -219,7 +259,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                 TodayShiftKey = todayShiftKey,
                 TodayTeam = todayTeam,
-
+                DueSoonDoses = dueSoonAlerts,
                 OverdueDoses = overdueAlerts,
                 PlansExpiringSoon = expiringAlerts,
                 LowOrOutStock = stockAlerts,

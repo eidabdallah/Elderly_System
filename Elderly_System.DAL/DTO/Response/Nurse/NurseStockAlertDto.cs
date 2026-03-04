@@ -4,7 +4,6 @@
     {
         public int ElderlyId { get; set; }
         public string ElderlyName { get; set; } = "";
-        public string RoomNumber { get; set; } = "";
 
         public int DrugPlanId { get; set; }
         public string MedicineName { get; set; } = "";
