@@ -46,6 +46,9 @@ namespace Elderly_System.PL
             services.AddScoped<IContactMessageService, ContactMessageService>();
             services.AddScoped<IMedicineRepository,MedicineRepository>();
             services.AddScoped<IMedicineService,MedicineService>();
+            services.AddScoped<INurseRepository, NurseRepository>();
+            services.AddScoped<INurseService, NurseService>();
+
         }
     }
 }

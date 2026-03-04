@@ -1509,6 +1509,32 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
+    "Method": "GetHome",
+    "RelativePath": "api/Nurse/Nurse/home",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "graceMinutes",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "expiringDays",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "activityTake",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Nurse.NurseController",
     "Method": "GetMySchedule",
     "RelativePath": "api/Nurse/Nurse/my-schedule",
     "HttpMethod": "GET",

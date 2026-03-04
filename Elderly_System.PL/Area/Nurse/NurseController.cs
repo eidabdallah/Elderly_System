@@ -1,4 +1,5 @@
-﻿using Elderly_System.BLL.Service.Interface;
+﻿using Elderly_System.BLL.Service.Classes;
+using Elderly_System.BLL.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,13 @@ namespace Elderly_System.PL.Area.Nurse
     {
         private readonly IUserService _service;
         private readonly INurseShiftService _shiftService;
+        private readonly INurseService _nurseService;
 
-        public NurseController(IUserService service , INurseShiftService shiftService)
+        public NurseController(IUserService service , INurseShiftService shiftService , INurseService nurseService)
         {
             _service = service;
             _shiftService = shiftService;
+            _nurseService = nurseService;
         }
         [HttpGet("")]
         public async Task<IActionResult> GetDetails()
@@ -48,6 +51,18 @@ namespace Elderly_System.PL.Area.Nurse
                 return BadRequest(new { message = result.Message });
 
             return Ok(new { message = result.Message, data = result.Data });
+        }
+        [HttpGet("home")]
+        public async Task<IActionResult> GetHome(
+           [FromQuery] int graceMinutes = 30,
+           [FromQuery] int expiringDays = 1,
+           [FromQuery] int activityTake = 20)
+        {
+            var nurseId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+               
+
+            var result = await _nurseService.GetHomeAsync(nurseId!, graceMinutes, expiringDays, activityTake);
+            return Ok(result);
         }
     }
 }
