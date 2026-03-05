@@ -1555,6 +1555,48 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "GetDetails",
+    "RelativePath": "api/Sponsor/Elderly/{elderlyId}/details",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "elderlyId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "GetMedicalReportDiagnosis",
+    "RelativePath": "api/Sponsor/Elderly/medical-reports/{reportId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reportId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "GetMyElderlies",
+    "RelativePath": "api/Sponsor/Elderly/mine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.VisitorController",
     "Method": "Add",
     "RelativePath": "api/Sponsor/Visitor",

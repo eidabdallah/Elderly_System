@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.Model;
+﻿using Elderly_System.DAL.DTO.Response.Sponsor;
+using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
@@ -14,81 +15,50 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
-        public async Task<bool> IsElderlyNationalIdExistsAsync(string nationalId)
-        {
-            return await _context.Elderlies.AnyAsync(e => e.NationalId == nationalId);
-        }
-
-        public async Task AddAsync(Elderly elderly, Doctor doctor, MedicalReport report, ElderlySponsor link)
-        {
-            report.Elderly = elderly;
-            report.Doctor = doctor;
-            link.Elderly = elderly;
-            await _context.Elderlies.AddAsync(elderly);
-            await _context.Doctors.AddAsync(doctor);
-            await _context.MedicalReports.AddAsync(report);
-            await _context.ElderlySponsors.AddAsync(link);
-            await _context.SaveChangesAsync();
-        }
-        public async Task<int?> GetElderlyIdForSponsorAsync(string sponsorId)
-        {
-            return await _context.ElderlySponsors
-                .Where(x => x.SponsorId == sponsorId)
-                .Select(x => (int?)x.ElderlyId)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<bool> LinkExistsAsync(int elderlyId, string sponsorId)
-        {
-            return await _context.ElderlySponsors
-                .AnyAsync(x => x.ElderlyId == elderlyId && x.SponsorId == sponsorId);
-        }
-
-        public async Task AddLinkAsync(int elderlyId, string sponsorId, string kinShip, string degree)
-        {
-            var link = new ElderlySponsor
-            {
-                ElderlyId = elderlyId,
-                SponsorId = sponsorId,
-                KinShip = kinShip,
-                Degree = degree
-            };
-
-            await _context.ElderlySponsors.AddAsync(link);
-            await _context.SaveChangesAsync();
-        }
-        public async Task<int?> GetElderlyIdByNationalIdAsync(string nationalId)
+        public async Task<List<SponsorElderlyBriefDto>> GetMyElderliesWithAllSponsorsAsync(string sponsorId)
         {
             return await _context.Elderlies
-                .Where(e => e.NationalId == nationalId)
-                .Select(e => (int?)e.Id)
+                .AsNoTracking()
+                .Where(e => e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
+                .Include(e => e.ElderlySponsors)
+                    .ThenInclude(es => es.Sponsor)
+                .Select(e => new SponsorElderlyBriefDto
+                {
+                    ElderlyId = e.Id,
+                    ElderlyName = e.Name,
+                    Sponsors = e.ElderlySponsors
+                        .Select(es => new SponsorRelationDto
+                        {
+                            SponsorId = es.SponsorId,
+                            SponsorName = es.Sponsor.FullName ?? "",
+                            status = es.Sponsor.Status == Enums.Status.Active ? "نشط" : "لم يتم قبوله بعد",
+                            KinShip = es.KinShip,
+                            Degree = es.Degree
+                        })
+                        .OrderBy(x => x.SponsorName)
+                        .ToList()
+                })
+                .OrderBy(x => x.ElderlyName)
+                .ToListAsync();
+        }
+        public async Task<Elderly?> GetByIdFullDetailsForSponsorAsync(int elderlyId, string sponsorId)
+        {
+            return await _context.Elderlies
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(e => e.Id == elderlyId &&
+                            e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
+                .Include(e => e.ResidentStays).ThenInclude(s => s.Room).ThenInclude(r => r.RoomImages)
+                .Include(e => e.MedicalReports).ThenInclude(r => r.Doctor)
                 .FirstOrDefaultAsync();
         }
-
-        public async Task<string?> GetSponsorIdByNationalIdAsync(string nationalId)
+        public async Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId)
         {
-            return await _context.Users
-                .Where(u => u.NationalId == nationalId)
-                .Select(u => u.Id)
-                .FirstOrDefaultAsync();
+            return await _context.MedicalReports
+                .AsNoTracking()
+                .Include(x => x.Doctor)
+                .FirstOrDefaultAsync(x => x.Id == reportId);
         }
 
-        public async Task<bool> IsLinkBetweenAsync(int elderlyId, string sponsorId)
-        {
-            return await _context.ElderlySponsors
-                .AnyAsync(x => x.ElderlyId == elderlyId && x.SponsorId == sponsorId);
-        }
-        public async Task CreateLinkAsync(int elderlyId, string sponsorId, string kinShip, string degree)
-        {
-            _context.ElderlySponsors.Add(new ElderlySponsor
-            {
-                ElderlyId = elderlyId,
-                SponsorId = sponsorId,
-                KinShip = kinShip,
-                Degree = degree
-            });
-
-            await _context.SaveChangesAsync();
-        }
     }
 }
