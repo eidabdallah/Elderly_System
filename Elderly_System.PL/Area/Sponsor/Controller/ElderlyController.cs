@@ -37,6 +37,20 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
             var result = await _service.GetMedicalReportDiagnosisAsync(reportId);
             return Ok(new { message = result.Message, data = result.Data });
         }
+        [HttpGet("mine/medicines")]
+        public async Task<IActionResult> GetMyElderliesMedicines()
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _service.GetMyElderliesMedicinesAsync(sponsorId!);
+            return Ok(result);
+        }
+        [HttpGet("mine/checklists/today")]
+        public async Task<IActionResult> GetTodayChecklists()
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _service.GetMyElderliesTodayChecklistsAsync(sponsorId!);
+            return Ok(result);
+        }
 
     }
 }

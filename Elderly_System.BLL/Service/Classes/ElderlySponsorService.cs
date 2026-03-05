@@ -138,5 +138,22 @@ namespace Elderly_System.BLL.Service.Classes
 
             return ServiceResult.SuccessWithData(dto, "تم جلب التشخيص بنجاح");
         }
+        public async Task<ServiceResult> GetMyElderliesMedicinesAsync(string sponsorId)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
+
+            var data = await _repository.GetMyElderliesMedicinesAsync(sponsorId);
+            return ServiceResult.SuccessWithData(data, "تم جلب أدوية المسنين بنجاح");
+        }
+        public async Task<ServiceResult> GetMyElderliesTodayChecklistsAsync(string sponsorId)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
+
+            var data = await _repository.GetMyElderliesTodayChecklistsAsync(sponsorId);
+            return ServiceResult.SuccessWithData(data, "تم جلب قائمة المتابعة لليوم بنجاح");
+        }
+
     }
 }
