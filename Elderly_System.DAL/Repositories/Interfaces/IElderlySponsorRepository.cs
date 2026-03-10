@@ -7,7 +7,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
     public interface IElderlySponsorRepository
     {
         Task<List<SponsorElderlyBriefDto>> GetMyElderliesWithAllSponsorsAsync(string sponsorId);
-        Task<Elderly?> GetByIdFullDetailsForSponsorAsync(int elderlyId, string sponsorId);
+        Task<Elderly?> GetByIdFullDetailsForSponsorAsync(string sponsorId);
         Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
         Task<List<SponsorElderlyMedicinesResponse>> GetMyElderliesMedicinesAsync(string sponsorId);
         Task<List<SponsorElderlyTodayChecklistsResponse>> GetMyElderliesTodayChecklistsAsync(string sponsorId);

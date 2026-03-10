@@ -41,16 +41,18 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .OrderBy(x => x.ElderlyName)
                 .ToListAsync();
         }
-        public async Task<Elderly?> GetByIdFullDetailsForSponsorAsync(int elderlyId, string sponsorId)
+        public async Task<Elderly?> GetByIdFullDetailsForSponsorAsync(string sponsorId)
         {
             return await _context.Elderlies
-                .AsNoTracking()
-                .AsSplitQuery()
-                .Where(e => e.Id == elderlyId &&
-                            e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
-                .Include(e => e.ResidentStays).ThenInclude(s => s.Room).ThenInclude(r => r.RoomImages)
-                .Include(e => e.MedicalReports).ThenInclude(r => r.Doctor)
-                .FirstOrDefaultAsync();
+                 .AsNoTracking()
+                 .AsSplitQuery()
+                 .Where(e => e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
+                 .Include(e => e.ResidentStays)
+                     .ThenInclude(s => s.Room)
+                         .ThenInclude(r => r.RoomImages)
+                 .Include(e => e.MedicalReports)
+                     .ThenInclude(r => r.Doctor)
+                 .FirstOrDefaultAsync();
         }
         public async Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId)
         {

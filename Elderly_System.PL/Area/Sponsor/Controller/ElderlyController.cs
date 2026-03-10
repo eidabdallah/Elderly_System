@@ -24,11 +24,11 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
             var result = await _service.GetMyElderliesAsync(sponsorId!);
             return Ok(result);
         }
-        [HttpGet("{elderlyId}/details")]
-        public async Task<IActionResult> GetDetails(int elderlyId)
+        [HttpGet("details")]
+        public async Task<IActionResult> GetDetails()
         {
             var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _service.GetElderlyDetailsForSponsorAsync(sponsorId!, elderlyId);
+            var result = await _service.GetElderlyDetailsForSponsorAsync(sponsorId!);
             return Ok(result);
         }
         [HttpGet("medical-reports/{reportId}")]

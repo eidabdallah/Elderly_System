@@ -27,12 +27,12 @@ namespace Elderly_System.BLL.Service.Classes
             var list = await _repository.GetMyElderliesWithAllSponsorsAsync(sponsorId);
             return ServiceResult.SuccessWithData(list, "تم جلب بيانات المسنين والكفلاء بنجاح.");
         }
-        public async Task<ServiceResult> GetElderlyDetailsForSponsorAsync(string sponsorId, int elderlyId)
+        public async Task<ServiceResult> GetElderlyDetailsForSponsorAsync(string sponsorId)
         {
             if (string.IsNullOrWhiteSpace(sponsorId))
                 return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
 
-            var elderly = await _repository.GetByIdFullDetailsForSponsorAsync(elderlyId, sponsorId);
+            var elderly = await _repository.GetByIdFullDetailsForSponsorAsync(sponsorId);
             if (elderly == null)
                 return ServiceResult.Failure("لا يوجد صلاحية أو المسن غير موجود.");
 

@@ -1557,17 +1557,11 @@
   {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "GetDetails",
-    "RelativePath": "api/Sponsor/Elderly/{elderlyId}/details",
+    "RelativePath": "api/Sponsor/Elderly/details",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "elderlyId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
