@@ -18,7 +18,7 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
-        public async Task<List<SponsorElderlyBriefDto>> GetMyElderliesWithAllSponsorsAsync(string sponsorId)
+        public async Task<SponsorElderlyBriefDto?> GetMyElderliesAsync(string sponsorId)
         {
             return await _context.Elderlies
                 .AsNoTracking()
@@ -27,7 +27,8 @@ namespace Elderly_System.DAL.Repositories.Classes
                 {
                     ElderlyId = e.Id,
                     ElderlyName = e.Name,
-                    Sponsors = e.ElderlySponsors.Where(es => es.SponsorId == sponsorId)
+                    Sponsor = e.ElderlySponsors
+                        .Where(es => es.SponsorId == sponsorId)
                         .Select(es => new SponsorRelationDto
                         {
                             SponsorId = es.SponsorId,
@@ -35,11 +36,9 @@ namespace Elderly_System.DAL.Repositories.Classes
                             KinShip = es.KinShip,
                             Degree = es.Degree
                         })
-                        .OrderBy(x => x.SponsorName)
-                        .ToList()
+                        .FirstOrDefault()
                 })
-                .OrderBy(x => x.ElderlyName)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
         }
         public async Task<Elderly?> GetByIdFullDetailsForSponsorAsync(string sponsorId)
         {

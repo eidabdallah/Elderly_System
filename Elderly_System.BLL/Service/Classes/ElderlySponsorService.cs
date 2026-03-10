@@ -24,7 +24,7 @@ namespace Elderly_System.BLL.Service.Classes
             if (string.IsNullOrWhiteSpace(sponsorId))
                 return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
 
-            var list = await _repository.GetMyElderliesWithAllSponsorsAsync(sponsorId);
+            var list = await _repository.GetMyElderliesAsync(sponsorId);
             return ServiceResult.SuccessWithData(list, "تم جلب بيانات المسنين والكفلاء بنجاح.");
         }
         public async Task<ServiceResult> GetElderlyDetailsForSponsorAsync(string sponsorId)

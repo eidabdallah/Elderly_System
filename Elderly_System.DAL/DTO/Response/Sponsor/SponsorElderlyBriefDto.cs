@@ -4,6 +4,6 @@
     {
         public int ElderlyId { get; set; }
         public string ElderlyName { get; set; } = "";
-        public List<SponsorRelationDto> Sponsors { get; set; } = new();
+        public SponsorRelationDto? Sponsor { get; set; }
     }
 }
