@@ -15,6 +15,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
             GetTodayActivePlansAsync(DateTime today);
 
         Task<List<(int DrugPlanId, TimeSpan Time)>> GetPlanTimesAsync(List<int> drugPlanIds);
+        Task<List<NurseShiftAssignment>> GetAssignmentsByDateAsync(DateTime date);
 
         Task<Dictionary<int, int>> GetTodayMedicationCountsByPlanAsync(List<int> drugPlanIds, DateTime start, DateTime end);
 

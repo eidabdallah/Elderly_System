@@ -156,5 +156,17 @@ namespace Elderly_System.DAL.Repositories.Classes
 
             return rows.ToDictionary(x => x.NurseId, x => x.ShiftKey.ToString());
         }
+        public async Task<List<NurseShiftAssignment>> GetAssignmentsByDateAsync(DateTime date)
+        {
+            var d = date.Date;
+            var next = d.AddDays(1);
+
+            return await _context.Set<NurseShiftAssignment>()
+                .AsNoTracking()
+                .Include(a => a.Nurse)
+                .Include(a => a.Shift)
+                .Where(a => a.Date >= d && a.Date < next)
+                .ToListAsync();
+        }
     }
 }

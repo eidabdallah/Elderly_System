@@ -62,20 +62,20 @@ namespace Elderly_System.BLL.Service.Classes
                 : (scheduledDays.Contains(today) ? "عطلة" : "-");
 
             var todayTeam = new List<NurseMiniDto>();
-            if (todayAssignment != null)
-            {
-                var sameShift = await _repository.GetAssignmentsByShiftAndDateAsync(todayAssignment.ShiftId, today);
-                todayTeam = sameShift
-                    .Where(a => a.NurseId != nurseId)
-                    .Select(a => new NurseMiniDto
-                    {
-                        Id = a.NurseId,
-                        FullName = a.Nurse?.FullName ?? "",
-                        ShiftKey = a.Shift?.ShiftKey.ToString() ?? "-"
-                    })
-                    .OrderBy(x => x.FullName)
-                    .ToList();
-            }
+
+            var allTodayAssignments = await _repository.GetAssignmentsByDateAsync(today);
+
+            todayTeam = allTodayAssignments
+                .Select(a => new NurseMiniDto
+                {
+                    Id = a.NurseId,
+                    FullName = a.Nurse?.FullName ?? "",
+                    ShiftKey = a.Shift?.ShiftKey.ToString() ?? "-"
+                })
+                .OrderBy(x => x.ShiftKey)
+                .ThenBy(x => x.FullName)
+                .ToList();
+
 
             var plans = await _repository.GetTodayActivePlansAsync(today);
             var planIds = plans.Select(p => p.DrugPlanId).Distinct().ToList();
