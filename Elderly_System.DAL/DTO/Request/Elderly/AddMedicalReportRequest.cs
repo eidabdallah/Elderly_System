@@ -10,9 +10,6 @@ namespace Elderly_System.DAL.DTO.Request.Elderly
 
         [Required(ErrorMessage = "ملف التشخيص مطلوب.")]
         public IFormFile DiagnosisFile { get; set; } = null!;
-        public int? DoctorId { get; set; }
-        public string? DoctorName { get; set; }
-        public string? DoctorWorkPlace { get; set; }
-        public string? DoctorPhone { get; set; }
+        public string DoctorId { get; set; } = null!;
     }
 }

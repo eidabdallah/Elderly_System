@@ -15,14 +15,10 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             _context = context;
         }
-        public async Task AddAsync(Elderly elderly, Doctor doctor, MedicalReport report, ElderlySponsor link)
+        public async Task AddAsync(Elderly elderly, ElderlySponsor link)
         {
-            report.Elderly = elderly;
-            report.Doctor = doctor;
             link.Elderly = elderly;
             await _context.Elderlies.AddAsync(elderly);
-            await _context.Doctors.AddAsync(doctor);
-            await _context.MedicalReports.AddAsync(report);
             await _context.ElderlySponsors.AddAsync(link);
             await _context.SaveChangesAsync();
         }

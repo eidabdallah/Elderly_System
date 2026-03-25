@@ -63,13 +63,8 @@ namespace ElderlySystem.DAL.DTO.Request.Auth
         public string KinShip { get; set; } = default!;
         [Required(ErrorMessage = "الدرجة مطلوبة.")]
         public string Degree { get; set; } = default!;
-        public string? DoctorName { get; set; }
-        public string? WorkPlace { get; set; }
-
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يتكون من 10 أرقام.")]
-        public string? DoctorPhone { get; set; }
-        public DateTime? ReportDate { get; set; }
-        public IFormFile? DiagnosisFile { get; set; }
+        //public DateTime? ReportDate { get; set; }
+        //public IFormFile? DiagnosisFile { get; set; }
 
     }
 }

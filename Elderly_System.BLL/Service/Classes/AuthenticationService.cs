@@ -137,10 +137,10 @@ namespace Elderly_System.BLL.Service.Classes
                 if (string.IsNullOrWhiteSpace(request.NationalIdElderly))
                     return ServiceResult.Failure("رقم هوية المسن مطلوب.");
 
-                if (request.MaritalStatus is null || request.BDate is null || request.ReportDate is null)
+                if (request.MaritalStatus is null || request.BDate is null)
                     return ServiceResult.Failure("يرجى إدخال الحالة الاجتماعية وتاريخ الميلاد وتاريخ التقرير.");
 
-                if (request.NationalIdImage is null || request.HealthInsurance is null || request.DiagnosisFile is null)
+                if (request.NationalIdImage is null || request.HealthInsurance is null)
                     return ServiceResult.Failure("يرجى إرفاق جميع الملفات المطلوبة.");
             }
 
@@ -189,8 +189,7 @@ namespace Elderly_System.BLL.Service.Classes
 
                     var allowed = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
 
-                    if (!HasAllowedExt(request.DiagnosisFile!, allowed) ||
-                        !HasAllowedExt(request.NationalIdImage!, allowed) ||
+                    if (!HasAllowedExt(request.NationalIdImage!, allowed) ||
                         !HasAllowedExt(request.HealthInsurance!, allowed))
                     {
                         return ServiceResult.Failure("يجب أن تكون جميع الملفات صورًا أو ملفات PDF.");
@@ -198,7 +197,6 @@ namespace Elderly_System.BLL.Service.Classes
 
                     var idImg = await _file.UploadAsync(request.NationalIdImage!, "elderly/nationalid");
                     var insurance = await _file.UploadAsync(request.HealthInsurance!, "elderly/insurance");
-                    var diagnosis = await _file.UploadAsync(request.DiagnosisFile!, "elderly/diagnosis");
 
                     var elderly = new Elderly
                     {
@@ -217,20 +215,6 @@ namespace Elderly_System.BLL.Service.Classes
                         status = Status.Pending,
                     };
 
-                    var doctor = new Doctor
-                    {
-                        Name = request.DoctorName!,
-                        WorkPlace = request.WorkPlace!,
-                        Phone = request.DoctorPhone!
-                    };
-
-                    var report = new MedicalReport
-                    {
-                        Date = request.ReportDate!.Value,
-                        DiagnosisUrl = diagnosis.Url,
-                        DiagnosisPublicId = diagnosis.PublicId
-                    };
-
                     var link = new ElderlySponsor
                     {
                         SponsorId = user.Id,
@@ -238,7 +222,7 @@ namespace Elderly_System.BLL.Service.Classes
                         Degree = request.Degree!
                     };
 
-                    await _repository.AddAsync(elderly, doctor, report, link);
+                    await _repository.AddAsync(elderly, link);
                 }
                 else if (request.SponsorDegree == SponsorDegree.Second)
                 {
@@ -284,6 +268,160 @@ namespace Elderly_System.BLL.Service.Classes
             {
                 await tx.RollbackAsync();
                 return ServiceResult.Failure("حدث خطأ أثناء التسجيل، لم يتم حفظ أي بيانات.");
+            }
+        }
+        public async Task<ServiceResult> RegisterDoctorAsync(RegisterDoctorRequest request, HttpRequest httpRequest)
+        {
+            await using var tx = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var existingEmail = await _userManager.FindByEmailAsync(request.Email);
+                if (existingEmail is not null)
+                    return ServiceResult.Failure("البريد الإلكتروني مستخدم بالفعل.");
+
+                var existingPhoneNumber = await _userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber);
+                if (existingPhoneNumber)
+                    return ServiceResult.Failure("رقم الهاتف مستخدم بالفعل.");
+
+                var nationalIdExists = await _userManager.Users.AnyAsync(u => u.NationalId == request.NationalId);
+                if (nationalIdExists)
+                    return ServiceResult.Failure("رقم الهوية مستخدم بالفعل.");
+
+                if (string.IsNullOrWhiteSpace(request.MedicalRank))
+                    return ServiceResult.Failure("الرتبة الطبية مطلوبة.");
+
+                if (string.IsNullOrWhiteSpace(request.YearsOfExperience))
+                    return ServiceResult.Failure("سنوات الخبرة مطلوبة.");
+
+                if (request.BDate.Date > DateTime.Today)
+                    return ServiceResult.Failure("تاريخ الميلاد غير صحيح.");
+
+                var doctor = new Doctor
+                {
+                    FullName = request.FullName.Trim(),
+                    Email = request.Email.Trim(),
+                    UserName = request.Email.Trim(),
+                    PhoneNumber = request.PhoneNumber.Trim(),
+                    City = request.City.Trim(),
+                    NationalId = request.NationalId.Trim(),
+                    Gender = request.GenderDoctor,
+                    MedicalRank = request.MedicalRank.Trim(),
+                    YearsOfExperience = request.YearsOfExperience.Trim(),
+                    NumberOfOperations = request.NumberOfOperations,
+                    BDate = request.BDate
+                };
+
+                var create = await _userManager.CreateAsync(doctor, request.Password);
+                if (!create.Succeeded)
+                    return ServiceResult.Failure(string.Join(" | ", create.Errors.Select(e => e.Description)));
+
+                var addRole = await _userManager.AddToRoleAsync(doctor, Role.Doctor.ToString());
+                if (!addRole.Succeeded)
+                    return ServiceResult.Failure("تم إنشاء المستخدم لكن فشل تعيين الدور.");
+
+                var doctorId = doctor.Id;
+
+                var specializations = NormalizeList(request.Specializations)
+                    .Select(x => new DoctorSpecialization
+                    {
+                        DoctorId = doctorId,
+                        Specialization = x
+                    }).ToList();
+
+                var diseases = NormalizeList(request.diseasesDoctor)
+                    .Select(x => new DoctorDisease
+                    {
+                        DoctorId = doctorId,
+                        Disease = x
+                    }).ToList();
+
+                var workPlaces = NormalizeList(request.WorkPlaces)
+                    .Select(x => new DoctorWorkPlace
+                    {
+                        DoctorId = doctorId,
+                        WorkPlace = x
+                    }).ToList();
+
+                var operationTypes = NormalizeList(request.OperationTypes)
+                    .Select(x => new DoctorOperationType
+                    {
+                        DoctorId = doctorId,
+                        OperationType = x
+                    }).ToList();
+
+                var procedures = NormalizeList(request.MedicalProcedures)
+                    .Select(x => new DoctorMedicalProcedure
+                    {
+                        DoctorId = doctorId,
+                        ProcedureName = x
+                    }).ToList();
+
+                var diagnosticTests = NormalizeList(request.DiagnosticTests)
+                    .Select(x => new DoctorDiagnosticTest
+                    {
+                        DoctorId = doctorId,
+                        TestName = x
+                    }).ToList();
+
+                var previousWorkPlaces = NormalizeList(request.PreviousWorkPlaces)
+                    .Select(x => new DoctorPreviousWorkPlace
+                    {
+                        DoctorId = doctorId,
+                        WorkPlace = x
+                    }).ToList();
+
+                var universities = request.Universities?
+                    .Where(x => !string.IsNullOrWhiteSpace(x.UniversityName))
+                    .Select(x => new DoctorUniversity
+                    {
+                        DoctorId = doctorId,
+                        UniversityName = x.UniversityName.Trim(),
+                        Degree = x.Degree
+                    }).ToList() ?? new List<DoctorUniversity>();
+
+                if (specializations.Count > 0)
+                    await _dbContext.Set<DoctorSpecialization>().AddRangeAsync(specializations);
+
+                if (diseases.Count > 0)
+                    await _dbContext.Set<DoctorDisease>().AddRangeAsync(diseases);
+
+                if (workPlaces.Count > 0)
+                    await _dbContext.Set<DoctorWorkPlace>().AddRangeAsync(workPlaces);
+
+                if (operationTypes.Count > 0)
+                    await _dbContext.Set<DoctorOperationType>().AddRangeAsync(operationTypes);
+
+                if (procedures.Count > 0)
+                    await _dbContext.Set<DoctorMedicalProcedure>().AddRangeAsync(procedures);
+
+                if (diagnosticTests.Count > 0)
+                    await _dbContext.Set<DoctorDiagnosticTest>().AddRangeAsync(diagnosticTests);
+
+                if (previousWorkPlaces.Count > 0)
+                    await _dbContext.Set<DoctorPreviousWorkPlace>().AddRangeAsync(previousWorkPlaces);
+
+                if (universities.Count > 0)
+                    await _dbContext.Set<DoctorUniversity>().AddRangeAsync(universities);
+
+                await _dbContext.SaveChangesAsync();
+                await tx.CommitAsync();
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(doctor);
+                var tokenEncoded = Uri.EscapeDataString(token);
+                var emailUrl = $"{httpRequest.Scheme}://{httpRequest.Host}/api/Identity/Account/ConfirmEmail?token={tokenEncoded}&userId={doctor.Id}";
+
+                await _emailSender.SendEmailAsync(
+                    doctor.Email!,
+                    "تأكيد البريد الالكتروني",
+                    $"<h1>أهلاا {doctor.FullName} ❤️</h1><a href='{emailUrl}'>تأكيد</a>"
+                );
+
+                return ServiceResult.SuccessMessage("تم تسجيل حساب الدكتور بنجاح، يرجى تأكيد البريد الإلكتروني.");
+            }
+            catch
+            {
+                await tx.RollbackAsync();
+                return ServiceResult.Failure("حدث خطأ أثناء تسجيل الدكتور، لم يتم حفظ أي بيانات.");
             }
         }
         public async Task<string> ConfirmEmailAsync(string token, string userId)
@@ -418,6 +556,15 @@ namespace Elderly_System.BLL.Service.Classes
                 Gender = user.Gender
             };
             return ServiceResult.SuccessWithData(response, "تم جلب معلومات المستخدم");
+        }
+        private static List<string> NormalizeList(List<string>? values)
+        {
+            return values?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                ?? new List<string>();
         }
         private static bool HasAllowedExt(IFormFile file, params string[] allowed)
         {

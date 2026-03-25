@@ -1,22 +1,40 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ElderlySystem.DAL.Model;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Elderly_System.DAL.Model
 {
-    public class Doctor
+    public class Doctor : ApplicationUser
     {
-        public int Id { get; set; }
+        public string MedicalRank { get; set; } = null!;
+        public string YearsOfExperience { get; set; } = null!;
+        public int NumberOfOperations { get; set; }
+        public DateTime BDate { get; set; }
+        public ICollection<DoctorSpecialization> Specializations { get; set; } = new List<DoctorSpecialization>();
+        public ICollection<DoctorDisease> Diseases { get; set; } = new List<DoctorDisease>();
 
-        [Required(ErrorMessage = "اسم الطبيب مطلوب.")]
-        [StringLength(100, ErrorMessage = "الاسم يجب ألا يتجاوز 100 حرف.")]
-        public string Name { get; set; } = null!;
-        [Required(ErrorMessage = "مكان عمل الطبيب مطلوب.")]
-        [StringLength(150, ErrorMessage = "مكان العمل يجب ألا يتجاوز 150 حرف.")]
-        public string WorkPlace { get; set; } = null!;
+        public ICollection<DoctorWorkPlace> WorkPlaces { get; set; } = new List<DoctorWorkPlace>();
 
-        [Required(ErrorMessage = "رقم الهاتف مطلوب.")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "رقم الهاتف يجب أن يتكون من 10 أرقام.")]
-        public string Phone { get; set; } = null!;
+        public ICollection<DoctorOperationType> OperationTypes { get; set; } = new List<DoctorOperationType>();
+
+        public ICollection<DoctorMedicalProcedure> MedicalProcedures { get; set; } = new List<DoctorMedicalProcedure>();
+
+        public ICollection<DoctorDiagnosticTest> DiagnosticTests { get; set; } = new List<DoctorDiagnosticTest>();
+        public ICollection<DoctorUniversity> Universities { get; set; } = new List<DoctorUniversity>();
+
+        public ICollection<DoctorPreviousWorkPlace> PreviousWorkPlaces { get; set; } = new List<DoctorPreviousWorkPlace>();
 
         public ICollection<MedicalReport> MedicalReports { get; set; } = new List<MedicalReport>();
+
+        [NotMapped]
+        public int Age
+        {
+            get
+            {
+                var today = DateTime.Today;
+                int age = today.Year - BDate.Year;
+                if (BDate.Date > today.AddYears(-age)) age--;
+                return age;
+            }
+        }
     }
 }

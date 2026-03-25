@@ -11,6 +11,7 @@
         Chef,
         Security,
         Cleaner,
-        Secretary
+        Secretary,
+        Doctor
     }
 }

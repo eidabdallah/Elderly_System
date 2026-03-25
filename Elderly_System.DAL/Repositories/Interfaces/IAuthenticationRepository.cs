@@ -5,7 +5,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
 {
     public interface IAuthenticationRepository
     {
-        Task AddAsync(Elderly elderly, Doctor doctor, MedicalReport report, ElderlySponsor link);
+        Task AddAsync(Elderly elderly , ElderlySponsor link);
         Task<bool> IsElderlyNationalIdExistsAsync(string nationalId);
         Task<Elderly?> GetActiveElderlyByNationalIdAsync(string nationalId);
         Task<bool> IsSponsorLinkedToElderlyAsync(int elderlyId, string sponsorId);

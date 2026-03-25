@@ -1,10 +1,6 @@
 ﻿using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
 using ElderlySystem.DAL.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elderly_System.DAL.Repositories.Interfaces
 {
@@ -16,6 +12,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<ApplicationUser?> GetBaseAsync(string id);
         Task<Employee?> GetEmployeeAsync(string id);
         Task<Nurse?> GetNurseAsync(string id);
+        Task<Doctor?> GetDoctorAsync(string userId);
         Task<Sponsor?> GetSponsorWithElderlyAsync(string id);
         Task<Nurse?> GetByIdAsync(string id);
         Task UpdateAsync(Nurse nurse);

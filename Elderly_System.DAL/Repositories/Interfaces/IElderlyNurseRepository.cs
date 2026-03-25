@@ -12,7 +12,7 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
         Task<Elderly?> GetByIdAsync(int id);
         Task SaveChangesAsync();
-        Task<Doctor?> GetDoctorByIdAsync(int doctorId);
+        Task<Doctor?> GetDoctorByIdAsync(string doctorId);
         Task<bool> DoctorPhoneExistsAsync(string phone);
         Task AddMedicalReportAsync(MedicalReport report);
         Task AddDoctorAsync(Doctor doctor);

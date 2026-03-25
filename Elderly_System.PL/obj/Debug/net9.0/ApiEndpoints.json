@@ -903,31 +903,22 @@
         "Name": "Degree",
         "Type": "System.String",
         "IsRequired": false
-      },
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
+    "Method": "RegisterDoctor",
+    "RelativePath": "api/Identity/Account/register-doctor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "DoctorName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "WorkPlace",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorPhone",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ReportDate",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "DiagnosisFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Auth.RegisterDoctorRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -1159,21 +1150,6 @@
       },
       {
         "Name": "DoctorId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorWorkPlace",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "DoctorPhone",
         "Type": "System.String",
         "IsRequired": false
       }

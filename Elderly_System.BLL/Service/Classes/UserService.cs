@@ -190,6 +190,16 @@ namespace Elderly_System.BLL.Service.Classes
                         .ToList();
 
             }
+            else if (roleEnum == Role.Doctor)
+            {
+                var doctor = await _repository.GetDoctorAsync(userId);
+                if (doctor is null)
+                    return ServiceResult.Failure("بيانات الطبيب غير موجودة.");
+
+                dto.CurrentWorkPlace = doctor.WorkPlaces?
+                    .Select(w => w.WorkPlace)
+                    .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+            }
 
             return ServiceResult.SuccessWithData(dto, "تم جلب تفاصيل المستخدم بنجاح");
         }

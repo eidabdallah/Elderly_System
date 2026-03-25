@@ -679,7 +679,7 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.ToTable("ContactMessages");
                 });
 
-            modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorDiagnosticTest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -687,23 +687,183 @@ namespace Elderly_System.DAL.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("DoctorId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("TestName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WorkPlace")
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorDiagnosticTests");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorDisease", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Disease")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Doctors");
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorDiseases");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorMedicalProcedure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProcedureName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorMedicalProcedures");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorOperationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OperationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorOperationTypes");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorPreviousWorkPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WorkPlace")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorPreviousWorkPlaces");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorSpecialization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorSpecializations");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorUniversity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Degree")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UniversityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorUniversities");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorWorkPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WorkPlace")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorWorkPlaces");
                 });
 
             modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlan", b =>
@@ -819,8 +979,9 @@ namespace Elderly_System.DAL.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ElderlyId")
                         .HasColumnType("int");
@@ -1061,6 +1222,27 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.ToTable("Sponsors", (string)null);
                 });
 
+            modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
+                {
+                    b.HasBaseType("ElderlySystem.DAL.Model.ApplicationUser");
+
+                    b.Property<DateTime>("BDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MedicalRank")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfOperations")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YearsOfExperience")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Doctors", (string)null);
+                });
+
             modelBuilder.Entity("ElderlySystem.DAL.Model.Nurse", b =>
                 {
                     b.HasBaseType("ElderlySystem.DAL.Model.Employee");
@@ -1233,6 +1415,94 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Navigation("Nurse");
                 });
 
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorDiagnosticTest", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("DiagnosticTests")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorDisease", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("Diseases")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorMedicalProcedure", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("MedicalProcedures")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorOperationType", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("OperationTypes")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorPreviousWorkPlace", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("PreviousWorkPlaces")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorSpecialization", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("Specializations")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorUniversity", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("Universities")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.DoctorWorkPlace", b =>
+                {
+                    b.HasOne("Elderly_System.DAL.Model.Doctor", "Doctor")
+                        .WithMany("WorkPlaces")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
             modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlan", b =>
                 {
                     b.HasOne("ElderlySystem.DAL.Model.Elderly", "Elderly")
@@ -1381,6 +1651,15 @@ namespace Elderly_System.DAL.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
+                {
+                    b.HasOne("ElderlySystem.DAL.Model.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("Elderly_System.DAL.Model.Doctor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ElderlySystem.DAL.Model.Nurse", b =>
                 {
                     b.HasOne("ElderlySystem.DAL.Model.Employee", null)
@@ -1441,11 +1720,6 @@ namespace Elderly_System.DAL.Data.Migrations
                     b.Navigation("ElderlyVisitors");
                 });
 
-            modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
-                {
-                    b.Navigation("MedicalReports");
-                });
-
             modelBuilder.Entity("Elderly_System.DAL.Model.DrugPlan", b =>
                 {
                     b.Navigation("DrugPlanTimes");
@@ -1466,6 +1740,27 @@ namespace Elderly_System.DAL.Data.Migrations
             modelBuilder.Entity("ElderlySystem.DAL.Model.Sponsor", b =>
                 {
                     b.Navigation("ElderlySponsors");
+                });
+
+            modelBuilder.Entity("Elderly_System.DAL.Model.Doctor", b =>
+                {
+                    b.Navigation("DiagnosticTests");
+
+                    b.Navigation("Diseases");
+
+                    b.Navigation("MedicalProcedures");
+
+                    b.Navigation("MedicalReports");
+
+                    b.Navigation("OperationTypes");
+
+                    b.Navigation("PreviousWorkPlaces");
+
+                    b.Navigation("Specializations");
+
+                    b.Navigation("Universities");
+
+                    b.Navigation("WorkPlaces");
                 });
 
             modelBuilder.Entity("ElderlySystem.DAL.Model.Nurse", b =>

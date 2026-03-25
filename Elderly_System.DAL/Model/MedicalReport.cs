@@ -19,7 +19,7 @@ namespace Elderly_System.DAL.Model
         public Elderly Elderly { get; set; } = null!;
 
         [Required(ErrorMessage = "الطبيب مطلوب.")]
-        public int DoctorId { get; set; }
+        public string DoctorId { get; set; } = null!;
         public Doctor Doctor { get; set; } = null!;
 
     }

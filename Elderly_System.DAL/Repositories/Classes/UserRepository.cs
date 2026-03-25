@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.Enums;
+using Elderly_System.DAL.Model;
 using Elderly_System.DAL.Repositories.Interfaces;
 using ElderlySystem.DAL.Data;
 using ElderlySystem.DAL.Model;
@@ -126,6 +127,12 @@ namespace Elderly_System.DAL.Repositories.Classes
             if (elderly != null) _context.Remove(elderly);
 
             return await _context.SaveChangesAsync() > 0;
+        }
+        public async Task<Doctor?> GetDoctorAsync(string userId)
+        {
+            return await _context.Doctors
+                .Include(d => d.WorkPlaces)
+                .FirstOrDefaultAsync(d => d.Id == userId);
         }
     }
 }

@@ -42,6 +42,17 @@ namespace Elderly_System.PL.Area.Identitiy.Controller
             }
             return Ok(new { message = result.Message });
         }
+        [HttpPost("register-doctor")]
+        public async Task<IActionResult> RegisterDoctor([FromBody] RegisterDoctorRequest request)
+        {
+            var result = await _authenticationService.RegisterDoctorAsync(request, Request);
+
+            if (!result.Success)
+            {
+                return BadRequest(new { message = result.Message });
+            }
+            return Ok(new { message = result.Message });
+        }
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string userId)
         {

@@ -36,6 +36,14 @@ namespace ElderlySystem.DAL.Data
         public DbSet<CheckList> CheckLists { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<DrugPlanTime> DrugPlanTimes { get; set; }
+        public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
+        public DbSet<DoctorDisease> DoctorDiseases { get; set; }
+        public DbSet<DoctorWorkPlace> DoctorWorkPlaces { get; set; }
+        public DbSet<DoctorOperationType> DoctorOperationTypes { get; set; }
+        public DbSet<DoctorMedicalProcedure> DoctorMedicalProcedures { get; set; }
+        public DbSet<DoctorDiagnosticTest> DoctorDiagnosticTests { get; set; }
+        public DbSet<DoctorPreviousWorkPlace> DoctorPreviousWorkPlaces { get; set; }
+        public DbSet<DoctorUniversity> DoctorUniversities { get; set; }
 
 
 
@@ -49,6 +57,8 @@ namespace ElderlySystem.DAL.Data
             builder.Entity<Employee>().ToTable("Employees");
             builder.Entity<Sponsor>().ToTable("Sponsors");
             builder.Entity<Nurse>().ToTable("Nurses");
+            builder.Entity<Doctor>().ToTable("Doctors");
+
 
             builder.Entity<Donation>()
                 .Property(d => d.MonetaryAmount)

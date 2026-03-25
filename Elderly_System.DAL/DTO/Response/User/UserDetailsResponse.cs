@@ -24,7 +24,7 @@ namespace Elderly_System.DAL.DTO.Response.User
         public List<ElderlyMiniDto>? ElderlyList { get; set; } = new();
         public List<WorkExperienceResponse>? WorkExperiences { get; set; }
 
-
+        public string? CurrentWorkPlace { get; set; }
         public static string ToArabic(Role role) => role switch
         {
             Role.Admin => "أدمن",
@@ -36,6 +36,7 @@ namespace Elderly_System.DAL.DTO.Response.User
             Role.Security => "حارس",
             Role.Cleaner => "عاملة نظافة",
             Role.Secretary => "سكرتيرة",
+            Role.Doctor => "طبيب",
             _ => "غير معروف"
         };
 

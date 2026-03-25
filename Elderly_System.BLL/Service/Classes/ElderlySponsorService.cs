@@ -95,9 +95,12 @@ namespace Elderly_System.BLL.Service.Classes
                     Doctor = new DoctorInfoResponse
                     {
                         DoctorId = latestReport.Doctor.Id,
-                        Name = latestReport.Doctor.Name,
-                        WorkPlace = latestReport.Doctor.WorkPlace,
-                        Phone = latestReport.Doctor.Phone
+                        Name = latestReport.Doctor.FullName,
+                        WorkPlace = latestReport.Doctor.WorkPlaces
+                        .OrderByDescending(wp => wp.Id)
+                        .Select(wp => wp.WorkPlace)
+                        .FirstOrDefault() ?? "",
+                        Phone = latestReport.Doctor.PhoneNumber!
                     }
                 },
 
@@ -130,9 +133,12 @@ namespace Elderly_System.BLL.Service.Classes
                 Doctor = new DoctorInfoResponse
                 {
                     DoctorId = report.Doctor.Id,
-                    Name = report.Doctor.Name,
-                    WorkPlace = report.Doctor.WorkPlace,
-                    Phone = report.Doctor.Phone
+                    Name = report.Doctor.FullName,
+                    WorkPlace = report.Doctor.WorkPlaces
+                    .OrderByDescending(wp => wp.Id)
+                    .Select(wp => wp.WorkPlace)
+                    .FirstOrDefault() ?? "",
+                    Phone = report.Doctor.PhoneNumber!
                 }
             };
 

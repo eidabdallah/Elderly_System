@@ -59,9 +59,9 @@ namespace Elderly_System.BLL.Service.Classes
                 Doctor = new DoctorInfoDto
                 {
                     DoctorId = report.Doctor.Id,
-                    Name = report.Doctor.Name,
-                    WorkPlace = report.Doctor.WorkPlace,
-                    Phone = report.Doctor.Phone
+                    Name = report.Doctor.FullName,
+                    WorkPlace = report.Doctor.WorkPlaces.OrderByDescending(wp => wp.Id).Select(wp => wp.WorkPlace).FirstOrDefault() ?? "",
+                    Phone = report.Doctor.PhoneNumber!
                 }
             };
 
@@ -195,86 +195,61 @@ namespace Elderly_System.BLL.Service.Classes
         return ServiceResult.SuccessWithData(docs, "تم جلب قائمة الأطباء بنجاح");
     }
 
-    public async Task<ServiceResult> AddMedicalReportAsync(int elderlyId, AddMedicalReportRequest request)
-    {
-        if (elderlyId <= 0)
-            return ServiceResult.Failure("رقم المسن غير صحيح.");
-
-        if (request.DiagnosisFile is null)
-            return ServiceResult.Failure("ملف التشخيص مطلوب.");
-
-        var allowed = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
-        if (!HasAllowedExt(request.DiagnosisFile, allowed))
-            return ServiceResult.Failure("ملف التشخيص يجب أن يكون صورة أو PDF.");
-
-        if (!DateTime.TryParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out var reportDate))
-            return ServiceResult.Failure("صيغة التاريخ غير صحيحة. استخدم yyyy-MM-dd.");
-
-        var elderly = await _repository.GetByIdAsync(elderlyId);
-        if (elderly is null)
-            return ServiceResult.Failure("المسن غير موجود.");
-
-        int doctorId;
-
-        if (request.DoctorId.HasValue && request.DoctorId.Value > 0)
+        public async Task<ServiceResult> AddMedicalReportAsync(int elderlyId, AddMedicalReportRequest request)
         {
-            var doc = await _repository.GetDoctorByIdAsync(request.DoctorId.Value);
-            if (doc is null)
+            if (elderlyId <= 0)
+                return ServiceResult.Failure("رقم المسن غير صحيح.");
+
+            if (request.DiagnosisFile is null)
+                return ServiceResult.Failure("ملف التشخيص مطلوب.");
+
+            var allowed = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            if (!HasAllowedExt(request.DiagnosisFile, allowed))
+                return ServiceResult.Failure("ملف التشخيص يجب أن يكون صورة أو PDF.");
+
+            if (!DateTime.TryParseExact(
+                    request.Date,
+                    "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var reportDate))
+            {
+                return ServiceResult.Failure("صيغة التاريخ غير صحيحة. استخدم yyyy-MM-dd.");
+            }
+
+            var elderly = await _repository.GetByIdAsync(elderlyId);
+            if (elderly is null)
+                return ServiceResult.Failure("المسن غير موجود.");
+
+            if (string.IsNullOrWhiteSpace(request.DoctorId))
+                return ServiceResult.Failure("يرجى اختيار الطبيب من القائمة.");
+
+            var doctor = await _repository.GetDoctorByIdAsync(request.DoctorId);
+            if (doctor is null)
                 return ServiceResult.Failure("الطبيب المختار غير موجود.");
 
-            doctorId = doc.Id;
-        }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(request.DoctorName) ||
-                string.IsNullOrWhiteSpace(request.DoctorWorkPlace) ||
-                string.IsNullOrWhiteSpace(request.DoctorPhone))
-                return ServiceResult.Failure("يرجى اختيار طبيب أو إدخال بيانات طبيب جديد كاملة.");
+            var uploaded = await _file.UploadAsync(request.DiagnosisFile, "elderly/diagnosis");
 
-            var phone = request.DoctorPhone.Trim();
-            if (!System.Text.RegularExpressions.Regex.IsMatch(phone, @"^\d{10}$"))
-                return ServiceResult.Failure("رقم هاتف الطبيب يجب أن يتكون من 10 أرقام.");
-
-            var exists = await _repository.DoctorPhoneExistsAsync(phone);
-            if (exists)
-                return ServiceResult.Failure("رقم هاتف الطبيب مستخدم مسبقاً. اختر الطبيب من القائمة.");
-
-            var newDoctor = new Doctor
+            var report = new MedicalReport
             {
-                Name = request.DoctorName.Trim(),
-                WorkPlace = request.DoctorWorkPlace.Trim(),
-                Phone = phone
+                Date = reportDate,
+                ElderlyId = elderlyId,
+                DoctorId = doctor.Id,
+                DiagnosisUrl = uploaded.Url,
+                DiagnosisPublicId = uploaded.PublicId
             };
 
-            await _repository.AddDoctorAsync(newDoctor);
+            await _repository.AddMedicalReportAsync(report);
             await _repository.SaveChangesAsync();
 
-            doctorId = newDoctor.Id;
+            return ServiceResult.SuccessWithData(new
+            {
+                ReportId = report.Id,
+                Date = report.Date.ToString("yyyy-MM-dd"),
+                DiagnosisUrl = report.DiagnosisUrl,
+                DiagnosisPublicId = report.DiagnosisPublicId,
+                DoctorId = report.DoctorId
+            }, "تم إضافة التشخيص بنجاح.");
         }
-
-        var uploaded = await _file.UploadAsync(request.DiagnosisFile, "elderly/diagnosis");
-
-        var report = new MedicalReport
-        {
-            Date = reportDate,
-            ElderlyId = elderlyId,
-            DoctorId = doctorId,
-            DiagnosisUrl = uploaded.Url,
-            DiagnosisPublicId = uploaded.PublicId
-        };
-
-        await _repository.AddMedicalReportAsync(report);
-        await _repository.SaveChangesAsync();
-
-        return ServiceResult.SuccessWithData(new
-        {
-            ReportId = report.Id,
-            Date = report.Date.ToString("yyyy-MM-dd"),
-            DiagnosisUrl = report.DiagnosisUrl,
-            DiagnosisPublicId = report.DiagnosisPublicId,
-            DoctorId = report.DoctorId
-        }, "تم إضافة التشخيص بنجاح.");
     }
-}
 }

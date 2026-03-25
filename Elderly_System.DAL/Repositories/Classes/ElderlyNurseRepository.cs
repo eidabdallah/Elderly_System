@@ -78,9 +78,12 @@ namespace Elderly_System.DAL.Repositories.Classes
                             Doctor = new DoctorInfoDto
                             {
                                 DoctorId = mr.Doctor.Id,
-                                Name = mr.Doctor.Name,
-                                WorkPlace = mr.Doctor.WorkPlace,
-                                Phone = mr.Doctor.Phone
+                                Name = mr.Doctor.FullName,
+                                WorkPlace  = mr.Doctor.WorkPlaces
+                                    .OrderByDescending(wp => wp.Id) 
+                                    .Select(wp => wp.WorkPlace)
+                                    .FirstOrDefault() ?? "",
+                                Phone = mr.Doctor.PhoneNumber!
                             }
                         })
                         .FirstOrDefault()
@@ -117,11 +120,11 @@ namespace Elderly_System.DAL.Repositories.Classes
         public async Task SaveChangesAsync()
             => await _context.SaveChangesAsync();
     
-    public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
-    => await _context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
+        public async Task<Doctor?> GetDoctorByIdAsync(string doctorId)
+        => await _context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
 
         public async Task<bool> DoctorPhoneExistsAsync(string phone)
-            => await _context.Doctors.AnyAsync(d => d.Phone == phone);
+            => await _context.Doctors.AnyAsync(d => d.PhoneNumber == phone);
 
         public async Task AddDoctorAsync(Doctor doctor)
         {
@@ -137,13 +140,16 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             return await _context.Doctors
                 .AsNoTracking()
-                .OrderBy(d => d.Name)
+                .OrderBy(d => d.FullName)
                 .Select(d => new DoctorInfoDto
                 {
                     DoctorId = d.Id,
-                    Name = d.Name,
-                    WorkPlace = d.WorkPlace,
-                    Phone = d.Phone
+                    Name = d.FullName,
+                    WorkPlace = d.WorkPlaces
+                        .OrderByDescending(wp => wp.Id) 
+                        .Select(wp => wp.WorkPlace)
+                        .FirstOrDefault() ?? "",
+                    Phone = d.PhoneNumber!
                 })
                 .ToListAsync();
         }
