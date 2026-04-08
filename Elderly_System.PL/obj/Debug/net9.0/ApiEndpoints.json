@@ -724,6 +724,105 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "ApproveDoctorRequest",
+    "RelativePath": "api/Doctor/doctor-change-requests/{requestId}/approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "RejectDoctorRequest",
+    "RelativePath": "api/Doctor/doctor-change-requests/{requestId}/reject",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "GetPendingDoctorRequests",
+    "RelativePath": "api/Doctor/doctor-change-requests/pending",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "AddMedicalReport",
+    "RelativePath": "api/Doctor/medical-reports",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ElderlyId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "DiagnosisFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "GetMyElderlies",
+    "RelativePath": "api/Doctor/mine/elderlies",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "GetMyProfile",
+    "RelativePath": "api/Doctor/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Doctor.Controller.DoctorController",
+    "Method": "UpdateMyProfile",
+    "RelativePath": "api/Doctor/profile",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Elderly_System.DAL.DTO.Request.Doctor.UpdateDoctorProfileRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elderly_System.PL.Area.Identitiy.Controller.AccountController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/Identity/Account/ConfirmEmail",
@@ -1532,12 +1631,48 @@
   },
   {
     "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "GetAvailableDoctors",
+    "RelativePath": "api/Sponsor/Elderly/available-doctors",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "GetCurrentDoctor",
+    "RelativePath": "api/Sponsor/Elderly/current-doctor",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
     "Method": "GetDetails",
     "RelativePath": "api/Sponsor/Elderly/details",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elderly_System.PL.Area.Sponsor.Controller.ElderlyController",
+    "Method": "CreateDoctorChangeRequest",
+    "RelativePath": "api/Sponsor/Elderly/doctor-change-request",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Elderly_System.DAL.DTO.Request.Elderly.CreateDoctorChangeRequestDto",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

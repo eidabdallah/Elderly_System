@@ -1,4 +1,5 @@
-﻿using Elderly_System.DAL.DTO.Response.Sponsor;
+﻿using Elderly_System.DAL.DTO.Response.Doctor;
+using Elderly_System.DAL.DTO.Response.Sponsor;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Model;
@@ -151,6 +152,69 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .ToList();
 
             return result;
+        }
+        public async Task<Elderly?> GetElderlyWithCurrentDoctorBySponsorIdAsync(string sponsorId)
+        {
+            return await _context.Elderlies
+                .AsNoTracking()
+                .Where(e => e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
+                .Include(e => e.Doctor)
+                    .ThenInclude(d => d.WorkPlaces)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<List<DoctorNameResponse>> GetAvailableDoctorsForSponsorAsync(string sponsorId)
+        {
+            var currentDoctorId = await _context.Elderlies
+                .AsNoTracking()
+                .Where(e => e.ElderlySponsors.Any(es => es.SponsorId == sponsorId))
+                .Select(e => e.DoctorId)
+                .FirstOrDefaultAsync();
+
+            var doctorsQuery = _context.Users
+                .AsNoTracking()
+                .OfType<Doctor>();
+
+            if (!string.IsNullOrWhiteSpace(currentDoctorId))
+            {
+                doctorsQuery = doctorsQuery.Where(d => d.Id != currentDoctorId);
+            }
+
+            return await doctorsQuery
+                .OrderBy(d => d.FullName)
+                .Select(d => new DoctorNameResponse
+                {
+                    DoctorId = d.Id,
+                    Name = d.FullName ?? ""
+                })
+                .ToListAsync();
+        }
+        public async Task<Elderly?> GetElderlyBySponsorIdAsync(string sponsorId)
+        {
+            return await _context.Elderlies
+                .FirstOrDefaultAsync(e => e.ElderlySponsors.Any(es => es.SponsorId == sponsorId));
+        }
+
+        public async Task<bool> DoctorExistsAsync(string doctorId)
+        {
+            return await _context.Users
+                .OfType<Doctor>()
+                .AnyAsync(d => d.Id == doctorId);
+        }
+
+        public async Task<bool> HasPendingDoctorChangeRequestAsync(int elderlyId)
+        {
+            return await _context.DoctorChangeRequests
+                .AnyAsync(r => r.ElderlyId == elderlyId && r.RequestStatus == Status.Pending);
+        }
+
+        public async Task AddDoctorChangeRequestAsync(DoctorChangeRequest request)
+        {
+            await _context.DoctorChangeRequests.AddAsync(request);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
 
     }

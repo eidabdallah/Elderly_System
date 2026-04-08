@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Elderly;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -49,6 +50,32 @@ namespace Elderly_System.PL.Area.Sponsor.Controller
         {
             var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _service.GetMyElderliesTodayChecklistsAsync(sponsorId!);
+            return Ok(result);
+        }
+        [HttpGet("current-doctor")]
+        public async Task<IActionResult> GetCurrentDoctor()
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _service.GetCurrentDoctorAsync(sponsorId!);
+            if(!result.Success)
+                return NotFound(new { message = result.Message });
+            return Ok(new { message = result.Message, data = result.Data });
+
+        }
+        [HttpGet("available-doctors")]
+        public async Task<IActionResult> GetAvailableDoctors()
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _service.GetAvailableDoctorsAsync(sponsorId!);
+            if (!result.Success)
+                return NotFound(new { message = result.Message });
+            return Ok(new { message = result.Message, data = result.Data });
+        }
+        [HttpPost("doctor-change-request")]
+        public async Task<IActionResult> CreateDoctorChangeRequest([FromBody] CreateDoctorChangeRequestDto dto)
+        {
+            var sponsorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _service.CreateDoctorChangeRequestAsync(sponsorId!, dto);
             return Ok(result);
         }
 

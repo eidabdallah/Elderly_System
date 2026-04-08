@@ -24,6 +24,7 @@ namespace Elderly_System.DAL.Model
         public ICollection<DoctorPreviousWorkPlace> PreviousWorkPlaces { get; set; } = new List<DoctorPreviousWorkPlace>();
 
         public ICollection<MedicalReport> MedicalReports { get; set; } = new List<MedicalReport>();
+        public ICollection<Elderly> Elderlies { get; set; } = new List<Elderly>();
 
         [NotMapped]
         public int Age

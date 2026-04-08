@@ -44,6 +44,7 @@ namespace ElderlySystem.DAL.Data
         public DbSet<DoctorDiagnosticTest> DoctorDiagnosticTests { get; set; }
         public DbSet<DoctorPreviousWorkPlace> DoctorPreviousWorkPlaces { get; set; }
         public DbSet<DoctorUniversity> DoctorUniversities { get; set; }
+        public DbSet<DoctorChangeRequest> DoctorChangeRequests { get; set; }
 
 
 

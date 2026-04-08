@@ -1,4 +1,5 @@
-﻿using ElderlySystem.BLL.Helpers;
+﻿using Elderly_System.DAL.DTO.Request.Elderly;
+using ElderlySystem.BLL.Helpers;
 
 namespace Elderly_System.BLL.Service.Interface
 {
@@ -9,6 +10,10 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> GetMedicalReportDiagnosisAsync(int reportId);
         Task<ServiceResult> GetMyElderliesMedicinesAsync(string sponsorId);
         Task<ServiceResult> GetMyElderliesTodayChecklistsAsync(string sponsorId);
+        Task<ServiceResult> GetCurrentDoctorAsync(string sponsorId);
+        Task<ServiceResult> GetAvailableDoctorsAsync(string sponsorId);
+        Task<ServiceResult> CreateDoctorChangeRequestAsync(string sponsorId, CreateDoctorChangeRequestDto dto);
+
     }
 }
 

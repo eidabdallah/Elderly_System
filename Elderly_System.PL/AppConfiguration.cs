@@ -48,6 +48,10 @@ namespace Elderly_System.PL
             services.AddScoped<IMedicineService,MedicineService>();
             services.AddScoped<INurseRepository, NurseRepository>();
             services.AddScoped<INurseService, NurseService>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IDoctorService, DoctorService>();
+
+
 
         }
     }

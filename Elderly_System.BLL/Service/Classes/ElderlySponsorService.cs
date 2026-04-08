@@ -1,4 +1,5 @@
 ﻿using Elderly_System.BLL.Service.Interface;
+using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.DTO.Response.Elderly;
 using Elderly_System.DAL.DTO.Response.MedicalReport;
 using Elderly_System.DAL.DTO.Response.Room;
@@ -96,10 +97,8 @@ namespace Elderly_System.BLL.Service.Classes
                     {
                         DoctorId = latestReport.Doctor.Id,
                         Name = latestReport.Doctor.FullName,
-                        WorkPlace = latestReport.Doctor.WorkPlaces
-                        .OrderByDescending(wp => wp.Id)
-                        .Select(wp => wp.WorkPlace)
-                        .FirstOrDefault() ?? "",
+                        WorkPlace = latestReport.Doctor.WorkPlaces.OrderByDescending(wp => wp.Id).Select(wp => wp.WorkPlace).FirstOrDefault() ?? "",
+
                         Phone = latestReport.Doctor.PhoneNumber!
                     }
                 },
@@ -159,6 +158,79 @@ namespace Elderly_System.BLL.Service.Classes
 
             var data = await _repository.GetMyElderliesTodayChecklistsAsync(sponsorId);
             return ServiceResult.SuccessWithData(data, "تم جلب قائمة المتابعة لليوم بنجاح");
+        }
+        public async Task<ServiceResult> GetCurrentDoctorAsync(string sponsorId)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
+
+            var elderly = await _repository.GetElderlyWithCurrentDoctorBySponsorIdAsync(sponsorId);
+
+            if (elderly == null)
+                return ServiceResult.Failure("لا يوجد مسن مرتبط بهذا الكفيل.");
+
+            if (elderly.Doctor == null)
+                return ServiceResult.Failure("لا يوجد دكتور حالي مرتبط بهذه المسنة.");
+
+            var dto = new CurrentDoctorResponse
+            {
+                Name = elderly.Doctor.FullName ?? "",
+                Phone = elderly.Doctor.PhoneNumber ?? "",
+                WorkPlace = elderly.Doctor.WorkPlaces
+                    .OrderByDescending(wp => wp.Id)
+                    .Select(wp => wp.WorkPlace)
+                    .FirstOrDefault() ?? ""
+            };
+
+            return ServiceResult.SuccessWithData(dto, "تم جلب معلومات الدكتور الحالي بنجاح.");
+        }
+        public async Task<ServiceResult> GetAvailableDoctorsAsync(string sponsorId)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
+
+            var hasElderly = await _repository.GetMyElderliesAsync(sponsorId);
+            if (hasElderly == null)
+                return ServiceResult.Failure("لا يوجد مسن مرتبط بهذا الكفيل.");
+
+            var doctors = await _repository.GetAvailableDoctorsForSponsorAsync(sponsorId);
+
+            return ServiceResult.SuccessWithData(doctors, "تم جلب أسماء الدكاترة بنجاح.");
+        }
+        public async Task<ServiceResult> CreateDoctorChangeRequestAsync(string sponsorId, CreateDoctorChangeRequestDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(sponsorId))
+                return ServiceResult.Failure("تعذر تحديد الكفيل من التوكن.");
+
+            if (dto == null || string.IsNullOrWhiteSpace(dto.RequestedDoctorId))
+                return ServiceResult.Failure("معرّف الدكتور المطلوب غير صحيح.");
+
+            var elderly = await _repository.GetElderlyBySponsorIdAsync(sponsorId);
+            if (elderly == null)
+                return ServiceResult.Failure("لا يوجد مسن مرتبط بهذا الكفيل.");
+
+            var doctorExists = await _repository.DoctorExistsAsync(dto.RequestedDoctorId);
+            if (!doctorExists)
+                return ServiceResult.Failure("الدكتور المطلوب غير موجود.");
+
+            if (!string.IsNullOrWhiteSpace(elderly.DoctorId) && elderly.DoctorId == dto.RequestedDoctorId)
+                return ServiceResult.Failure("هذا الدكتور هو الدكتور الحالي بالفعل.");
+
+            var hasPendingRequest = await _repository.HasPendingDoctorChangeRequestAsync(elderly.Id);
+            if (hasPendingRequest)
+                return ServiceResult.Failure("يوجد طلب تغيير دكتور قيد الانتظار لهذه المسنة.");
+
+            var request = new DoctorChangeRequest
+            {
+                ElderlyId = elderly.Id,
+                RequestedDoctorId = dto.RequestedDoctorId,
+                RequestStatus = Status.Pending
+            };
+
+            await _repository.AddDoctorChangeRequestAsync(request);
+            await _repository.SaveChangesAsync();
+
+            return ServiceResult.SuccessWithData(request.Id, "تم إرسال طلب تغيير الدكتور بنجاح.");
         }
 
     }

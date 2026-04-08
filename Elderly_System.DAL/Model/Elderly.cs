@@ -55,7 +55,8 @@ namespace ElderlySystem.DAL.Model
 
         public Status status { get; set; } = Status.Pending;
 
-
+        public string? DoctorId { get; set; }
+        public Doctor? Doctor { get; set; }
         public int Age
         {
             get
