@@ -12,5 +12,7 @@ namespace Elderly_System.BLL.Service.Interface
         Task<ServiceResult> UpdateDoctorRequestStatusAsync(string doctorId, int requestId, bool isApproved);
         Task<ServiceResult> GetDoctorProfileAsync(string doctorId);
         Task<ServiceResult> UpdateDoctorProfileAsync(string doctorId, UpdateDoctorProfileRequest request);
+        Task<ServiceResult> GetDoctorElderlyDetailsAsync(int elderlyId);
+        Task<ServiceResult> GetDoctorMedicalReportDiagnosisAsync(int reportId);
     }
 }

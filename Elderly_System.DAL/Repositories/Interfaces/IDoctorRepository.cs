@@ -1,4 +1,5 @@
 ﻿using Elderly_System.DAL.DTO.Response.Elderly;
+using Elderly_System.DAL.DTO.Response.Nurse;
 using Elderly_System.DAL.Model;
 
 namespace Elderly_System.DAL.Repositories.Interfaces
@@ -11,6 +12,8 @@ namespace Elderly_System.DAL.Repositories.Interfaces
         Task<List<DoctorPendingRequestResponse>> GetPendingDoctorRequestsAsync(string doctorId);
         Task<DoctorChangeRequest?> GetDoctorRequestByIdAsync(int requestId, string doctorId);
         Task<Doctor?> GetDoctorWithDetailsByIdAsync(string doctorId);
+        Task<NurseElderlyDetailsDto?> GetElderlyDetailsAsync(int elderlyId);
+        Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId);
         Task SaveChangesAsync();
     }
 }

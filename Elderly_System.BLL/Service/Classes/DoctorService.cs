@@ -2,6 +2,7 @@
 using Elderly_System.DAL.DTO.Request.Doctor;
 using Elderly_System.DAL.DTO.Request.Elderly;
 using Elderly_System.DAL.DTO.Response.Doctor;
+using Elderly_System.DAL.DTO.Response.Nurse;
 using Elderly_System.DAL.DTO.Response.User;
 using Elderly_System.DAL.Enums;
 using Elderly_System.DAL.Model;
@@ -300,6 +301,48 @@ namespace Elderly_System.BLL.Service.Classes
             await _repository.SaveChangesAsync();
 
             return ServiceResult.SuccessWithData(doctor.Id, "تم تعديل بيانات الدكتور بنجاح.");
+        }
+        public async Task<ServiceResult> GetDoctorElderlyDetailsAsync(int elderlyId)
+        {
+            if (elderlyId <= 0)
+                return ServiceResult.Failure("رقم المسن غير صحيح.");
+
+            var dto = await _repository.GetElderlyDetailsAsync(elderlyId);
+
+            if (dto == null)
+                return ServiceResult.Failure("المسن غير موجود.");
+
+            return ServiceResult.SuccessWithData(dto, "تم جلب تفاصيل المسن بنجاح");
+        }
+
+        public async Task<ServiceResult> GetDoctorMedicalReportDiagnosisAsync(int reportId)
+        {
+            if (reportId <= 0)
+                return ServiceResult.Failure("رقم التقرير غير صحيح.");
+
+            var report = await _repository.GetMedicalReportByIdAsync(reportId);
+            if (report == null)
+                return ServiceResult.Failure("التقرير غير موجود.");
+
+            var dto = new NurseDiagnosisDto
+            {
+                ReportId = report.Id,
+                Date = report.Date.ToString("yyyy-MM-dd"),
+                DiagnosisUrl = report.DiagnosisUrl,
+                DiagnosisPublicId = report.DiagnosisPublicId,
+                Doctor = new DoctorInfoDto
+                {
+                    DoctorId = report.Doctor.Id,
+                    Name = report.Doctor.FullName,
+                    WorkPlace = report.Doctor.WorkPlaces
+                        .OrderByDescending(wp => wp.Id)
+                        .Select(wp => wp.WorkPlace)
+                        .FirstOrDefault() ?? "",
+                    Phone = report.Doctor.PhoneNumber!
+                }
+            };
+
+            return ServiceResult.SuccessWithData(dto, "تم جلب التشخيص بنجاح");
         }
 
     }

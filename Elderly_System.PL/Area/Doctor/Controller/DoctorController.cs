@@ -68,5 +68,18 @@ namespace Elderly_System.PL.Area.Doctor.Controller
             var result = await _service.UpdateDoctorProfileAsync(doctorId!, request);
             return Ok(result);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetails([FromRoute] int id)
+        {
+            var result = await _service.GetDoctorElderlyDetailsAsync(id);
+            return Ok(new { message = result.Message, data = result.Data });
+        }
+
+        [HttpGet("medical-reports/{reportId}")]
+        public async Task<IActionResult> GetDiagnosis([FromRoute] int reportId)
+        {
+            var result = await _service.GetDoctorMedicalReportDiagnosisAsync(reportId);
+            return Ok(new { message = result.Message, data = result.Data });
+        }
     }
 }
