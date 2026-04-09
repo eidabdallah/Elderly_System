@@ -81,7 +81,7 @@ namespace Elderly_System.DAL.Repositories.Classes
                 .Include(d => d.Universities)
                 .FirstOrDefaultAsync(d => d.Id == doctorId);
         }
-        public async Task<NurseElderlyDetailsDto?> GetElderlyDetailsAsync(int elderlyId)
+        public async Task<DoctorElderlyDetailsDto?> GetElderlyDetailsAsync(int elderlyId)
         {
             var data = await _context.Elderlies
                 .AsNoTracking()
@@ -93,14 +93,9 @@ namespace Elderly_System.DAL.Repositories.Classes
                     e.NationalId,
                     e.HealthStatus,
                     e.Diseases,
-                    e.Age,
+                    e.BDate,
+                    e.City,
                     e.ComprehensiveExamination,
-
-                    RoomNumber = e.ResidentStays
-                        .Where(rs => rs.Status == Status.Active)
-                        .OrderByDescending(rs => rs.StartDate)
-                        .Select(rs => rs.Room.RoomNumber)
-                        .FirstOrDefault(),
 
                     DiagnosisDates = e.MedicalReports
                         .OrderByDescending(mr => mr.Date)
@@ -136,13 +131,13 @@ namespace Elderly_System.DAL.Repositories.Classes
 
             if (data == null) return null;
 
-            return new NurseElderlyDetailsDto
+            return new DoctorElderlyDetailsDto
             {
                 ElderlyId = data.Id,
                 Name = data.Name,
                 NationalId = data.NationalId,
-                RoomNumber = data.RoomNumber,
-                Age = data.Age,
+                City = data.City,
+                BDate = data.BDate.ToString("yyyy-MM-dd") ?? "",
                 HealthStatus = data.HealthStatus,
                 Diseases = data.Diseases?.ToList() ?? new List<string>(),
                 ComprehensiveExamination = data.ComprehensiveExamination,
