@@ -96,6 +96,8 @@ namespace Elderly_System.DAL.Repositories.Classes
                     e.BDate,
                     e.City,
                     e.ComprehensiveExamination,
+                    e.NationalIdImage,
+                    e.HealthInsurance,
 
                     DiagnosisDates = e.MedicalReports
                         .OrderByDescending(mr => mr.Date)
@@ -141,6 +143,8 @@ namespace Elderly_System.DAL.Repositories.Classes
                 HealthStatus = data.HealthStatus,
                 Diseases = data.Diseases?.ToList() ?? new List<string>(),
                 ComprehensiveExamination = data.ComprehensiveExamination,
+                NationalIdImage = data.NationalIdImage,
+                HealthInsurance = data.HealthInsurance,
 
                 LatestDiagnosis = data.LatestDiagnosis,
                 DiagnosisDates = data.DiagnosisDates

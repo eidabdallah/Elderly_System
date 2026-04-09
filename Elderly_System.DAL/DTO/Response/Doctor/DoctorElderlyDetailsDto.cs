@@ -19,6 +19,9 @@ namespace Elderly_System.DAL.DTO.Response.Doctor
         public List<string> Diseases { get; set; } = new();
 
         public string? ComprehensiveExamination { get; set; }
+        public string? HealthInsurance { get; set; }
+        public string? NationalIdImage { get; set; }
+
         public NurseDiagnosisDto? LatestDiagnosis { get; set; }
         public List<MedicalReportDateResponse> DiagnosisDates { get; set; } = new();
     }
