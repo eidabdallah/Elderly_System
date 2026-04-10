@@ -51,12 +51,14 @@ namespace Elderly_System.DAL.Repositories.Classes
         {
             return await _context.Elderlies
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Include(e => e.ElderlySponsors)
                     .ThenInclude(es => es.Sponsor)
                 .Include(e => e.ResidentStays)
                     .ThenInclude(rs => rs.Room)
                 .Include(e => e.MedicalReports)
                     .ThenInclude(m => m.Doctor)
+                        .ThenInclude(d => d.WorkPlaces)
                 .FirstOrDefaultAsync(e => e.Id == elderlyId);
         }
         public async Task<Room?> GetRoomByIdAsync(int roomId)
@@ -154,6 +156,7 @@ namespace Elderly_System.DAL.Repositories.Classes
             return await _context.MedicalReports
                 .AsNoTracking()
                 .Include(x => x.Doctor)
+                 .ThenInclude(d => d.WorkPlaces)
                 .FirstOrDefaultAsync(x => x.Id == reportId);
         }
     }

@@ -52,6 +52,7 @@ namespace Elderly_System.DAL.Repositories.Classes
                          .ThenInclude(r => r.RoomImages)
                  .Include(e => e.MedicalReports)
                      .ThenInclude(r => r.Doctor)
+                      .ThenInclude(d => d.WorkPlaces)
                  .FirstOrDefaultAsync();
         }
         public async Task<MedicalReport?> GetMedicalReportByIdAsync(int reportId)
@@ -59,6 +60,7 @@ namespace Elderly_System.DAL.Repositories.Classes
             return await _context.MedicalReports
                 .AsNoTracking()
                 .Include(x => x.Doctor)
+                 .ThenInclude(d => d.WorkPlaces)
                 .FirstOrDefaultAsync(x => x.Id == reportId);
         }
         public async Task<List<SponsorElderlyMedicinesResponse>> GetMyElderliesMedicinesAsync(string sponsorId)
@@ -172,7 +174,8 @@ namespace Elderly_System.DAL.Repositories.Classes
 
             var doctorsQuery = _context.Users
                 .AsNoTracking()
-                .OfType<Doctor>();
+                .OfType<Doctor>()
+                .Where(d => d.Status == Status.Active);
 
             if (!string.IsNullOrWhiteSpace(currentDoctorId))
             {

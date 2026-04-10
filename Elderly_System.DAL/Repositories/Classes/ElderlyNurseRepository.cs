@@ -112,6 +112,7 @@ namespace Elderly_System.DAL.Repositories.Classes
             return await _context.MedicalReports
                 .AsNoTracking()
                 .Include(x => x.Doctor)
+                 .ThenInclude(d => d.WorkPlaces)
                 .FirstOrDefaultAsync(x => x.Id == reportId);
         }
         public async Task<Elderly?> GetByIdAsync(int id)
